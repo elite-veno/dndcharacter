@@ -4,7 +4,8 @@ import {
   CLASS_BY_ID, SKILLS, WEAPONS, FEAT_BY_ID, ASI_LEVELS, ASI_LEVELS_BY_CLASS, spellsForClass, MUSICAL_INSTRUMENTS,
   ARTISANS_TOOLS, GAMING_SETS, TOOL_BY_ID,
 } from './data/index.js';
-import { highestSpellLevel } from './rules.js';
+import { highestSpellLevel, getSubclass } from './rules.js';
+import { SUBCLASS_LEVEL } from './data/subclasses.js';
 
 /** Level at which classes gain a Fighting Style feat (Fighter at 1, Paladin and Ranger at 2). */
 export const FIGHTING_STYLE_LEVEL = { fighter: 1, paladin: 2, ranger: 2 };
@@ -31,6 +32,28 @@ export const ORDERS = {
 export function chosenOrder(c) {
   const spec = ORDERS[c.classId];
   return spec ? c[spec.key] : null;
+}
+
+/** The subclass chosen by a character (null below level 3, when unset, or when it belongs to another class). */
+export function chosenSubclass(c) {
+  return c.level >= SUBCLASS_LEVEL ? getSubclass(c.classId, c.subclassId) : null;
+}
+
+/** Granted proficiency strings of the chosen subclass (e.g. 'Heavy armor', 'Martial weapons'). */
+const subclassGrants = (c) => (chosenSubclass(c)?.grantedProficiencies || []).map((g) => g.toLowerCase());
+
+/** Subclass-granted proficiencies that are not armor, weapons or concrete tools (shown as text on the sheet). */
+export function subclassOtherProficiencies(c) {
+  return (chosenSubclass(c)?.grantedProficiencies || []).filter((g) => !/armor|^shields?$|weapons/i.test(g) && !subclassToolName(g));
+}
+
+/** A concrete tool proficiency granted by a subclass (kit / tools), or null for open choices and other grants. */
+export function subclassToolName(g) {
+  return /(kit|tools?)$/i.test(g) && !/\b(one|any|your choice)\b/i.test(g) ? g : null;
+}
+
+export function subclassToolList(c) {
+  return (chosenSubclass(c)?.grantedProficiencies || []).map(subclassToolName).filter(Boolean);
 }
 
 const SCHOLAR_SKILLS = ['arcana', 'history', 'investigation', 'medicine', 'nature', 'religion'];
@@ -177,6 +200,10 @@ export function armorTrainingOf(c) {
   const order = chosenOrder(c);
   if (order === 'protector' && !out.includes('heavy')) out.push('heavy');
   if (order === 'warden' && !out.includes('medium')) out.push('medium');
+  const grants = subclassGrants(c);
+  if (grants.some((g) => g.includes('heavy armor')) && !out.includes('heavy')) out.push('heavy');
+  if (grants.some((g) => g.includes('medium armor')) && !out.includes('medium')) out.push('medium');
+  if (grants.some((g) => /^shields?$/.test(g)) && !out.includes('shield')) out.push('shield');
   return out;
 }
 
@@ -187,6 +214,7 @@ export function weaponProficiencyOf(c) {
   const prof = { ...cls.weaponProficiency, categories: [...cls.weaponProficiency.categories] };
   const order = chosenOrder(c);
   if ((order === 'protector' || order === 'warden') && !prof.categories.includes('martial')) prof.categories.push('martial');
+  if (subclassGrants(c).some((g) => g.includes('martial weapons')) && !prof.categories.includes('martial')) prof.categories.push('martial');
   return prof;
 }
 
@@ -203,7 +231,7 @@ export function extraSkillPicks(c) {
   if (c.classId === 'barbarian' && c.level >= 3) {
     picks.push({ key: 'primal-knowledge', label: 'Primal Knowledge', count: 1, from: cls.skillChoices.from });
   }
-  if (c.classId === 'bard' && c.level >= 3) {
+  if (c.classId === 'bard' && c.level >= 3 && c.subclassId === 'college-of-lore') {
     picks.push({ key: 'lore-proficiencies', label: 'College of Lore: Bonus Proficiencies', count: 3, from: SKILLS.map((s) => s.id) });
   }
   return picks;

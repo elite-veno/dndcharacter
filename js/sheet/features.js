@@ -1,7 +1,10 @@
 // Features & traits tab (class, subclass, species, background, feats, proficiencies) and the Notes tab.
 
 import { h } from '../ui.js';
-import { FEAT_BY_ID } from '../data/index.js';
+import { FEAT_BY_ID, SUBCLASS_LABELS } from '../data/index.js';
+import { subclassChoices } from '../rules.js';
+import { subclassOtherProficiencies } from '../choices.js';
+import { select, field } from '../steps/shared.js';
 import { panel, disclosure, titleCase } from './widgets.js';
 
 const featureItem = (f) => disclosure(`${f.name} (level ${f.level}${f.source ? `, ${f.source}` : ''})`, h('p', {}, f.desc || 'See the SRD 5.2 for the full text.'));
@@ -24,6 +27,7 @@ export function featuresTab(ctx) {
         fact('Size', d.size))),
     panel(d.cls ? `${d.cls.name} features` : 'Class features',
       d.features.length ? h('div', { class: 'disclosure-list' }, d.features.map(featureItem)) : h('p', { class: 'empty' }, 'No features yet.')),
+    subclassPanel(ctx),
     d.species ? panel(`${d.species.name} traits`,
       choice.length ? h('p', { class: 'hint' }, choice.join(' · ')) : null,
       h('div', { class: 'disclosure-list' }, speciesTraits.map((t) => disclosure(t.name, h('p', {}, t.desc)))),
@@ -34,6 +38,28 @@ export function featuresTab(ctx) {
       return disclosure(`${feat.name} (${f.source})`, h('p', {}, feat.desc), feat.benefits.length ? h('ul', { class: 'bullets' }, feat.benefits.map((b) => h('li', {}, b))) : null);
     }))) : null,
     c.invocations.length ? panel('Eldritch Invocations', h('p', {}, c.invocations.join(', ').replace(/-/g, ' '))) : null);
+}
+
+function subclassPanel(ctx) {
+  const { c, d } = ctx;
+  if (!d.cls || d.level < 3) return null;
+  const label = SUBCLASS_LABELS[d.cls.id] || 'Subclass';
+  const sub = d.subclass;
+  const picker = field(label, select({
+    options: d.cls.subclass.map((x) => ({ value: x.id, label: x.name })), value: c.subclassId, placeholder: 'Choose...',
+    onChange: (v) => ctx.update((x) => { x.subclassId = v; x.subclassChoice = subclassChoices(d.cls.subclass.find((y) => y.id === v))[0] || null; }),
+  }));
+  if (!sub) return panel(`${label}`, picker, h('p', { class: 'notice warn' }, `Choose a ${label} to gain its features.`));
+  const choices = subclassChoices(sub);
+  const spells = d.subclassSpells || [];
+  const other = subclassOtherProficiencies(c);
+  return panel(`${sub.name} (${sub.source})`,
+    picker,
+    choices.length ? field('Terrain', select({ options: choices.map((o) => ({ value: o, label: o })), value: c.subclassChoice, onChange: (v) => ctx.update((x) => { x.subclassChoice = v; }) })) : null,
+    h('p', {}, sub.summary),
+    h('p', { class: 'hint' }, `Subclass from the 2014 Player's Handbook; chosen at level 3 under the 2024 rules.${sub.notes2024 ? ` 2024 note: ${sub.notes2024}` : ''}`),
+    other.length ? h('p', {}, h('strong', {}, 'Other proficiencies: '), other.join('; ')) : null,
+    spells.length ? h('p', {}, h('strong', {}, 'Granted spells: '), spells.map((g) => `${g.name}${g.kind === 'ritual' ? ' (ritual only)' : ''}`).join(', ')) : null);
 }
 
 const fact = (label, value) => h('div', {}, h('dt', {}, label), h('dd', {}, value));

@@ -5,7 +5,8 @@ import {
   CLASSES, CLASS_BY_ID, SKILLS, WEAPON_BY_ID, WEAPON_MASTERY, FEATS, FEAT_BY_ID, ABILITIES, INVOCATIONS,
   SPELL_BY_ID,
 } from '../data/index.js';
-import { weaponMasteryCount, featuresAtLevel } from '../rules.js';
+import { weaponMasteryCount, featuresAtLevel, subclassChoices, subclassGrantLevel } from '../rules.js';
+import { SUBCLASS_LABELS, SUBCLASS_LEVEL } from '../data/subclasses.js';
 import {
   ORDERS, FIGHTING_STYLE_LEVEL, expertiseSlots, masteryOptions, spellCounts, classSpellOptions, classToolChoice, classFixedTools,
   extraSkillPicks, levelSlots, featAbilityOptions, chosenOrder,
@@ -28,6 +29,7 @@ function chooseClass(c, classId) {
   if (c.classId === classId) return;
   c.classId = classId;
   Object.assign(c, {
+    subclassId: null, subclassChoice: null,
     classSkills: [], classTools: [], masteries: [], divineOrder: null, primalOrder: null, fightingStyle: null,
     expertise: [], cantrips: [], spells: [], spellbook: [], invocations: [], extraSkills: {}, levelAsi: [],
   });
@@ -82,15 +84,14 @@ function classTab(ctx, cls) {
     root.append(notice('Select a class to see its details and choices.'));
     return root;
   }
-  root.append(classDetails(ctx, cls), classChoices(ctx, cls));
+  root.append(classDetails(ctx, cls), subclassPicker(ctx, cls), classChoices(ctx, cls));
   return root;
 }
 
 function classDetails(ctx, cls) {
   const { c } = ctx;
-  const features = featuresAtLevel(cls.id, c.level);
+  const features = featuresAtLevel(cls.id, c.level, { subclassId: c.subclassId });
   const later = cls.features.filter((f) => f.level > c.level);
-  const sub = cls.subclass;
   const proficiencyTags = [
     ...cls.armorTraining.map((a) => tag(`${titleCase(a)} ${a === 'shield' ? '' : 'armor'}`.trim())),
     ...cls.weaponProficiency.categories.map((w) => tag(`${titleCase(w)} weapons`)),
@@ -105,12 +106,52 @@ function classDetails(ctx, cls) {
       h('div', {}, h('dt', {}, 'Saving throws'), h('dd', {}, cls.savingThrows.map((a) => a.toUpperCase()).join(', '))),
       h('div', {}, h('dt', {}, 'Spellcasting'), h('dd', {}, cls.spellcasting ? `${cls.spellcasting.ability.toUpperCase()} (${titleCase(cls.spellcasting.type)})` : 'None'))),
     h('div', { class: 'tag-row' }, proficiencyTags),
-    sub && c.level >= sub.level ? notice(`Subclass: ${sub.name} (level ${sub.level}). It is the SRD subclass for this class and is applied automatically.`) : null,
-    sub && c.level < sub.level ? h('p', { class: 'hint' }, `Subclass (${sub.name}) unlocks at level ${sub.level}.`) : null,
+    c.level < SUBCLASS_LEVEL ? h('p', { class: 'hint' }, `Your ${SUBCLASS_LABELS[cls.id] || 'subclass'} is chosen at level ${SUBCLASS_LEVEL}.`) : null,
     h('h4', {}, `Features up to level ${c.level}`),
     h('ul', { class: 'feature-list' }, features.map((f) => h('li', {}, h('strong', {}, `L${f.level} ${f.name}`), f.source !== cls.name ? tag(f.source, 'sub') : null, ' ', f.desc))),
     later.length ? h('details', {}, h('summary', {}, `Higher-level class features (${later.length})`),
       h('ul', { class: 'feature-list' }, later.map((f) => h('li', {}, h('strong', {}, `L${f.level} ${f.name}`), ' ', f.desc)))) : null);
+}
+
+function subclassPicker(ctx, cls) {
+  const { c } = ctx;
+  if (c.level < SUBCLASS_LEVEL) return null;
+  const label = SUBCLASS_LABELS[cls.id] || 'Subclass';
+  const chosen = cls.subclass.find((x) => x.id === c.subclassId) || null;
+  const wrap = h('div', { class: 'choices' }, sectionTitle(`${label} (subclass)`, 3),
+    notice(`These subclasses come from the 2014 Player's Handbook. The 2024 rules choose every subclass at level ${SUBCLASS_LEVEL}, so features, spells and proficiencies the 2014 book grants earlier are granted at level ${SUBCLASS_LEVEL} when you select one.`));
+  const group = h('div', { class: 'card-grid subclass-grid', role: 'radiogroup', 'aria-label': label });
+  cls.subclass.forEach((sub) => {
+    const on = sub.id === c.subclassId;
+    group.append(h('button', {
+      type: 'button', id: `subclass-${sub.id}`, class: `choice-card subclass-card${on ? ' selected' : ''}`, role: 'radio', 'aria-checked': on ? 'true' : 'false',
+      onclick: () => ctx.update((x) => { x.subclassId = sub.id; x.subclassChoice = subclassChoices(sub)[0] || null; }),
+    },
+    h('span', { class: 'choice-title' }, sub.name),
+    h('span', { class: 'choice-badge' }, sub.source),
+    h('span', { class: 'choice-sub' }, sub.summary),
+    h('ul', { class: 'subclass-features' }, sub.features.map((f) => h('li', { class: subclassGrantLevel(f.level) <= c.level ? '' : 'locked' }, `L${subclassGrantLevel(f.level)} ${f.name}`)))));
+  });
+  wrap.append(group);
+  if (!chosen) {
+    wrap.append(h('p', { class: 'notice warn' }, `Choose a ${label} to continue.`));
+    return wrap;
+  }
+  const choices = subclassChoices(chosen);
+  if (choices.length) {
+    wrap.append(field('Terrain (determines your circle spells)', select({
+      options: choices.map((o) => ({ value: o, label: o })), value: c.subclassChoice,
+      onChange: (v) => ctx.update((x) => { x.subclassChoice = v; }),
+    })));
+  }
+  const grantedProfs = chosen.grantedProficiencies;
+  wrap.append(h('div', { class: 'info-card' },
+    h('h4', {}, `${chosen.name} at level ${c.level}`),
+    h('ul', { class: 'feature-list' }, featuresAtLevel(cls.id, c.level, { subclassId: chosen.id }).filter((f) => f.source === chosen.name)
+      .map((f) => h('li', {}, h('strong', {}, `L${f.level} ${f.name}`), ' ', f.desc))),
+    grantedProfs.length ? h('p', {}, h('strong', {}, 'Proficiencies: '), grantedProfs.join('; ')) : null,
+    chosen.notes2024 ? h('p', { class: 'hint' }, h('strong', {}, '2024 note: '), chosen.notes2024) : null));
+  return wrap;
 }
 
 function classChoices(ctx, cls) {

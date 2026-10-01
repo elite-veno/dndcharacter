@@ -3,6 +3,7 @@
 
 import { ABILITY_IDS, SKILLS, SIZES } from './data/skills.js';
 import { CLASS_BY_ID, FULL_CASTER_SLOTS, HALF_CASTER_SLOTS, PACT_SLOTS, XP_THRESHOLDS } from './data/classes.js';
+import { SUBCLASS_BY_ID, SUBCLASS_LEVEL } from './data/subclasses.js';
 import { ASI_LEVELS, ASI_LEVELS_BY_CLASS } from './data/feats.js';
 
 export const MAX_LEVEL = 20;
@@ -484,13 +485,57 @@ export function asiCount(classId, level) {
   return levels.filter((l) => l <= level).length;
 }
 
-/** Class features available at or below the level (class + subclass if level >= 3). */
-export function featuresAtLevel(classId, level, { includeSubclass = true } = {}) {
-  const cls = CLASS_BY_ID[classId];
-  const list = cls.features.filter((f) => f.level <= level).map((f) => ({ ...f, source: cls.name }));
-  if (includeSubclass && cls.subclass && level >= cls.subclass.level) {
-    list.push(...cls.subclass.features.filter((f) => f.level <= level).map((f) => ({ ...f, source: cls.subclass.name })));
+/** The chosen subclass of a class (or null when unset / not belonging to the class). */
+export const LEGACY_SUBCLASS = { barbarian: 'path-of-the-berserker', bard: 'college-of-lore', cleric: 'life', druid: 'circle-of-the-land', fighter: 'champion', monk: 'way-of-the-open-hand', paladin: 'oath-of-devotion', ranger: 'hunter', rogue: 'thief', sorcerer: 'draconic-bloodline', warlock: 'the-fiend', wizard: 'school-of-evocation' };
+export function defaultSubclassId(classId) {
+  const id = LEGACY_SUBCLASS[classId];
+  return id && getSubclass(classId, id) ? id : (CLASS_BY_ID[classId]?.subclass?.[0]?.id || null);
+}
+
+export function getSubclass(classId, subclassId) {
+  const sub = SUBCLASS_BY_ID[subclassId];
+  return sub && sub.classId === classId ? sub : null;
+}
+
+/** Level at which a subclass feature or grant becomes active: 2014 grants below level 3 are deferred to level 3. */
+export const subclassGrantLevel = (level) => Math.max(SUBCLASS_LEVEL, level);
+
+/** Subclass features active at a character level (level >= 3). Deferred features report level 3. */
+export function subclassFeaturesAtLevel(sub, level) {
+  if (!sub || level < SUBCLASS_LEVEL) return [];
+  return sub.features
+    .map((f) => ({ ...f, level: subclassGrantLevel(f.level), source: sub.name }))
+    .filter((f) => f.level <= level);
+}
+
+/** Choices (e.g. Circle of the Land terrain) that select which granted spells apply. */
+export function subclassChoices(sub) {
+  return sub ? [...new Set(sub.grantedSpells.map((g) => g.choice).filter(Boolean))] : [];
+}
+
+/**
+ * Spells a subclass grants at a level: [{ name, kind, level }]. 'prepared' spells are always prepared, 'ritual' spells can be
+ * cast only as rituals, 'expanded' spells join the class list (level is a spell level and is not gated by character level).
+ */
+export function subclassSpellsAtLevel(sub, level, choice = null) {
+  if (!sub || level < SUBCLASS_LEVEL) return [];
+  const out = [];
+  for (const g of sub.grantedSpells) {
+    if (g.choice && g.choice !== choice) continue;
+    if (g.kind !== 'expanded' && subclassGrantLevel(g.level) > level) continue;
+    g.spells.forEach((name) => out.push({ name, kind: g.kind, level: g.level }));
   }
+  return out;
+}
+
+/** Class features available at or below the level, plus the chosen subclass's features (subclass picked at level 3). */
+export function featuresAtLevel(classId, level, { includeSubclass = true, subclassId = null } = {}) {
+  const cls = CLASS_BY_ID[classId];
+  const sub = includeSubclass ? getSubclass(classId, subclassId) : null;
+  const list = cls.features
+    .filter((f) => f.level <= level && !(sub && f.name === 'Subclass Feature'))
+    .map((f) => ({ ...f, source: cls.name }));
+  if (sub) list.push(...subclassFeaturesAtLevel(sub, level));
   return list.sort((a, b) => a.level - b.level);
 }
 

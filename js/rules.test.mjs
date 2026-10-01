@@ -4,6 +4,7 @@ import * as R from './rules.js';
 import {
   CLASSES, CLASS_BY_ID, SPECIES, BACKGROUNDS, BACKGROUND_BY_ID, FEAT_BY_ID, WEAPON_BY_ID, ARMOR_BY_ID,
   SHIELD, SKILLS, SPELLS, SPELL_BY_ID, spellsForClass, CONDITIONS, TOOL_BY_ID, WEAPON_MASTERY,
+  SUBCLASSES, SUBCLASS_BY_ID, subclassesFor,
   resolveItem, isValidVariant, EQUIPMENT_CHOICES,
 } from './data/index.js';
 
@@ -320,9 +321,9 @@ test('class progression helpers', () => {
   assert.equal(R.asiCount('wizard', 16), 4);
   assert.equal(R.asiCount('fighter', 14), 5);
   assert.equal(R.asiCount('rogue', 10), 3);
-  const f = R.featuresAtLevel('fighter', 3).map((x) => x.name);
+  const f = R.featuresAtLevel('fighter', 3, { subclassId: 'champion' }).map((x) => x.name);
   assert.ok(f.includes('Second Wind') && f.includes('Improved Critical'));
-  assert.ok(!R.featuresAtLevel('fighter', 2).some((x) => x.name === 'Improved Critical'));
+  assert.ok(!R.featuresAtLevel('fighter', 2, { subclassId: 'champion' }).some((x) => x.name === 'Improved Critical'));
   assert.equal(R.classResources('rogue', 5, scores(10, 16, 10, 10, 10, 10)).sneakAttack, '3d6');
   assert.equal(R.classResources('barbarian', 9, scores(16, 10, 14, 10, 10, 10)).rageDamage, 3);
   assert.equal(R.classResources('paladin', 5, scores(16, 10, 14, 10, 10, 14)).layOnHands, 25);
@@ -339,7 +340,7 @@ test('data integrity', () => {
     assert.ok([6, 8, 10, 12].includes(c.hitDie), c.id);
     assert.equal(c.savingThrows.length, 2, c.id);
     assert.ok(c.features.length > 10, c.id);
-    assert.ok(c.subclass && c.subclass.level === 3, c.id);
+    assert.ok(Array.isArray(c.subclass) && c.subclass.length >= 2, c.id);
     if (c.skillChoices.from !== 'any') for (const sk of c.skillChoices.from) assert.ok(SKILLS.some((x) => x.id === sk), `${c.id}:${sk}`);
     if (c.spellcasting) {
       assert.equal(c.spellcasting.prepared.length, 20, c.id);
@@ -370,6 +371,87 @@ test('data integrity', () => {
   for (const w of Object.values(WEAPON_BY_ID)) assert.ok(WEAPON_MASTERY[w.mastery], `${w.id} mastery`);
   assert.ok(SPELL_BY_ID.fireball.level === 3 && SPELL_BY_ID.fireball.classes.includes('wizard'));
   assert.ok(spellsForClass('wizard', 0).length >= 10);
+});
+
+
+import fs from 'node:fs';
+import { normalizeCharacter, validateStep, deriveCharacter, newCharacter } from './character.js';
+import { armorTrainingOf, weaponProficiencyOf } from './choices.js';
+
+test('subclass data: all source subclasses present, every class has >= 2', () => {
+  const srcDir = new URL('../data-src/subclasses/', import.meta.url);
+  let total = 0;
+  for (const file of fs.readdirSync(srcDir)) {
+    const j = JSON.parse(fs.readFileSync(new URL(file, srcDir), 'utf8'));
+    const classId = j.class.toLowerCase();
+    total += j.subclasses.length;
+    assert.ok(subclassesFor(classId).length >= 2, classId);
+    assert.equal(subclassesFor(classId).length, j.subclasses.length, classId);
+    for (const s of j.subclasses) assert.ok(subclassesFor(classId).some((x) => x.name === s.name), s.name);
+  }
+  assert.equal(SUBCLASSES.length, total);
+  assert.ok(total >= 37);
+  assert.equal(new Set(SUBCLASSES.map((s) => s.id)).size, SUBCLASSES.length);
+  for (const s of SUBCLASSES) {
+    assert.equal(s.source, '2014 PHB');
+    assert.ok(s.features.length && s.summary, s.id);
+    assert.ok(CLASS_BY_ID[s.classId].subclass.includes(s), s.id);
+  }
+});
+
+test('featuresAtLevel respects chosen subclass and level', () => {
+  const names = (cls, lvl, id) => R.featuresAtLevel(cls, lvl, { subclassId: id }).filter((f) => f.source !== CLASS_BY_ID[cls].name).map((f) => `${f.level}:${f.name}`);
+  assert.deepEqual(names('cleric', 2, 'life'), []);
+  // Cleric domain features granted at level 1/2 in 2014 arrive at level 3.
+  const life3 = names('cleric', 3, 'life');
+  assert.ok(life3.length >= 2 && life3.every((n) => n.startsWith('3:')));
+  assert.ok(!names('cleric', 3, 'life').some((n) => n.includes('Divine Strike')));
+  assert.ok(names('cleric', 8, 'life').some((n) => n.includes('Divine Strike')));
+  assert.deepEqual(names('fighter', 3, 'champion').map((n) => n.split(':')[0]), ['3']);
+  assert.notDeepEqual(names('fighter', 10, 'champion'), names('fighter', 10, 'battle-master'));
+  // A subclass of another class is ignored.
+  assert.deepEqual(names('fighter', 10, 'life'), []);
+  assert.deepEqual(names('fighter', 10, null), []);
+});
+
+test('granted spells and proficiencies', () => {
+  const life = SUBCLASS_BY_ID.life;
+  assert.deepEqual(R.subclassSpellsAtLevel(life, 2), []);
+  const l3 = R.subclassSpellsAtLevel(life, 3).map((s) => s.name.toLowerCase());
+  assert.ok(l3.includes('bless') && l3.includes('cure wounds'));
+  assert.ok(!R.subclassSpellsAtLevel(life, 4).some((s) => s.name.toLowerCase() === 'revivify'));
+  assert.ok(R.subclassSpellsAtLevel(life, 5).some((s) => s.name.toLowerCase() === 'revivify'));
+  const land = SUBCLASS_BY_ID['circle-of-the-land'];
+  assert.ok(R.subclassChoices(land).length >= 5);
+  assert.ok(R.subclassSpellsAtLevel(land, 3, 'Arctic').some((s) => s.name === 'hold person'));
+  assert.equal(R.subclassSpellsAtLevel(land, 3, null).length, 0);
+  const c = { ...newCharacter(), classId: 'cleric', level: 3, subclassId: 'life' };
+  assert.ok(armorTrainingOf(c).includes('heavy'));
+  assert.ok(!armorTrainingOf({ ...c, level: 2 }).includes('heavy'));
+  assert.ok(!armorTrainingOf({ ...c, subclassId: 'knowledge' }).includes('heavy'));
+  assert.ok(armorTrainingOf({ ...c, subclassId: 'war' }).includes('heavy'));
+  assert.ok(weaponProficiencyOf({ ...c, subclassId: 'war' }).categories.includes('martial'));
+});
+
+test('subclass selection, validation and migration of old saves', () => {
+  const old = JSON.parse(JSON.stringify({ ...newCharacter(), classId: 'wizard', level: 5 }));
+  delete old.subclassId; delete old.subclassChoice;
+  const n = normalizeCharacter(old);
+  assert.equal(n.subclassId, 'school-of-evocation');
+  const oldCleric = { ...old, classId: 'cleric', level: 5 };
+  assert.equal(normalizeCharacter(oldCleric).subclassId, 'life');
+  assert.equal(normalizeCharacter({ ...old, level: 2 }).subclassId, null);
+  assert.equal(normalizeCharacter({ ...old, classId: null }).subclassId, null);
+  assert.equal(normalizeCharacter({ ...old, subclassId: 'life' }).subclassId, 'school-of-evocation');
+  const d = deriveCharacter(n);
+  assert.ok(d.subclass && d.features.some((f) => f.source === d.subclass.name));
+  const bare = { ...newCharacter(), classId: 'rogue', level: 3, subclassId: null };
+  assert.ok(validateStep(bare, 'class').some((e) => /Roguish Archetype/.test(e)));
+  assert.ok(!validateStep({ ...bare, subclassId: 'thief' }, 'class').some((e) => /Roguish Archetype/.test(e)));
+  assert.ok(!validateStep({ ...bare, level: 2 }, 'class').some((e) => /Roguish Archetype/.test(e)));
+  assert.equal(deriveCharacter({ ...bare, level: 2, subclassId: 'thief' }).subclass, null);
+  const druid = { ...newCharacter(), classId: 'druid', level: 3, subclassId: 'circle-of-the-land', subclassChoice: null };
+  assert.ok(validateStep(druid, 'class').some((e) => /terrain/.test(e)));
 });
 
 console.log(`\n${passed} test groups passed`);

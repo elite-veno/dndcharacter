@@ -296,3 +296,10 @@ input[type='checkbox'] { width: 1.15rem; height: 1.15rem; accent-color: var(--go
   .sheet-panel, .char-card, .stat { break-inside: avoid; border-color: #888 !important; }
   a { color: #000; text-decoration: none; }
 }
+
+/* Subclass picker */
+.subclass-grid { grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+.subclass-card { text-align: left; align-items: flex-start; }
+.subclass-features { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.85rem; }
+.subclass-features li.locked { opacity: 0.55; }
+.subclass-card .choice-title { padding-right: 5.5rem; }

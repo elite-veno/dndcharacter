@@ -5,11 +5,12 @@ import {
   CLASS_BY_ID, BACKGROUND_BY_ID, SPECIES_BY_ID, FEAT_BY_ID, ABILITY_IDS, SKILLS, SKILL_BY_ID, LANGUAGES, WEAPON_BY_ID,
   SPELL_BY_ID, INVOCATION_BY_ID, TOOL_BY_ID,
 } from './data/index.js';
+import { SUBCLASS_LABELS } from './data/subclasses.js';
 import * as R from './rules.js';
 import {
   FIGHTING_STYLE_LEVEL, ORDERS, expertiseSlots, masteryOptions, spellCounts, classSpellOptions, classToolChoice,
   classFixedTools, featChoiceSpec, featAbilityOptions, featAbilityCap, magicInitiateOptions, levelSlots, armorTrainingOf,
-  weaponProficiencyOf, extraSkillPicks,
+  weaponProficiencyOf, extraSkillPicks, chosenSubclass, subclassToolList,
 } from './choices.js';
 import { equippedArmor, hasShieldEquipped, choiceSlots, slotValue, goldLeft } from './inventory.js';
 
@@ -31,6 +32,8 @@ export function newCharacter() {
     classSkills: [],
     classTools: [],
     masteries: [],
+    subclassId: null,
+    subclassChoice: null,
     divineOrder: null,
     primalOrder: null,
     fightingStyle: null,
@@ -78,6 +81,15 @@ export function normalizeCharacter(raw) {
   c.standard = { ...base.standard, ...(raw?.standard || {}) };
   c.manual = { ...base.manual, ...(raw?.manual || {}) };
   c.pointBuy = { ...base.pointBuy, ...(raw?.pointBuy || {}) };
+  // Older saves have no subclass: use the class's original SRD subclass from level 3, otherwise none.
+  const valid = R.getSubclass(c.classId, c.subclassId);
+  if (!valid) {
+    c.subclassId = Number(c.level) >= 3 ? R.defaultSubclassId(c.classId) : null;
+    c.subclassChoice = null;
+  }
+  const sub = R.getSubclass(c.classId, c.subclassId);
+  const opts = R.subclassChoices(sub);
+  if (!opts.includes(c.subclassChoice)) c.subclassChoice = opts[0] || null;
   return c;
 }
 
@@ -167,6 +179,7 @@ export function toolList(c) {
   if (bg) tools.push(bg.toolId ? bg.tool : TOOL_BY_ID[c.bgToolChoice]?.name);
   classFixedTools(c.classId).forEach((t) => tools.push(t));
   c.classTools.forEach((id) => tools.push(TOOL_BY_ID[id]?.name));
+  subclassToolList(c).forEach((t) => tools.push(t));
   const skilled = (choices) => (choices.skills || []).forEach((v) => { if (v.startsWith('tool:')) tools.push(TOOL_BY_ID[v.slice(5)]?.name); });
   if (bg && bg.feat === 'skilled') skilled(c.bgFeatChoices);
   if (c.speciesFeatId === 'skilled') skilled(c.speciesFeatChoices);
@@ -220,7 +233,8 @@ export function deriveCharacter(c) {
 
   return {
     level, cls, bg, species, lineage,
-    subclass: cls && cls.subclass && level >= cls.subclass.level ? cls.subclass : null,
+    subclass: chosenSubclass({ ...c, level }),
+    subclassSpells: R.subclassSpellsAtLevel(chosenSubclass({ ...c, level }), level, c.subclassChoice),
     breakdown, scores, mods, pb, hitDie, hp, ac, speed, darkvision, resistances, feats, armorTraining,
     weaponProficiency: weaponProficiencyOf(c),
     initiative: R.initiativeBonus({ scores, level, alert: feats.some((f) => f.id === 'alert') }),
@@ -231,7 +245,7 @@ export function deriveCharacter(c) {
     languages: ['Common', ...c.languages],
     size: choices.size || (species ? species.size[0] : 'Medium'),
     spellcasting: cls ? R.classSpellcasting(cls.id, level, scores) : null,
-    features: cls ? R.featuresAtLevel(cls.id, level) : [],
+    features: cls ? R.featuresAtLevel(cls.id, level, { subclassId: c.subclassId }) : [],
     gold: goldLeft(c),
     classResources: cls ? R.classResources(cls.id, level, scores) : {},
   };
@@ -285,6 +299,11 @@ export function validateStep(c, stepId) {
       const masteryIds = masteryOptions(cls.id).map((w) => w.id);
       if (mastery && (c.masteries.length !== mastery || !distinct(c.masteries) || !c.masteries.every((id) => masteryIds.includes(id)))) {
         errors.push(`Choose ${mastery} weapons for Weapon Mastery.`);
+      }
+      if (c.level >= 3) {
+        const sub = chosenSubclass(c);
+        if (!sub) errors.push(`Choose a ${SUBCLASS_LABELS[cls.id] || 'subclass'}.`);
+        else if (R.subclassChoices(sub).length && !R.subclassChoices(sub).includes(c.subclassChoice)) errors.push(`Choose a terrain for ${sub.name}.`);
       }
       const order = ORDERS[cls.id];
       if (order && !order.options.some((o) => o.id === c[order.key])) errors.push(`Choose a ${order.label}.`);

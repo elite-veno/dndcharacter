@@ -1,4 +1,6 @@
-// Classes (SRD 5.2, CC-BY-4.0): the 12 core classes with the SRD subclass of each.
+// Classes (SRD 5.2, CC-BY-4.0): the 12 core classes. Each class gets its list of selectable subclasses (data/subclasses.js).
+
+import { subclassesFor } from './subclasses.js';
 // Features are listed as 'level|Name|short description'. Full wording lives in the SRD.
 
 const feats = (list) => list.map((s) => {
@@ -58,15 +60,6 @@ export const CLASSES = [
       BOON,
       '20|Primal Champion|Strength and Constitution increase by 4 (max 25).',
     ]),
-    subclass: {
-      id: 'berserker', name: 'Path of the Berserker', level: 3,
-      features: feats([
-        '3|Frenzy|While raging, the first target you hit with a Strength attack takes extra damage dice.',
-        '6|Mindless Rage|Immune to Charmed and Frightened while raging.',
-        '10|Retaliation|Reaction: make a melee attack against a creature that damages you.',
-        '14|Intimidating Presence|Frighten creatures within 30 feet.',
-      ]),
-    },
   },
   {
     id: 'bard', name: 'Bard', hitDie: 8, primaryAbility: ['cha'],
@@ -100,15 +93,6 @@ export const CLASSES = [
       BOON,
       '20|Words of Creation|Always have Power Word Heal and Power Word Kill prepared.',
     ]),
-    subclass: {
-      id: 'lore', name: 'College of Lore', level: 3,
-      features: feats([
-        '3|Bonus Proficiencies|Gain proficiency in three skills of your choice.',
-        '3|Cutting Words|Reaction: spend Bardic Inspiration to subtract the die from a creature\'s damage, attack, or check.',
-        '6|Magical Discoveries|Learn two spells from the Cleric, Druid, or Wizard lists.',
-        '14|Peerless Skill|Spend Bardic Inspiration to add its die to your own ability check.',
-      ]),
-    },
   },
   {
     id: 'cleric', name: 'Cleric', hitDie: 8, primaryAbility: ['wis'],
@@ -139,17 +123,6 @@ export const CLASSES = [
       BOON,
       '20|Greater Divine Intervention|Cast Wish via Divine Intervention.',
     ]),
-    subclass: {
-      id: 'life', name: 'Life Domain', level: 3,
-      features: feats([
-        '3|Disciple of Life|Healing spells restore extra HP equal to 2 + the spell\'s level.',
-        '3|Life Domain Spells|Always prepared: Aid, Bless, Cure Wounds, Lesser Restoration, Spare the Dying.',
-        '3|Preserve Life|Channel Divinity: restore HP equal to 5x Cleric level, divided among creatures within 30 ft.',
-        '3|Bonus Proficiency|Gain training with Heavy armor.',
-        '6|Blessed Healer|When you heal another creature with a spell slot, you regain HP too.',
-        '17|Supreme Healing|Treat healing dice as their maximum value.',
-      ]),
-    },
   },
   {
     id: 'druid', name: 'Druid', hitDie: 8, primaryAbility: ['wis'],
@@ -182,16 +155,6 @@ export const CLASSES = [
       BOON,
       '20|Archdruid|Regain Wild Shape on Initiative; unlimited Wild Shape.',
     ]),
-    subclass: {
-      id: 'land', name: 'Circle of the Land', level: 3,
-      features: feats([
-        '3|Circle of the Land Spells|Choose a land type (Arid, Polar, Temperate, Tropical) for extra always-prepared spells.',
-        '3|Land\'s Aid|Expend Wild Shape to deal necrotic damage and heal an ally (10-ft sphere).',
-        '6|Natural Recovery|Cast a Circle spell for free once per Long Rest; recover spell slots on a Short Rest.',
-        '10|Nature\'s Ward|Immune to Poisoned; Resistance based on land type.',
-        '14|Nature\'s Sanctuary|Conjure spectral plants granting Half or Three-Quarters Cover.',
-      ]),
-    },
   },
   {
     id: 'fighter', name: 'Fighter', hitDie: 10, primaryAbility: ['str', 'dex'],
@@ -231,17 +194,6 @@ export const CLASSES = [
       BOON,
       '20|Three Extra Attacks|Attack four times when you take the Attack action.',
     ]),
-    subclass: {
-      id: 'champion', name: 'Champion', level: 3,
-      features: feats([
-        '3|Improved Critical|Weapon attacks score a Critical Hit on a roll of 19 or 20.',
-        '3|Remarkable Athlete|Advantage on Initiative and Athletics checks; extra movement after a Critical Hit.',
-        '7|Additional Fighting Style|Gain a second Fighting Style feat.',
-        '10|Heroic Warrior|Gain Heroic Inspiration at the start of each turn if you lack it.',
-        '15|Superior Critical|Critical Hit on 18-20.',
-        '18|Survivor|Advantage on Death Saves; regain HP at the start of your turn while Bloodied.',
-      ]),
-    },
   },
   {
     id: 'monk', name: 'Monk', hitDie: 8, primaryAbility: ['dex', 'wis'],
@@ -283,15 +235,6 @@ export const CLASSES = [
       BOON,
       '20|Body and Mind|Dexterity and Wisdom increase by 4 (max 25).',
     ]),
-    subclass: {
-      id: 'open-hand', name: 'Warrior of the Hand', level: 3,
-      features: feats([
-        '3|Open Hand Technique|Flurry of Blows hits can add Addle, Push, or Topple effects.',
-        '6|Wholeness of Body|Bonus Action: heal HP equal to the Martial Arts die + Wis mod (uses equal to Wis mod).',
-        '11|Fleet Step|Take Step of the Wind after another Bonus Action.',
-        '17|Quivering Palm|Set up lethal vibrations in a creature you hit.',
-      ]),
-    },
   },
   {
     id: 'paladin', name: 'Paladin', hitDie: 10, primaryAbility: ['str', 'cha'],
@@ -329,16 +272,6 @@ export const CLASSES = [
       BOON,
       SUB(20),
     ]),
-    subclass: {
-      id: 'devotion', name: 'Oath of Devotion', level: 3,
-      features: feats([
-        '3|Oath of Devotion Spells|Always prepared: Protection from Evil and Good, Shield of Faith, Aid, Zone of Truth, and more at higher levels.',
-        '3|Sacred Weapon|Channel Divinity: add Cha mod to attack rolls with a weapon for 10 minutes; it emits light.',
-        '7|Aura of Devotion|You and allies within 10 ft are immune to Charmed.',
-        '15|Smite of Protection|Cast Divine Smite while allies gain Half Cover.',
-        '20|Holy Nimbus|Radiate sunlight and deal radiant damage to foes.',
-      ]),
-    },
   },
   {
     id: 'ranger', name: 'Ranger', hitDie: 10, primaryAbility: ['dex', 'wis'],
@@ -376,16 +309,6 @@ export const CLASSES = [
       BOON,
       '20|Foe Slayer|Hunter\'s Mark damage die becomes d10.',
     ]),
-    subclass: {
-      id: 'hunter', name: 'Hunter', level: 3,
-      features: feats([
-        '3|Hunter\'s Lore|While a creature is marked by Hunter\'s Mark, you know its immunities, resistances, and vulnerabilities.',
-        '3|Hunter\'s Prey|Choose Colossus Slayer (+1d8 to a wounded target) or Horde Breaker (extra attack on an adjacent target).',
-        '7|Defensive Tactics|Choose Escape the Horde or Multiattack Defense.',
-        '11|Superior Hunter\'s Prey|Hunter\'s Mark damage can be shared with another creature.',
-        '15|Superior Hunter\'s Defense|Reaction: gain Resistance to damage.',
-      ]),
-    },
   },
   {
     id: 'rogue', name: 'Rogue', hitDie: 8, primaryAbility: ['dex'],
@@ -426,16 +349,6 @@ export const CLASSES = [
       BOON,
       '20|Stroke of Luck|Turn a miss into a hit or a failed check into a 20 (once per Short/Long Rest).',
     ]),
-    subclass: {
-      id: 'thief', name: 'Thief', level: 3,
-      features: feats([
-        '3|Fast Hands|Use Cunning Action to make a Sleight of Hand check, use Thieves\' Tools, or take the Utilize action.',
-        '3|Second-Story Work|Climb Speed equal to your Speed; Dexterity for jump distance.',
-        '9|Supreme Sneak|Cunning Strike option: Stealth Attack.',
-        '13|Use Magic Device|Attune to more items; chance to not expend charges.',
-        '17|Thief\'s Reflexes|Take two turns in the first round of combat.',
-      ]),
-    },
   },
   {
     id: 'sorcerer', name: 'Sorcerer', hitDie: 6, primaryAbility: ['cha'],
@@ -468,16 +381,6 @@ export const CLASSES = [
       BOON,
       '20|Arcane Apotheosis|Use Metamagic once per turn for free while Innate Sorcery is active.',
     ]),
-    subclass: {
-      id: 'draconic', name: 'Draconic Sorcery', level: 3,
-      features: feats([
-        '3|Draconic Resilience|HP maximum +3, +1 per Sorcerer level; unarmored AC = 10 + Dex + Cha.',
-        '3|Draconic Spells|Always prepared: Alter Self, Chromatic Orb, Command, Dragon\'s Breath, and more at higher levels.',
-        '6|Elemental Affinity|Gain Resistance to a damage type and add Cha mod to damage of spells of that type.',
-        '14|Dragon Wings|Bonus Action: sprout wings for a Fly Speed.',
-        '18|Dragon Companion|Cast Summon Dragon without Material components.',
-      ]),
-    },
   },
   {
     id: 'warlock', name: 'Warlock', hitDie: 8, primaryAbility: ['cha'],
@@ -516,16 +419,6 @@ export const CLASSES = [
       BOON,
       '20|Eldritch Master|Regain all Pact Magic slots by spending 1 minute.',
     ]),
-    subclass: {
-      id: 'fiend', name: 'Fiend Patron', level: 3,
-      features: feats([
-        '3|Dark One\'s Blessing|When you reduce an enemy to 0 HP, gain Temporary HP equal to Cha mod + Warlock level.',
-        '3|Fiend Spells|Always prepared: Burning Hands, Command, Scorching Ray, Suggestion, and more at higher levels.',
-        '6|Dark One\'s Own Luck|Add 1d10 to an ability check or saving throw (Cha mod uses per Long Rest).',
-        '10|Fiendish Resilience|Choose a damage type to resist after each rest.',
-        '14|Hurl Through Hell|Banish a creature to the Lower Planes for psychic damage.',
-      ]),
-    },
   },
   {
     id: 'wizard', name: 'Wizard', hitDie: 6, primaryAbility: ['int'],
@@ -560,16 +453,6 @@ export const CLASSES = [
       BOON,
       '20|Signature Spells|Two 3rd-level spells always prepared; cast each once per rest free.',
     ]),
-    subclass: {
-      id: 'evoker', name: 'Evoker', level: 3,
-      features: feats([
-        '3|Evocation Savant|Copy Evocation spells into your spellbook for half the time and cost.',
-        '3|Potent Cantrip|Damaging cantrips deal half damage on a successful save.',
-        '6|Sculpt Spells|Protect a number of creatures from your Evocation spells.',
-        '10|Empowered Evocation|Add Int mod to one damage roll of a Wizard Evocation spell.',
-        '14|Overchannel|Maximize the damage of a spell of level 1-5.',
-      ]),
-    },
   },
 ];
 
@@ -599,3 +482,6 @@ export const PACT_SLOTS = [
 ];
 
 export const XP_THRESHOLDS = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
+
+// cls.subclass is the list of selectable subclasses (all chosen at level 3).
+CLASSES.forEach((cls) => { cls.subclass = subclassesFor(cls.id); });

@@ -1,7 +1,7 @@
 // Level up / level down: HP and Hit Dice adjustment, Ability Score Improvement / feat choices and spell trimming.
 
 import { h, openModal, confirmDialog } from '../ui.js';
-import { ABILITIES, FEAT_BY_ID, featsByCategory } from '../data/index.js';
+import { ABILITIES, CLASS_BY_ID, FEAT_BY_ID, featsByCategory } from '../data/index.js';
 import * as R from '../rules.js';
 import { levelSlots, featAbilityOptions, spellCounts } from '../choices.js';
 import { deriveCharacter, featList } from '../character.js';
@@ -25,6 +25,7 @@ export async function changeLevel(ctx, delta) {
   const oldMax = d.hp;
   ctx.update((x) => {
     x.level = next;
+    if (next >= 3 && !R.getSubclass(x.classId, x.subclassId)) { x.subclassId = R.defaultSubclassId(x.classId); x.subclassChoice = R.subclassChoices(R.getSubclass(x.classId, x.subclassId))[0] || null; }
     x.levelAsi = x.levelAsi.slice(0, levelSlots(x.classId, next).length);
     const counts = spellCounts(x);
     if (counts) {
@@ -37,7 +38,7 @@ export async function changeLevel(ctx, delta) {
     x.sheet = adjustForLevelChange(x.sheet, { oldMax, newMax, newLevel: next });
   });
   if (delta > 0) {
-    const gained = R.featuresAtLevel(c.classId, next).filter((f) => f.level === next).map((f) => f.name);
+    const gained = R.featuresAtLevel(c.classId, next, { subclassId: c.subclassId || R.defaultSubclassId(c.classId) }).filter((f) => f.level === next).map((f) => f.name);
     ctx.toast(`Level ${next}!${gained.length ? ` New: ${gained.join(', ')}.` : ''}`);
     if (pendingAsi(c, next).length) openAsiModal(ctx);
   }

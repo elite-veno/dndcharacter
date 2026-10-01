@@ -41,6 +41,14 @@ export function spellEntries(c, d) {
   if (sc) {
     c.cantrips.forEach((id) => SPELL_BY_ID[id] && out.push({ spell: SPELL_BY_ID[id], source: d.cls.name, ability: sc.ability, kind: 'cantrip' }));
     c.spells.forEach((id) => SPELL_BY_ID[id] && out.push({ spell: SPELL_BY_ID[id], source: d.cls.name, ability: sc.ability, kind: 'prepared' }));
+    // Always-prepared subclass spells (domain, oath and circle spells) that exist in the spell data.
+    for (const g of d.subclassSpells || []) {
+      if (g.kind !== 'prepared') continue;
+      const id = g.name.toLowerCase().replace(/'/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      if (SPELL_BY_ID[id] && !out.some((e) => e.spell.id === id && e.kind === 'prepared')) {
+        out.push({ spell: SPELL_BY_ID[id], source: `${d.subclass.name} (always prepared)`, ability: sc.ability, kind: 'prepared' });
+      }
+    }
   }
   const bg = BACKGROUND_BY_ID[c.backgroundId];
   const featSources = [
