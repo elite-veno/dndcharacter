@@ -1,0 +1,280 @@
+{
+ "class": "Wizard",
+ "source": "2014 PHB",
+ "subclassLabel": "Arcane Tradition",
+ "subclassLevel": 2,
+ "subclasses": [
+  {
+   "name": "School of Abjuration",
+   "summary": "Abjurers specialize in magic that protects, blocks, and banishes, guarding people and places and sealing away harmful influences.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Abjuration Savant",
+     "summary": "Copying an abjuration spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Arcane Ward",
+     "summary": "When you cast an abjuration spell of 1st level or higher, you can also create a ward on yourself that lasts until a long rest. It has hit points equal to twice your wizard level plus Intelligence modifier and absorbs your damage first, spillover going to you. It regains 2 HP per level of each abjuration spell you cast with a slot. You can create it once per long rest."
+    },
+    {
+     "level": 6,
+     "name": "Projected Ward",
+     "summary": "As a reaction, when a creature you can see within 30 feet takes damage, your Arcane Ward absorbs that damage instead; any excess passes to the creature."
+    },
+    {
+     "level": 10,
+     "name": "Improved Abjuration",
+     "summary": "Add your proficiency bonus to ability checks required by your abjuration spells (such as counterspell and dispel magic)."
+    },
+    {
+     "level": 14,
+     "name": "Spell Resistance",
+     "summary": "Spells have a harder time affecting you: saving throws against spells are made with advantage, and you resist damage from spells."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Conjuration",
+   "summary": "Conjurers favor spells that create objects and creatures from nothing, later mastering summoning and teleportation.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Conjuration Savant",
+     "summary": "Copying a conjuration spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Minor Conjuration",
+     "summary": "As an action, conjure a nonmagical inanimate object (max 3 ft per side, 10 lb) within 10 feet; it sheds dim light 5 ft, and vanishes after 1 hour, on reuse, or if damaged."
+    },
+    {
+     "level": 6,
+     "name": "Benign Transposition",
+     "summary": "As an action, teleport up to 30 feet to a visible unoccupied space, or swap places with a willing Small or Medium creature. Recharges on a long rest or when you cast a conjuration spell of 1st level or higher."
+    },
+    {
+     "level": 10,
+     "name": "Focused Conjuration",
+     "summary": "Damage can't break your concentration on a conjuration spell."
+    },
+    {
+     "level": 14,
+     "name": "Durable Summons",
+     "summary": "Creatures you summon or create with conjuration spells gain 30 temporary hit points."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Divination",
+   "summary": "Diviners seek clarity about past, present, and future through foresight, remote viewing, and supernatural knowledge.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Divination Savant",
+     "summary": "Copying a divination spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Portent",
+     "summary": "After a long rest, roll two d20s and record them. Before a roll, you can replace an attack roll, saving throw, or ability check by you or a creature you can see with one recorded die, once per turn. Each die is used once; unused dice are lost at the next long rest."
+    },
+    {
+     "level": 6,
+     "name": "Expert Divination",
+     "summary": "When you cast a divination spell of 2nd level or higher with a slot, regain an expended slot of lower level than the spell, max 5th level."
+    },
+    {
+     "level": 10,
+     "name": "The Third Eye",
+     "summary": "As an action, pick one benefit lasting until incapacitated or a short/long rest (once per rest): darkvision 60 ft; see into the Ethereal Plane 60 ft; read any language; or see invisible creatures/objects within 10 feet in line of sight."
+    },
+    {
+     "level": 14,
+     "name": "Greater Portent",
+     "summary": "You roll three d20s for Portent instead of two."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Enchantment",
+   "summary": "Enchanters beguile and entrance people and monsters, whether to make peace, command, or something in between.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Enchantment Savant",
+     "summary": "Copying an enchantment spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Hypnotic Gaze",
+     "summary": "As an action, target a creature within 5 feet that can see or hear you; it must make a Wisdom save against your spell save DC or be charmed until the end of your next turn, with speed 0 and incapacitated. You can keep it going with your action each turn, but it ends if you move over 5 feet away, the creature can't see or hear you, or it takes damage. After it ends or on a successful save, you can't target that creature again until a long rest."
+    },
+    {
+     "level": 6,
+     "name": "Instinctive Charm",
+     "summary": "As a reaction when a creature you can see within 30 feet attacks you, force a Wisdom save vs your spell DC; on a failure it must redirect the attack to the nearest other creature (attacker's choice on ties) within range. On a success you can't use this on that attacker until a long rest. Declare before knowing if it hits; creatures immune to charm are unaffected."
+    },
+    {
+     "level": 10,
+     "name": "Split Enchantment",
+     "summary": "An enchantment spell of 1st level or higher that targets one creature can target a second creature too."
+    },
+    {
+     "level": 14,
+     "name": "Alter Memories",
+     "summary": "When you charm creatures with an enchantment spell, one can be left unaware it was charmed. Later, once before the spell ends, you can use an action to make it forget time: it makes an Intelligence save vs your spell DC or loses 1 + your Charisma modifier hours (min 1), not more than the spell's duration."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Evocation",
+   "summary": "Evokers shape destructive and elemental energy such as fire, frost, lightning, and acid, as soldiers, protectors, or opportunists.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Evocation Savant",
+     "summary": "Copying an evocation spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Sculpt Spells",
+     "summary": "When you cast an evocation spell affecting creatures you can see, choose 1 + the spell's level of them; they automatically succeed on their saves and take no damage if they would take half on a success."
+    },
+    {
+     "level": 6,
+     "name": "Potent Cantrip",
+     "summary": "When a creature succeeds on a save against your damaging cantrip, it still takes half the cantrip's damage but suffers no other effect."
+    },
+    {
+     "level": 10,
+     "name": "Empowered Evocation",
+     "summary": "Your wizard evocation spells deal extra damage equal to your Intelligence modifier."
+    },
+    {
+     "level": 14,
+     "name": "Overchannel",
+     "summary": "When you cast a wizard spell of 5th level or lower that deals damage, you can deal its maximum damage. The first use per long rest is free; each later use before a long rest deals 2d12 necrotic damage per spell level to you (increasing by 1d12 per level for each further use), ignoring resistance and immunity."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Illusion",
+   "summary": "Illusionists dazzle senses and deceive minds with subtle, convincing illusions, whether for entertainment or deception.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Illusion Savant",
+     "summary": "Copying an illusion spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Improved Minor Illusion",
+     "summary": "You learn minor illusion (or another wizard cantrip if you already know it) without it counting against cantrips known. A single casting can create both a sound and an image."
+    },
+    {
+     "level": 6,
+     "name": "Malleable Illusions",
+     "summary": "When you cast an illusion spell lasting 1 minute or longer, you can use an action to change its nature within the spell's normal parameters, if you can see it."
+    },
+    {
+     "level": 10,
+     "name": "Illusory Self",
+     "summary": "As a reaction when a creature attacks you, an illusory duplicate makes the attack automatically miss, then vanishes. Recharges on a short or long rest."
+    },
+    {
+     "level": 14,
+     "name": "Illusory Reality",
+     "summary": "When you cast an illusion spell of 1st level or higher, you can use a bonus action to make one inanimate, nonmagical object in the illusion real for 1 minute. It can't deal damage or directly harm anyone."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Necromancy",
+   "summary": "Necromancers study life, death, and undeath, harvesting life energy and commanding the dead.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Necromancy Savant",
+     "summary": "Copying a necromancy spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Grim Harvest",
+     "summary": "Once per turn, when you kill one or more creatures with a spell of 1st level or higher, you regain HP equal to twice the spell's level (three times if it's a necromancy spell). Doesn't work on constructs or undead."
+    },
+    {
+     "level": 6,
+     "name": "Undead Thralls",
+     "summary": "You add animate dead to your spellbook if absent. When you cast it, you can target one additional corpse or bones. Undead you create with necromancy spells gain extra HP maximum equal to your wizard level and add your proficiency bonus to weapon damage."
+    },
+    {
+     "level": 10,
+     "name": "Inured to Undeath",
+     "summary": "You resist necrotic damage, and nothing can lower your hit point maximum."
+    },
+    {
+     "level": 14,
+     "name": "Command Undead",
+     "summary": "As an action, target an undead within 60 feet; it makes a Charisma save vs your spell DC. On success you can't use this on it again. On failure it is friendly and obeys you until you use this feature again. Targets with Intelligence 8+ have advantage; if it fails and has Intelligence 12+, it repeats the save hourly until it succeeds."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "School of Transmutation",
+   "summary": "Transmuters alter matter and energy, changing both physical forms and mental qualities, whether as pranksters or world-shapers.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Transmutation Savant",
+     "summary": "Copying a transmutation spell into your spellbook costs half the usual gold and time."
+    },
+    {
+     "level": 2,
+     "name": "Minor Alchemy",
+     "summary": "Temporarily change one nonmagical object made entirely of wood, stone (not gems), iron, copper, or silver into another of those materials. Each 10 minutes of work transforms up to 1 cubic foot; it reverts after 1 hour or when concentration lapses."
+    },
+    {
+     "level": 6,
+     "name": "Transmuter's Stone",
+     "summary": "Spend 8 hours making a stone that gives its holder one benefit of your choice: darkvision 60 ft; +10 ft speed while unencumbered; Constitution saving throw proficiency; or resistance to acid, cold, fire, lightning, or thunder (chosen when selected). When you cast a transmutation spell of 1st level or higher you can change the benefit if the stone is on you. A new stone ends the old one."
+    },
+    {
+     "level": 10,
+     "name": "Shapechanger",
+     "summary": "You add polymorph to your spellbook and can cast it without a slot, only on yourself and only into a beast of CR 1 or lower. Once per short or long rest this way."
+    },
+    {
+     "level": 14,
+     "name": "Master Transmuter",
+     "summary": "As an action, destroy your transmuter's stone for one effect (it can't be remade until a long rest): Major Transformation (turn a nonmagical object up to 5-ft cube into another of similar size and mass and equal or lesser value, over 10 minutes); Panacea (remove curses, diseases, poisons from a touched creature and restore all its HP); Restore Life (cast raise dead on a touched creature without a slot or having it prepared); Restore Youth (a willing touched creature appears 3d10 years younger, minimum 13, without extending lifespan)."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  }
+ ]
+}
