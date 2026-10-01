@@ -532,3 +532,23 @@ export function carryingCapacity({ strength, size = 'Medium', sizeSteps = 0 }) {
 export function jumpDistances(strength) {
   return { longJump: strength, highJump: Math.max(0, 3 + abilityMod(strength)) };
 }
+
+// ---------------------------------------------------------------- damage modifiers
+
+/**
+ * Apply damage adjustments in the order the rules use: flat adjustments first, then Resistance (halve, round down),
+ * then Vulnerability (double). Immunity ignores the damage entirely. Temporary Hit Points are handled by the caller.
+ * Returns { final, steps } where steps is a human-readable trail.
+ */
+export function applyDamageModifiers({ amount, adjustment = 0, resistance = false, vulnerability = false, immunity = false }) {
+  const steps = [`Rolled damage: ${amount}`];
+  if (immunity) return { final: 0, steps: [...steps, 'Immunity: the damage is ignored.'] };
+  let total = Math.max(0, amount);
+  if (adjustment) {
+    total = Math.max(0, total + adjustment);
+    steps.push(`Flat adjustment ${formatMod(adjustment)}: ${total}`);
+  }
+  if (resistance) { total = Math.floor(total / 2); steps.push(`Resistance (halve, round down): ${total}`); }
+  if (vulnerability) { total *= 2; steps.push(`Vulnerability (double): ${total}`); }
+  return { final: total, steps };
+}
