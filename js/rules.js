@@ -47,12 +47,27 @@ export function rollDie(sides, rng = defaultRng) {
   return Math.floor(rng() * sides) + 1;
 }
 
-/** Parse '2d6+3', '1d8', 'd20-1' or '5' into { count, sides, mod }. */
+/**
+ * Parse '2d6+3', '1d8', 'd20-1', '5' or '1+3' into { count, sides, mod }.
+ * Accepts a sum of terms: at most one dice term plus any number of flat terms.
+ */
 export function parseDice(expr) {
-  const m = String(expr).replace(/\s+/g, '').match(/^(\d*)d(\d+)([+-]\d+)?$|^([+-]?\d+)$/i);
-  if (!m) throw new Error(`Invalid dice expression: ${expr}`);
-  if (m[4] !== undefined) return { count: 0, sides: 0, mod: Number(m[4]) };
-  return { count: m[1] === '' ? 1 : Number(m[1]), sides: Number(m[2]), mod: m[3] ? Number(m[3]) : 0 };
+  const terms = String(expr).replace(/\s+/g, '').split(/(?=[+-])/);
+  let count = 0;
+  let sides = 0;
+  let mod = 0;
+  let hasDice = false;
+  for (const term of terms) {
+    const flat = term.match(/^[+-]?\d+$/);
+    const dice = term.match(/^\+?(\d*)d(\d+)$/i);
+    if (flat) mod += Number(term);
+    else if (dice && !hasDice) {
+      hasDice = true;
+      count = dice[1] === '' ? 1 : Number(dice[1]);
+      sides = Number(dice[2]);
+    } else throw new Error(`Invalid dice expression: ${expr}`);
+  }
+  return { count, sides, mod };
 }
 
 /** Roll a dice expression. On a critical hit the dice (not the modifier) are doubled. */

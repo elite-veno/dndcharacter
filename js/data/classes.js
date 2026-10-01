@@ -26,7 +26,7 @@ export const CLASSES = [
     toolProficiencies: [],
     weaponMastery: { 1: 2, 4: 3, 10: 4 },
     unarmoredDefense: 'barbarian',
-    startingEquipment: { a: ['Greataxe', 'Handaxe', 'Handaxe', 'Handaxe', 'Handaxe', "Explorer's Pack"], goldA: 15, goldB: 75 },
+    startingEquipment: { a: [{ id: 'greataxe' }, { id: 'handaxe', qty: 4 }, { id: 'explorers-pack' }], goldA: 15, goldB: 75 },
     spellcasting: null,
     rages: [2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 99],
     rageDamage: [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4],
@@ -77,7 +77,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'] },
     toolProficiencies: ['Three Musical Instruments'],
     weaponMastery: null,
-    startingEquipment: { a: ['Leather Armor', 'Dagger', 'Dagger', 'Musical Instrument (any)', "Entertainer's Pack"], goldA: 19, goldB: 90 },
+    startingEquipment: { a: [{ id: 'leather-armor' }, { id: 'dagger', qty: 2 }, { choice: 'musical-instrument' }, { id: 'entertainers-pack' }], goldA: 19, goldB: 90 },
     spellcasting: { type: 'full', ability: 'cha', spellList: 'bard', cantrips: CAN(2, 3, 4), prepared: PREP_FULL, ritual: 'prepared', focus: 'Musical instrument' },
     inspirationDie: [6, 6, 6, 6, 8, 8, 8, 8, 8, 10, 10, 10, 10, 10, 12, 12, 12, 12, 12, 12],
     features: feats([
@@ -119,7 +119,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'] },
     toolProficiencies: [],
     weaponMastery: null,
-    startingEquipment: { a: ['Chain Shirt', 'Shield', 'Mace', 'Holy Symbol', "Priest's Pack"], goldA: 7, goldB: 110 },
+    startingEquipment: { a: [{ id: 'chain-shirt' }, { id: 'shield' }, { id: 'mace' }, { id: 'holy-symbol' }, { id: 'priests-pack' }], goldA: 7, goldB: 110 },
     spellcasting: { type: 'full', ability: 'wis', spellList: 'cleric', cantrips: CAN(3, 4, 5), prepared: PREP_FULL, ritual: 'prepared', focus: 'Holy Symbol' },
     features: feats([
       '1|Spellcasting|Cast Cleric spells using Wisdom.',
@@ -160,7 +160,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'] },
     toolProficiencies: ['Herbalism Kit'],
     weaponMastery: null,
-    startingEquipment: { a: ['Leather Armor', 'Shield', 'Sickle', 'Druidic Focus (Quarterstaff)', "Explorer's Pack", 'Herbalism Kit'], goldA: 9, goldB: 50 },
+    startingEquipment: { a: [{ id: 'leather-armor' }, { id: 'shield' }, { id: 'sickle' }, { id: 'druidic-focus', variant: 'Wooden Staff' }, { id: 'explorers-pack' }, { id: 'herbalism-kit' }], goldA: 9, goldB: 50 },
     spellcasting: { type: 'full', ability: 'wis', spellList: 'druid', cantrips: CAN(2, 3, 4), prepared: PREP_FULL, ritual: 'prepared', focus: 'Druidic Focus' },
     features: feats([
       '1|Spellcasting|Cast Druid spells using Wisdom.',
@@ -202,7 +202,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple', 'martial'] },
     toolProficiencies: [],
     weaponMastery: { 1: 3, 4: 4, 10: 5, 16: 6 },
-    startingEquipment: { a: ['Chain Mail', 'Greatsword', 'Flail', 'Javelin x8', "Dungeoneer's Pack"], goldA: 4, goldB: 155 },
+    startingEquipment: { a: [{ id: 'chain-mail' }, { id: 'greatsword' }, { id: 'flail' }, { id: 'javelin', qty: 8 }, { id: 'dungeoneers-pack' }], goldA: 4, goldB: 155 },
     spellcasting: null,
     features: feats([
       '1|Fighting Style|Gain a Fighting Style feat (e.g. Archery, Defense, Great Weapon Fighting, Two-Weapon Fighting).',
@@ -253,7 +253,7 @@ export const CLASSES = [
     toolProficiencies: ["One Artisan's Tool or Musical Instrument"],
     weaponMastery: null,
     unarmoredDefense: 'monk',
-    startingEquipment: { a: ['Spear', 'Dagger', 'Dagger', 'Dagger', 'Dagger', 'Dagger', "Artisan's Tools or Musical Instrument", "Explorer's Pack"], goldA: 11, goldB: 50 },
+    startingEquipment: { a: [{ id: 'spear' }, { id: 'dagger', qty: 5 }, { choice: 'artisan-or-instrument' }, { id: 'explorers-pack' }], goldA: 11, goldB: 50 },
     spellcasting: null,
     martialArtsDie: [6, 6, 6, 6, 8, 8, 8, 8, 8, 8, 10, 10, 10, 10, 10, 10, 12, 12, 12, 12],
     features: feats([
@@ -301,8 +301,8 @@ export const CLASSES = [
     armorTraining: ['light', 'medium', 'heavy', 'shield'],
     weaponProficiency: { categories: ['simple', 'martial'] },
     toolProficiencies: [],
-    weaponMastery: { 1: 2, 4: 3, 10: 4 },
-    startingEquipment: { a: ['Chain Mail', 'Shield', 'Longsword', 'Javelin x6', 'Holy Symbol', "Priest's Pack"], goldA: 9, goldB: 150 },
+    weaponMastery: { 1: 2 },
+    startingEquipment: { a: [{ id: 'chain-mail' }, { id: 'shield' }, { id: 'longsword' }, { id: 'javelin', qty: 6 }, { id: 'holy-symbol' }, { id: 'priests-pack' }], goldA: 9, goldB: 150 },
     spellcasting: { type: 'half', ability: 'cha', spellList: 'paladin', cantrips: null, prepared: PREP_HALF, ritual: null, focus: 'Holy Symbol' },
     features: feats([
       '1|Lay On Hands|Pool of healing equal to 5x Paladin level; Bonus Action to restore HP or cure Poisoned (5 HP).',
@@ -348,8 +348,8 @@ export const CLASSES = [
     armorTraining: ['light', 'medium', 'shield'],
     weaponProficiency: { categories: ['simple', 'martial'] },
     toolProficiencies: [],
-    weaponMastery: { 1: 2, 4: 3, 10: 4 },
-    startingEquipment: { a: ['Studded Leather Armor', 'Scimitar', 'Shortsword', 'Longbow', 'Arrows (20)', 'Quiver', 'Druidic Focus (Sprig of Mistletoe)', "Explorer's Pack"], goldA: 7, goldB: 150 },
+    weaponMastery: { 1: 2 },
+    startingEquipment: { a: [{ id: 'studded-leather-armor' }, { id: 'scimitar' }, { id: 'shortsword' }, { id: 'longbow' }, { id: 'arrows' }, { id: 'quiver' }, { id: 'druidic-focus', variant: 'Sprig of Mistletoe' }, { id: 'explorers-pack' }], goldA: 7, goldB: 150 },
     spellcasting: { type: 'half', ability: 'wis', spellList: 'ranger', cantrips: null, prepared: PREP_HALF, ritual: null, focus: 'Druidic Focus' },
     features: feats([
       '1|Spellcasting|Cast Ranger spells using Wisdom.',
@@ -396,7 +396,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'], martialWith: ['finesse', 'light'] },
     toolProficiencies: ["Thieves' Tools"],
     weaponMastery: { 1: 2 },
-    startingEquipment: { a: ['Leather Armor', 'Dagger', 'Dagger', 'Shortsword', 'Shortbow', 'Arrows (20)', 'Quiver', "Thieves' Tools", "Burglar's Pack"], goldA: 8, goldB: 100 },
+    startingEquipment: { a: [{ id: 'leather-armor' }, { id: 'dagger', qty: 2 }, { id: 'shortsword' }, { id: 'shortbow' }, { id: 'arrows' }, { id: 'quiver' }, { id: 'thieves-tools' }, { id: 'burglars-pack' }], goldA: 8, goldB: 100 },
     spellcasting: null,
     expertiseAtLevel1: 2,
     features: feats([
@@ -446,7 +446,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'] },
     toolProficiencies: [],
     weaponMastery: null,
-    startingEquipment: { a: ['Spear', 'Dagger', 'Dagger', 'Arcane Focus (Crystal)', "Dungeoneer's Pack"], goldA: 28, goldB: 50 },
+    startingEquipment: { a: [{ id: 'spear' }, { id: 'dagger', qty: 2 }, { id: 'arcane-focus', variant: 'Crystal' }, { id: 'dungeoneers-pack' }], goldA: 28, goldB: 50 },
     spellcasting: { type: 'full', ability: 'cha', spellList: 'sorcerer', cantrips: CAN(4, 5, 6), prepared: [2, 4, 6, 7, 9, 10, 11, 12, 14, 15, 16, 16, 17, 17, 18, 18, 19, 20, 21, 22], ritual: null, focus: 'Arcane Focus' },
     features: feats([
       '1|Spellcasting|Cast Sorcerer spells using Charisma.',
@@ -488,7 +488,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'] },
     toolProficiencies: [],
     weaponMastery: null,
-    startingEquipment: { a: ['Leather Armor', 'Sickle', 'Dagger', 'Dagger', 'Arcane Focus (Orb)', 'Book (occult lore)', "Scholar's Pack"], goldA: 15, goldB: 100 },
+    startingEquipment: { a: [{ id: 'leather-armor' }, { id: 'sickle' }, { id: 'dagger', qty: 2 }, { id: 'arcane-focus', variant: 'Orb' }, { id: 'book', variant: 'occult lore' }, { id: 'scholars-pack' }], goldA: 15, goldB: 100 },
     spellcasting: {
       type: 'pact', ability: 'cha', spellList: 'warlock', cantrips: CAN(2, 3, 4),
       prepared: [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15], ritual: null, focus: 'Arcane Focus',
@@ -536,7 +536,7 @@ export const CLASSES = [
     weaponProficiency: { categories: ['simple'] },
     toolProficiencies: [],
     weaponMastery: null,
-    startingEquipment: { a: ['Dagger', 'Dagger', 'Arcane Focus (Quarterstaff)', 'Robe', 'Spellbook', "Scholar's Pack"], goldA: 5, goldB: 55 },
+    startingEquipment: { a: [{ id: 'dagger', qty: 2 }, { id: 'arcane-focus', variant: 'Staff' }, { id: 'robe' }, { id: 'spellbook' }, { id: 'scholars-pack' }], goldA: 5, goldB: 55 },
     spellcasting: {
       type: 'full', ability: 'int', spellList: 'wizard', cantrips: CAN(3, 4, 5),
       prepared: [4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 16, 17, 18, 19, 21, 22, 23, 24, 25], ritual: 'spellbook', focus: 'Arcane Focus',

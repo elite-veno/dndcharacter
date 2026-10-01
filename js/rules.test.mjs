@@ -4,6 +4,7 @@ import * as R from './rules.js';
 import {
   CLASSES, CLASS_BY_ID, SPECIES, BACKGROUNDS, BACKGROUND_BY_ID, FEAT_BY_ID, WEAPON_BY_ID, ARMOR_BY_ID,
   SHIELD, SKILLS, SPELLS, SPELL_BY_ID, spellsForClass, CONDITIONS, TOOL_BY_ID, WEAPON_MASTERY,
+  resolveItem, isValidVariant, EQUIPMENT_CHOICES,
 } from './data/index.js';
 
 let passed = 0;
@@ -84,6 +85,11 @@ test('dice parsing and rolling', () => {
   assert.deepEqual(R.parseDice('2d6+3'), { count: 2, sides: 6, mod: 3 });
   assert.deepEqual(R.parseDice('d20-1'), { count: 1, sides: 20, mod: -1 });
   assert.deepEqual(R.parseDice('5'), { count: 0, sides: 0, mod: 5 });
+  assert.deepEqual(R.parseDice('1+3'), { count: 0, sides: 0, mod: 4 });
+  assert.deepEqual(R.parseDice('1d6+2+1'), { count: 1, sides: 6, mod: 3 });
+  assert.throws(() => R.parseDice('abc'));
+  assert.equal(R.rollDice('1+3').total, 4);
+  assert.equal(R.rollDice('1-1').total, 0);
   const r = R.rollDice('2d6+3', { rng: seq(0.99, 0) });
   assert.equal(r.total, 6 + 1 + 3);
   const crit = R.rollDice('1d8+2', { rng: seq(0.99), crit: true });
@@ -275,6 +281,10 @@ test('unarmed strikes and martial arts', () => {
   const staff = R.weaponAttack({ weapon: WEAPON_BY_ID.quarterstaff, scores: s, level: 5, martialArtsDie: 8 });
   assert.equal(staff.ability, 'dex');
   assert.equal(staff.damageDice, '1d8');
+  assert.equal(R.rollDice(plain.damage).total, 3);
+  const blow = R.weaponAttack({ weapon: WEAPON_BY_ID.blowgun, scores: s, level: 1 });
+  assert.equal(blow.damage, '1+3');
+  assert.equal(R.rollDice(blow.damage).total, 4);
 });
 
 test('weapon proficiency and mastery counts', () => {
@@ -289,6 +299,8 @@ test('weapon proficiency and mastery counts', () => {
   assert.equal(R.weaponMasteryCount('fighter', 4), 4);
   assert.equal(R.weaponMasteryCount('barbarian', 1), 2);
   assert.equal(R.weaponMasteryCount('barbarian', 10), 4);
+  assert.equal(R.weaponMasteryCount('paladin', 10), 2);
+  assert.equal(R.weaponMasteryCount('ranger', 10), 2);
   assert.equal(R.weaponMasteryCount('wizard', 20), 0);
   assert.ok(R.isArmorTrained(CLASS_BY_ID.fighter.armorTraining, ARMOR_BY_ID['plate-armor']));
   assert.ok(!R.isArmorTrained(CLASS_BY_ID.wizard.armorTraining, ARMOR_BY_ID['leather-armor']));
@@ -342,6 +354,18 @@ test('data integrity', () => {
     b.skills.forEach((sk) => assert.ok(SKILLS.some((x) => x.id === sk)));
     if (b.toolId) assert.ok(TOOL_BY_ID[b.toolId], b.toolId);
   }
+  const checkEquip = (list, label) => {
+    assert.ok(Array.isArray(list) && list.length, label);
+    for (const e of list) {
+      assert.equal(typeof e, 'object', `${label} entry must be structured`);
+      if (e.choice) { assert.ok(EQUIPMENT_CHOICES[e.choice], `${label}: choice ${e.choice}`); continue; }
+      assert.ok(resolveItem(e.id), `${label}: unresolved item id '${e.id}'`);
+      if (e.qty !== undefined) assert.ok(Number.isInteger(e.qty) && e.qty > 1, `${label}: qty ${e.id}`);
+      if (e.variant !== undefined) assert.ok(isValidVariant(e.id, e.variant), `${label}: variant ${e.id}/${e.variant}`);
+    }
+  };
+  for (const c of CLASSES) checkEquip(c.startingEquipment.a, `class ${c.id}`);
+  for (const b of BACKGROUNDS) checkEquip(b.equipmentA, `background ${b.id}`);
   for (const sp of SPECIES) assert.ok(!('abilityBonuses' in sp), 'species must not grant ASI in 2024 rules');
   for (const w of Object.values(WEAPON_BY_ID)) assert.ok(WEAPON_MASTERY[w.mastery], `${w.id} mastery`);
   assert.ok(SPELL_BY_ID.fireball.level === 3 && SPELL_BY_ID.fireball.classes.includes('wizard'));

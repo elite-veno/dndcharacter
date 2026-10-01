@@ -32,10 +32,12 @@ export const GEAR = [
   { id: 'druidic-focus', name: 'Druidic Focus', cost: 1, weight: 0 },
   { id: 'spellbook', name: 'Spellbook', cost: 50, weight: 3 },
   { id: 'component-pouch', name: 'Component Pouch', cost: 25, weight: 2 },
-  { id: 'traveler-clothes', name: "Traveler's Clothes", cost: 2, weight: 4 },
+  { id: 'travelers-clothes', name: "Traveler's Clothes", cost: 2, weight: 4 },
   { id: 'robe', name: 'Robe', cost: 1, weight: 4 },
   { id: 'pouch', name: 'Pouch', cost: 0.5, weight: 1 },
   { id: 'quiver', name: 'Quiver', cost: 1, weight: 1 },
+  { id: 'book', name: 'Book', cost: 25, weight: 5 },
+  { id: 'parchment', name: 'Parchment (sheet)', cost: 0.1, weight: 0 },
 ];
 
 export const CURRENCY = { cp: 0.01, sp: 0.1, ep: 0.5, gp: 1, pp: 10 };
