@@ -1,0 +1,34 @@
+{"class":"Monk","source":"2014 PHB","subclassLabel":"Monastic Tradition","subclassLevel":3,"subclasses":[
+{"name":"Way of the Open Hand","summary":"Masters of armed and unarmed martial arts who unbalance foes, mend their own wounds with ki, and use deep meditation for protection.","features":[
+{"level":3,"name":"Open Hand Technique","summary":"When you hit with a Flurry of Blows attack, choose one rider: target makes a Dexterity save or falls prone; target makes a Strength save or is pushed up to 15 ft; or the target loses its reactions until your next turn ends."},
+{"level":6,"name":"Wholeness of Body","summary":"As an action, heal hit points equal to 3 times your monk level. Usable once per long rest."},
+{"level":11,"name":"Tranquility","summary":"At the end of a long rest you gain the effect of sanctuary lasting until your next long rest (ends early as normal). Save DC is 8 + Wisdom modifier + proficiency bonus."},
+{"level":17,"name":"Quivering Palm","summary":"When you hit with an unarmed strike, spend 3 ki to start imperceptible vibrations lasting for as many days as your monk level. Later, as an action while on the same plane, end them: the target makes a Constitution save, dropping to 0 hit points on a failure or taking 10d10 necrotic damage on a success. Only one creature affected at a time; you can end the vibrations harmlessly without an action."}],
+"grantedSpells":[],"grantedProficiencies":[],"notes2024":""},
+{"name":"Way of Shadow","summary":"A tradition of stealth and subterfuge, producing ninja-like spies and assassins who work in clans or as hired agents.","features":[
+{"level":3,"name":"Shadow Arts","summary":"As an action, spend 2 ki to cast one of silence, pass without trace, darkvision or darkness (no material components needed). You also learn the minor illusion cantrip if you don't know it."},
+{"level":6,"name":"Shadow Step","summary":"As a bonus action while in dim light or darkness, teleport up to 60 ft to any unoccupied dim or dark spot you can see; your next melee attack this turn, the first you make, has advantage."},
+{"level":11,"name":"Cloak of Shadows","summary":"While in dim light or darkness, use an action to become invisible. You stay invisible until you attack, cast a spell, or enter bright light."},
+{"level":17,"name":"Opportunist","summary":"When an ally or anyone other than you hits a creature within 5 ft of you, you can spend your reaction to strike that creature in melee."}],
+"grantedSpells":[],"grantedProficiencies":[],"notes2024":""},
+{"name":"Way of the Four Elements","summary":"Monks who channel ki into elemental power, bending air, earth, fire and water as an extension of the body; some specialize in one element, others blend several.","features":[
+{"level":3,"name":"Disciple of the Elements","summary":"You know Elemental Attunement plus one other elemental discipline, and learn one more at 6th, 11th and 17th level (you can swap one known discipline when you learn a new one). Disciplines cost ki. Spells cast through them need no material components. From 5th level you can spend extra ki to raise a spell's level by 1 per point if it scales; total ki per spell is capped at 3 (monk levels 5-8), 4 (9-12), 5 (13-16), 6 (17-20)."},
+{"level":3,"name":"Elemental Attunement","summary":"Action: minor elemental effect such as a harmless sensory display, lighting or snuffing a small flame, chilling or warming 1 lb of material for an hour, or shaping a 1-ft cube of earth/fire/water/mist crudely for 1 minute."},
+{"level":3,"name":"Fangs of the Fire Snake","summary":"When taking the Attack action, spend 1 ki: unarmed reach +10 ft that turn and unarmed hits deal fire damage; spending 1 more ki on a hit adds 1d10 fire damage."},
+{"level":3,"name":"Fist of Four Thunders","summary":"Spend 2 ki to cast thunderwave."},
+{"level":3,"name":"Fist of Unbroken Air","summary":"Action, 2 ki: creature within 30 ft makes a Strength save, taking 3d10 bludgeoning (plus 1d10 per extra ki) and being pushed up to 20 ft and knocked prone on a failure; half damage and no push/prone on a success."},
+{"level":3,"name":"Rush of the Gale Spirits","summary":"Spend 2 ki to cast gust of wind."},
+{"level":3,"name":"Shape the Flowing River","summary":"Action, 1 ki: reshape or convert water to ice (or ice to water) in an area up to 30 ft on a side within 120 ft; changes up to half the area's largest dimension; can't be used to trap or injure creatures."},
+{"level":3,"name":"Sweeping Cinder Strike","summary":"Spend 2 ki to cast burning hands."},
+{"level":3,"name":"Water Whip","summary":"Bonus action, 2 ki: creature within 30 ft makes a Dexterity save, taking 3d10 bludgeoning (plus 1d10 per extra ki) and being knocked prone or pulled up to 25 ft closer on a failure; half damage and no effect on movement on a success."},
+{"level":6,"name":"Clench of the North Wind","summary":"Requires 6th level. Spend 3 ki to cast hold person."},
+{"level":6,"name":"Gong of the Summit","summary":"Requires 6th level. Spend 3 ki to cast shatter."},
+{"level":11,"name":"Eternal Mountain Defense","summary":"Requires 11th level. Spend 5 ki to cast stoneskin on yourself."},
+{"level":11,"name":"Flames of the Phoenix","summary":"Requires 11th level. Spend 4 ki to cast fireball."},
+{"level":11,"name":"Mist Stance","summary":"Requires 11th level. Spend 4 ki to cast gaseous form on yourself."},
+{"level":11,"name":"Ride the Wind","summary":"Requires 11th level. Spend 4 ki to cast fly on yourself."},
+{"level":17,"name":"Breath of Winter","summary":"Requires 17th level. Spend 6 ki to cast cone of cold."},
+{"level":17,"name":"River of Hungry Flame","summary":"Requires 17th level. Spend 5 ki to cast wall of fire."},
+{"level":17,"name":"Wave of Rolling Earth","summary":"Requires 17th level. Spend 6 ki to cast wall of stone."}],
+"grantedSpells":[],"grantedProficiencies":[],"notes2024":"Renamed Warrior of the Elements in the 2024 PHB, with a different, simplified design (Elemental Attunement toggle, elemental damage on strikes, Elemental Burst), and the discipline list is gone."}
+]}

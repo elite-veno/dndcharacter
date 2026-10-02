@@ -1,0 +1,85 @@
+// Features & traits tab (class, subclass, species, background, feats, proficiencies) and the Notes tab.
+
+import { h } from '../ui.js';
+import { FEAT_BY_ID, SUBCLASS_LABELS } from '../data/index.js';
+import { subclassChoices } from '../rules.js';
+import { subclassOtherProficiencies } from '../choices.js';
+import { select, field } from '../steps/shared.js';
+import { panel, disclosure, titleCase } from './widgets.js';
+
+const featureItem = (f) => disclosure(`${f.name} (level ${f.level}${f.source ? `, ${f.source}` : ''})`, h('p', {}, f.desc || 'See the SRD 5.2 for the full text.'));
+
+export function featuresTab(ctx) {
+  const { c, d } = ctx;
+  const speciesTraits = d.species ? d.species.traits.filter((t) => t.level <= d.level) : [];
+  const lockedTraits = d.species ? d.species.traits.filter((t) => t.level > d.level) : [];
+  const choice = [d.lineage && `Lineage/ancestry: ${d.lineage}`].filter(Boolean);
+
+  return h('div', { class: 'tab-body' },
+    panel('Proficiencies and senses',
+      h('dl', { class: 'facts' },
+        fact('Armor training', d.armorTraining.length ? d.armorTraining.map(titleCase).join(', ') : 'None'),
+        fact('Weapons', d.weaponProficiency.categories.map(titleCase).join(', ') + (d.weaponProficiency.martialWith ? ` (+ Martial with ${d.weaponProficiency.martialWith.join(', ')})` : '')),
+        fact('Tools', d.tools.length ? d.tools.join(', ') : 'None'),
+        fact('Languages', d.languages.join(', ')),
+        fact('Darkvision', d.darkvision ? `${d.darkvision} ft` : 'None'),
+        fact('Resistances', d.resistances.length ? d.resistances.map(titleCase).join(', ') : 'None'),
+        fact('Size', d.size))),
+    panel(d.cls ? `${d.cls.name} features` : 'Class features',
+      d.features.length ? h('div', { class: 'disclosure-list' }, d.features.map(featureItem)) : h('p', { class: 'empty' }, 'No features yet.')),
+    subclassPanel(ctx),
+    d.species ? panel(`${d.species.name} traits`,
+      choice.length ? h('p', { class: 'hint' }, choice.join(' · ')) : null,
+      h('div', { class: 'disclosure-list' }, speciesTraits.map((t) => disclosure(t.name, h('p', {}, t.desc)))),
+      lockedTraits.length ? h('p', { class: 'hint' }, `Later traits: ${lockedTraits.map((t) => `${t.name} (level ${t.level})`).join(', ')}.`) : null) : null,
+    d.bg ? panel(`Background: ${d.bg.name}`, h('p', {}, d.bg.desc), h('p', { class: 'hint' }, `Origin feat: ${FEAT_BY_ID[d.bg.feat]?.name || d.bg.feat}`)) : null,
+    d.feats.length ? panel('Feats', h('div', { class: 'disclosure-list' }, d.feats.map((f) => {
+      const feat = FEAT_BY_ID[f.id];
+      return disclosure(`${feat.name} (${f.source})`, h('p', {}, feat.desc), feat.benefits.length ? h('ul', { class: 'bullets' }, feat.benefits.map((b) => h('li', {}, b))) : null);
+    }))) : null,
+    c.invocations.length ? panel('Eldritch Invocations', h('p', {}, c.invocations.join(', ').replace(/-/g, ' '))) : null);
+}
+
+function subclassPanel(ctx) {
+  const { c, d } = ctx;
+  if (!d.cls || d.level < 3) return null;
+  const label = SUBCLASS_LABELS[d.cls.id] || 'Subclass';
+  const sub = d.subclass;
+  const picker = field(label, select({
+    options: d.cls.subclass.map((x) => ({ value: x.id, label: x.name })), value: c.subclassId, placeholder: 'Choose...',
+    onChange: (v) => ctx.update((x) => { x.subclassId = v; x.subclassChoice = subclassChoices(d.cls.subclass.find((y) => y.id === v))[0] || null; }),
+  }));
+  if (!sub) return panel(`${label}`, picker, h('p', { class: 'notice warn' }, `Choose a ${label} to gain its features.`));
+  const choices = subclassChoices(sub);
+  const spells = d.subclassSpells || [];
+  const other = subclassOtherProficiencies(c);
+  return panel(`${sub.name} (${sub.source})`,
+    picker,
+    choices.length ? field('Terrain', select({ options: choices.map((o) => ({ value: o, label: o })), value: c.subclassChoice, onChange: (v) => ctx.update((x) => { x.subclassChoice = v; }) })) : null,
+    h('p', {}, sub.summary),
+    h('p', { class: 'hint' }, `Subclass from the 2014 Player's Handbook; chosen at level 3 under the 2024 rules.${sub.notes2024 ? ` 2024 note: ${sub.notes2024}` : ''}`),
+    other.length ? h('p', {}, h('strong', {}, 'Other proficiencies: '), other.join('; ')) : null,
+    spells.length ? h('p', {}, h('strong', {}, 'Granted spells: '), spells.map((g) => `${g.name}${g.kind === 'ritual' ? ' (ritual only)' : ''}`).join(', ')) : null);
+}
+
+const fact = (label, value) => h('div', {}, h('dt', {}, label), h('dd', {}, value));
+
+const DETAIL_FIELDS = [
+  ['traits', 'Personality traits'], ['ideals', 'Ideals'], ['bonds', 'Bonds'], ['flaws', 'Flaws'], ['appearance', 'Appearance'], ['backstory', 'Backstory'],
+];
+
+export function notesTab(ctx) {
+  const { c, s } = ctx;
+  const timers = {};
+  const later = (key, fn) => { clearTimeout(timers[key]); timers[key] = setTimeout(() => ctx.save(fn), 250); };
+  return h('div', { class: 'tab-body' },
+    panel('Notes',
+      h('label', { class: 'visually-hidden', for: 'notes-text' }, 'Notes'),
+      h('textarea', { id: 'notes-text', rows: 10, maxLength: 20000, placeholder: 'Session notes, quest log, NPC names...', oninput: (e) => { const v = e.target.value; later('notes', (x) => { x.sheet.notes = v; }); } }, s.notes)),
+    panel('Character details',
+      h('div', { class: 'form-grid' }, DETAIL_FIELDS.map(([key, label]) => {
+        const id = `detail-${key}`;
+        return h('div', { class: 'field' }, h('label', { for: id }, label),
+          h('textarea', { id, rows: key === 'backstory' ? 6 : 3, maxLength: 4000, oninput: (e) => { const v = e.target.value; later(key, (x) => { x.details[key] = v; }); } }, c.details[key] || ''));
+      }))));
+}

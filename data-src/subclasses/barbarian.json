@@ -1,0 +1,85 @@
+{
+  "class": "Barbarian",
+  "source": "2014 PHB",
+  "subclassLabel": "Primal Path",
+  "subclassLevel": 3,
+  "subclasses": [
+    {
+      "name": "Path of the Berserker",
+      "summary": "Rage becomes an end in itself: a blood-soaked, reckless fury that trades bodily well-being for relentless violence.",
+      "features": [
+        {
+          "level": 3,
+          "name": "Frenzy",
+          "summary": "When you rage you may choose to frenzy; for the rage's duration you can make one melee weapon attack as a bonus action each turn (after the turn you start raging). When the rage ends you gain one level of exhaustion."
+        },
+        {
+          "level": 6,
+          "name": "Mindless Rage",
+          "summary": "While raging you cannot be charmed or frightened; if already affected when you start raging, the effect is suspended until the rage ends."
+        },
+        {
+          "level": 10,
+          "name": "Intimidating Presence",
+          "summary": "As an action, target a creature within 30 ft that can see or hear you; it must succeed on a Wisdom save (DC 8 + proficiency + Charisma modifier) or be frightened until the end of your next turn. You can use your action on later turns to extend it. The effect lapses if the target finishes a turn without line of sight to you or more than 60 ft from you. If the target saves, you can't use this on it again for 24 hours."
+        },
+        {
+          "level": 14,
+          "name": "Retaliation",
+          "summary": "Once a creature within 5 ft hurts you, you may spend your reaction to strike back at it with a melee weapon."
+        }
+      ],
+      "grantedSpells": [],
+      "grantedProficiencies": [],
+      "notes2024": "2024 PHB Berserker: Frenzy (3) adds extra damage dice (d6s equal to Rage Damage bonus) on the first target hit each turn while raging, with no exhaustion; Mindless Rage (6) also ends charm/frighten; Retaliation (10); Intimidating Presence (14) is a once-per-long-rest area effect (or Rage use)."
+    },
+    {
+      "name": "Path of the Totem Warrior",
+      "summary": "A spiritual journey in which the barbarian takes a spirit animal as guide and protector, its power fueling the rage with supernatural might.",
+      "features": [
+        {
+          "level": 3,
+          "name": "Spirit Seeker",
+          "summary": "You can cast beast sense and speak with animals, but only as rituals."
+        },
+        {
+          "level": 3,
+          "name": "Totem Spirit",
+          "summary": "Choose a totem animal and gain its rage benefit. Bear: while raging you resist all damage except psychic. Eagle: while raging and not in heavy armor, opportunity attacks against you have disadvantage and you can Dash as a bonus action. Wolf: while raging, allies have advantage on melee attacks against hostile creatures within 5 ft of you."
+        },
+        {
+          "level": 6,
+          "name": "Aspect of the Beast",
+          "summary": "Gain a passive benefit from a totem animal of your choice (same or different). Bear: carrying capacity doubled and advantage on Strength checks to push, pull, lift or break objects. Eagle: see up to 1 mile clearly (as if 100 ft away) and dim light does not impose disadvantage on Perception checks. Wolf: can track while traveling at a fast pace and move stealthily at a normal pace."
+        },
+        {
+          "level": 10,
+          "name": "Spirit Walker",
+          "summary": "You can cast commune with nature as a ritual; a spirit version of one of your chosen totem animals appears to relay the information."
+        },
+        {
+          "level": 14,
+          "name": "Totemic Attunement",
+          "summary": "Choose a totem animal for a rage-only benefit. Bear: hostile creatures within 5 ft have disadvantage on attacks against anyone other than you or another character with this feature (enemies that can't see/hear you or can't be frightened are immune). Eagle: while raging you gain a flying speed equal to your walking speed, but only in bursts; ending your turn airborne with no support makes you drop. Wolf: when you hit with a melee weapon attack, you can spend a bonus action to topple a creature of Large size or smaller."
+        }
+      ],
+      "grantedSpells": [
+        {
+          "level": 3,
+          "spells": [
+            "Beast Sense (ritual only)",
+            "Speak with Animals (ritual only)"
+          ]
+        },
+        {
+          "level": 10,
+          "spells": [
+            "Commune with Nature (ritual only)"
+          ]
+        }
+      ],
+      "grantedProficiencies": [],
+      "notes2024": "2024 PHB renamed it Path of the Wild Heart: Rage of the Wilds (3: Bear/Eagle/Wolf), Aspect of the Wilds (6: Owl/Panther/Salmon, plus Speak with Animals as a ritual), Nature Speaker (10: Commune with Nature), Power of the Wilds (14: Falcon/Lion/Ram). Totem Warrior itself is not in the 2024 PHB."
+    }
+  ]
+}

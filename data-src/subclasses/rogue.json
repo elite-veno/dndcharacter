@@ -1,0 +1,113 @@
+{
+ "class": "Rogue",
+ "source": "2014 PHB",
+ "subclassLabel": "Roguish Archetype",
+ "subclassLevel": 3,
+ "subclasses": [
+  {
+   "name": "Thief",
+   "summary": "A specialist in burglary, delving and treasure-hunting who gains extra agility, climbing prowess and the knack of using any magic item.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Fast Hands",
+     "summary": "Your Cunning Action bonus action can also be used for a Sleight of Hand check, to disarm a trap or pick a lock with thieves' tools, or to take the Use an Object action."
+    },
+    {
+     "level": 3,
+     "name": "Second-Story Work",
+     "summary": "Climbing no longer costs extra movement, and your running jump distance increases by feet equal to your Dexterity modifier."
+    },
+    {
+     "level": 9,
+     "name": "Supreme Sneak",
+     "summary": "You have advantage on Dexterity (Stealth) checks if you move no more than half your speed that turn."
+    },
+    {
+     "level": 13,
+     "name": "Use Magic Device",
+     "summary": "You ignore all class, race and level requirements for using magic items."
+    },
+    {
+     "level": 17,
+     "name": "Thief's Reflexes",
+     "summary": "You take two turns in the first round of any combat: one at your normal initiative and one at initiative minus 10. Doesn't work if you are surprised."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "Assassin",
+   "summary": "A killer, spy or bounty hunter who relies on ambush, poison and disguise to eliminate targets swiftly.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Bonus Proficiencies",
+     "summary": "You gain proficiency with the disguise kit and the poisoner's kit."
+    },
+    {
+     "level": 3,
+     "name": "Assassinate",
+     "summary": "You have advantage on attack rolls against creatures that haven't yet acted in combat, and any hit against a surprised creature is a critical hit."
+    },
+    {
+     "level": 9,
+     "name": "Infiltration Expertise",
+     "summary": "By spending 7 days and 25 gp you can build a false identity (not someone else's real one) with history, profession and affiliations; others take it at face value unless something clearly gives you away."
+    },
+    {
+     "level": 13,
+     "name": "Impostor",
+     "summary": "After at least 3 hours studying a person's speech, handwriting and behavior, you can mimic them flawlessly; if a wary creature suspects you, you have advantage on Charisma (Deception) checks to avoid detection."
+    },
+    {
+     "level": 17,
+     "name": "Death Strike",
+     "summary": "When you hit a surprised creature, it makes a Constitution save (DC 8 + Dexterity modifier + proficiency bonus); on a failure your attack damage is doubled."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [
+    "Disguise kit",
+    "Poisoner's kit"
+   ],
+   "notes2024": ""
+  },
+  {
+   "name": "Arcane Trickster",
+   "summary": "A rogue who adds enchantment and illusion magic to stealth and agility, favoring pranks, pickpocketing and burglary.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Spellcasting",
+     "summary": "You cast wizard spells using Intelligence (save DC 8 + proficiency + Int mod; attack = proficiency + Int mod). You know 3 cantrips (mage hand plus two wizard cantrips; a 4th at level 10) and spells known rise from 3 at level 3 to 13 at level 20. Slots: 2 first-level at 3rd, up to 4 first, 3 second, 3 third, and 1 fourth-level slot at 19th. At 3rd level you know three 1st-level wizard spells, two of which must be enchantment or illusion. Each later spell you learn must be enchantment or illusion, except those gained at 8th, 14th and 20th level, which can be from any school. Slots return on a long rest, and you may swap one known spell on each level gained."
+    },
+    {
+     "level": 3,
+     "name": "Mage Hand Legerdemain",
+     "summary": "Your mage hand can be invisible and can stow or retrieve objects in containers worn or carried by others, and use thieves' tools at range. Doing so unnoticed requires a Sleight of Hand check contested by the target's Perception. You can control the hand with Cunning Action."
+    },
+    {
+     "level": 9,
+     "name": "Magical Ambush",
+     "summary": "Casting a spell at a creature that can't see you where you hide forces it to have disadvantage on any save against that spell until the end of the turn."
+    },
+    {
+     "level": 13,
+     "name": "Versatile Trickster",
+     "summary": "As a bonus action, mark a creature within 5 feet of your mage hand to gain advantage on attack rolls against it until the end of the turn."
+    },
+    {
+     "level": 17,
+     "name": "Spell Thief",
+     "summary": "As a reaction right after a creature casts a spell that targets you or includes you in its area, it makes a save against your spell save DC using its spellcasting modifier. On a failure the spell is negated against you and you learn it (must be 1st level or higher and of a level you can cast) for 8 hours, during which the caster can't cast it. Usable once per long rest."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  }
+ ]
+}

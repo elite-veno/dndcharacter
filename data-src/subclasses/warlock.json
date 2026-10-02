@@ -1,0 +1,203 @@
+{
+ "class": "Warlock",
+ "source": "2014 PHB",
+ "subclassLabel": "Otherworldly Patron",
+ "subclassLevel": 1,
+ "subclasses": [
+  {
+   "name": "The Archfey",
+   "summary": "Your patron is a powerful lord or lady of the Feywild whose goals are whimsical and hard to read. Its gifts center on enchantment, charm, fear and slipping away in mist.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Fey Presence",
+     "summary": "Action: every creature within a 10-foot cube centred on you must make a Wisdom save against your warlock spell save DC. Each one that fails is charmed or scared (your pick) until your next turn ends. Recharges on a short or long rest."
+    },
+    {
+     "level": 6,
+     "name": "Misty Escape",
+     "summary": "Reaction when you take damage: vanish and reappear as an invisible figure up to 60 ft away in any open spot you can see. The invisibility lasts until your next turn begins, or until you make an attack or cast a spell. Recharges on a short or long rest."
+    },
+    {
+     "level": 10,
+     "name": "Beguiling Defenses",
+     "summary": "You cannot be charmed. When someone tries to charm you, you can use your reaction to force a Wisdom save against your spell save DC; on a failed save it becomes charmed by you for a minute, ending early if it takes damage."
+    },
+    {
+     "level": 14,
+     "name": "Dark Delirium",
+     "summary": "Action: target a creature you see within 60 feet; Wisdom save vs your spell save DC. On a failure it is charmed or frightened (your choice) for 1 minute, requiring your concentration, ending early if it takes damage. It believes it is in an illusory misty realm you design and perceives only itself, you and the illusion. Recharges on a short or long rest."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "faerie fire",
+      "sleep"
+     ]
+    },
+    {
+     "level": 2,
+     "spells": [
+      "calm emotions",
+      "phantasmal force"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "blink",
+      "plant growth"
+     ]
+    },
+    {
+     "level": 4,
+     "spells": [
+      "dominate beast",
+      "greater invisibility"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "dominate person",
+      "seeming"
+     ]
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "The Fiend",
+   "summary": "You have bargained with a being from the lower planes whose aims are evil. It rewards you with fire magic, durability and the ability to hurl foes into hell.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Dark One's Blessing",
+     "summary": "Dropping a hostile creature to 0 HP grants you temp HP equal to your Charisma modifier plus warlock level (at least 1)."
+    },
+    {
+     "level": 6,
+     "name": "Dark One's Own Luck",
+     "summary": "When you make an ability check or saving throw, add 1d10 to the roll, even after seeing it but before the outcome. Recharges on a short or long rest."
+    },
+    {
+     "level": 10,
+     "name": "Fiendish Resilience",
+     "summary": "After a short or long rest, choose one damage type to gain resistance to, until you choose another. Damage from magical or silver weapons ignores this resistance."
+    },
+    {
+     "level": 14,
+     "name": "Hurl Through Hell",
+     "summary": "When you hit a creature with an attack, you can send it through the lower planes; it vanishes and returns at the end of your next turn to its space or nearest open one. A non-fiend takes 10d10 psychic damage. Recharges on a long rest."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "burning hands",
+      "command"
+     ]
+    },
+    {
+     "level": 2,
+     "spells": [
+      "blindness/deafness",
+      "scorching ray"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "fireball",
+      "stinking cloud"
+     ]
+    },
+    {
+     "level": 4,
+     "spells": [
+      "fire shield",
+      "wall of fire"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "flame strike",
+      "hallow"
+     ]
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": "In the 2024 PHB the Fiend patron is renamed Fiend Patron; Dark One's Blessing and Hurl Through Hell are reworked (Hurl Through Hell costs a Pact Magic slot rather than a rest use)."
+  },
+  {
+   "name": "The Great Old One",
+   "summary": "Your patron is an alien entity from beyond reality, indifferent or unaware of you, whose vast knowledge grants psychic and mind-bending powers.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Awakened Mind",
+     "summary": "You can speak telepathically to any creature you see within 30 feet, with no shared language needed, though it must understand at least one language."
+    },
+    {
+     "level": 6,
+     "name": "Entropic Ward",
+     "summary": "Reaction when a creature attacks you: impose disadvantage on that roll. If it misses, your next attack roll against that creature before the end of your next turn has advantage. Recharges on a short or long rest."
+    },
+    {
+     "level": 10,
+     "name": "Thought Shield",
+     "summary": "Your thoughts cannot be read by telepathy or other means unless you allow it. You resist psychic damage, and any creature that deals psychic damage to you takes the same amount."
+    },
+    {
+     "level": 14,
+     "name": "Create Thrall",
+     "summary": "Action: touch an incapacitated humanoid to charm it until remove curse is cast on it, the charmed condition is removed, or you use this feature again. You can communicate telepathically with it while on the same plane."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "dissonant whispers",
+      "Tasha's hideous laughter"
+     ]
+    },
+    {
+     "level": 2,
+     "spells": [
+      "detect thoughts",
+      "phantasmal force"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "clairvoyance",
+      "sending"
+     ]
+    },
+    {
+     "level": 4,
+     "spells": [
+      "dominate beast",
+      "Evard's black tentacles"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "dominate person",
+      "telekinesis"
+     ]
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": "In the 2024 PHB this is the Great Old One Patron with reworked features (e.g. Psychic Spells, Clairvoyant Combatant)."
+  }
+ ]
+}

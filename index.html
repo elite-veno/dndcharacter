@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#14111c">
+  <meta name="description" content="Character Forge: a step-by-step character builder and interactive sheet for the 2024 (5.5e) fifth edition rules, built on the SRD 5.2.">
+  <title>Character Forge</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2314111c'/%3E%3Cpath d='M32 8l6 18h18l-14 11 5 19-15-11-15 11 5-19L8 26h18z' fill='%23d9a441'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sheet.css">
+  <link rel="stylesheet" href="css/info.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">Skip to main content</a>
+  <header class="site-header">
+    <a class="brand" href="#/" aria-label="Character Forge home">
+      <svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><path d="M32 6l7 19h19l-15 12 6 20-17-12-17 12 6-20L6 25h19z" fill="currentColor"/></svg>
+      <span>Character Forge</span>
+    </a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="#/" data-route="home">My Characters</a>
+      <a href="#/build" data-route="build">Create</a>
+      <a href="#/sheet" data-route="sheet">Sheet</a>
+      <a href="#/info" data-route="info">Info</a>
+    </nav>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <p>This work includes material from the System Reference Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, available at
+      <a href="https://www.dndbeyond.com/srd" rel="noopener">dndbeyond.com/srd</a>. The SRD 5.2 is licensed under the
+      <a href="https://creativecommons.org/licenses/by/4.0/legalcode" rel="noopener">Creative Commons Attribution 4.0 International License</a>.</p>
+    <p>Character Forge is an unofficial fan project. It is not affiliated with, endorsed or sponsored by Wizards of the Coast.</p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">Character Forge needs JavaScript to run.</p></noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

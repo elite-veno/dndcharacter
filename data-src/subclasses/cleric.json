@@ -1,0 +1,537 @@
+{
+ "class": "Cleric",
+ "source": "2014 PHB",
+ "subclassLabel": "Divine Domain",
+ "subclassLevel": 1,
+ "subclasses": [
+  {
+   "name": "Knowledge",
+   "summary": "Clerics of gods of learning and lore who collect secrets, study esoteric knowledge, and read minds and the past.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Blessings of Knowledge",
+     "summary": "Learn two languages and gain proficiency in two of Arcana, History, Nature, Religion; proficiency bonus is doubled for checks with those two skills."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Knowledge of the Ages",
+     "summary": "Action: gain proficiency with one chosen skill or tool for 10 minutes."
+    },
+    {
+     "level": 6,
+     "name": "Channel Divinity: Read Thoughts",
+     "summary": "Action: a creature within 60 ft makes a Wisdom save. On a failure you read its surface thoughts for 1 minute while within 60 ft, and may use your action to end this and cast suggestion on it without a slot (it automatically fails). On a success, you cannot use this on it again until a long rest."
+    },
+    {
+     "level": 8,
+     "name": "Potent Spellcasting",
+     "summary": "Add your Wisdom modifier to damage of any cleric cantrip."
+    },
+    {
+     "level": 17,
+     "name": "Visions of the Past",
+     "summary": "Meditate at least 1 minute (up to minutes equal to your Wisdom score, concentration) to see a held object's history (previous owners, recent significant events) or the recent events of the area (up to a 50-ft cube, going back days equal to Wisdom score). Recharges on short or long rest."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "command",
+      "identify"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "augury",
+      "suggestion"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "nondetection",
+      "speak with dead"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "arcane eye",
+      "confusion"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "legend lore",
+      "scrying"
+     ]
+    }
+   ],
+   "grantedProficiencies": [
+    "Two skills from Arcana, History, Nature, Religion (expertise-style doubling)",
+    "Two languages"
+   ],
+   "notes2024": ""
+  },
+  {
+   "name": "Life",
+   "summary": "Servants of gods of vitality and healing who sustain the living and drive back death.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Bonus Proficiency",
+     "summary": "Gain heavy armor proficiency."
+    },
+    {
+     "level": 1,
+     "name": "Disciple of Life",
+     "summary": "Healing spells of 1st level or higher restore an extra 2 + spell level hit points."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Preserve Life",
+     "summary": "Action: distribute a pool of healing equal to 5 x cleric level among creatures within 30 ft, restoring each to at most half its hit point maximum; not usable on undead or constructs."
+    },
+    {
+     "level": 6,
+     "name": "Blessed Healer",
+     "summary": "When you cast a 1st-level or higher spell that heals another creature, you regain 2 + spell level hit points."
+    },
+    {
+     "level": 8,
+     "name": "Divine Strike",
+     "summary": "Once per turn when you hit with a weapon attack, add 1d8 radiant damage; rises to 2d8 at level 14."
+    },
+    {
+     "level": 17,
+     "name": "Supreme Healing",
+     "summary": "When healing dice would be rolled for a spell, use the maximum value of each die instead."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "bless",
+      "cure wounds"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "lesser restoration",
+      "spiritual weapon"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "beacon of hope",
+      "revivify"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "death ward",
+      "guardian of faith"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "mass cure wounds",
+      "raise dead"
+     ]
+    }
+   ],
+   "grantedProficiencies": [
+    "Heavy armor"
+   ],
+   "notes2024": ""
+  },
+  {
+   "name": "Light",
+   "summary": "Priests of sun, truth, and vigilance who burn away darkness and deception with radiance.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Bonus Cantrip",
+     "summary": "Learn the light cantrip if you do not know it."
+    },
+    {
+     "level": 1,
+     "name": "Warding Flare",
+     "summary": "Reaction when a creature you see within 30 ft attacks you: impose disadvantage on the roll (attackers immune to blinding are unaffected). Uses equal to Wisdom modifier (min 1), recharge on long rest."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Radiance of the Dawn",
+     "summary": "Action: dispel magical darkness within 30 ft; hostile creatures within 30 ft make a Constitution save, taking 2d10 + cleric level radiant damage on a failure, half on success (total cover protects)."
+    },
+    {
+     "level": 6,
+     "name": "Improved Flare",
+     "summary": "Warding Flare can also protect a creature other than you."
+    },
+    {
+     "level": 8,
+     "name": "Potent Spellcasting",
+     "summary": "Add your Wisdom modifier to damage of any cleric cantrip."
+    },
+    {
+     "level": 17,
+     "name": "Corona of Light",
+     "summary": "Action: for 1 minute, emit bright light in 60 ft and dim light 30 ft beyond; enemies in the bright light have disadvantage on saves against your fire or radiant spells."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "burning hands",
+      "faerie fire"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "flaming sphere",
+      "scorching ray"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "daylight",
+      "fireball"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "guardian of faith",
+      "wall of fire"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "flame strike",
+      "scrying"
+     ]
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "Nature",
+   "summary": "Champions of wild gods who hunt despoilers, bless harvests, and command beasts and plants.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Acolyte of Nature",
+     "summary": "Learn one druid cantrip and gain proficiency in Animal Handling, Nature, or Survival."
+    },
+    {
+     "level": 1,
+     "name": "Bonus Proficiency",
+     "summary": "Gain heavy armor proficiency."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Charm Animals and Plants",
+     "summary": "Action: beasts and plants that can see you within 30 ft make a Wisdom save or are charmed for 1 minute or until damaged, friendly to you and your designees."
+    },
+    {
+     "level": 6,
+     "name": "Dampen Elements",
+     "summary": "Reaction: grant yourself or a creature within 30 ft resistance to one instance of acid, cold, fire, lightning, or thunder damage."
+    },
+    {
+     "level": 8,
+     "name": "Divine Strike",
+     "summary": "Once per turn on a weapon hit, add 1d8 cold, fire, or lightning damage (your choice); 2d8 at level 14."
+    },
+    {
+     "level": 17,
+     "name": "Master of Nature",
+     "summary": "While creatures are charmed by Charm Animals and Plants, you can use a bonus action to verbally command them."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "animal friendship",
+      "speak with animals"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "barkskin",
+      "spike growth"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "plant growth",
+      "wind wall"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "dominate beast",
+      "grasping vine"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "insect plague",
+      "tree stride"
+     ]
+    }
+   ],
+   "grantedProficiencies": [
+    "Heavy armor",
+    "One of Animal Handling, Nature, Survival"
+   ],
+   "notes2024": ""
+  },
+  {
+   "name": "Tempest",
+   "summary": "Wielders of storm, sea, and sky who strike with thunder and lightning and inspire fear.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Bonus Proficiencies",
+     "summary": "Gain martial weapon and heavy armor proficiency."
+    },
+    {
+     "level": 1,
+     "name": "Wrath of the Storm",
+     "summary": "Reaction when a creature within 5 ft hits you: it makes a Dexterity save or takes 2d8 lightning or thunder damage (half on success). Uses equal to Wisdom modifier (min 1), recharge on long rest."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Destructive Wrath",
+     "summary": "When rolling lightning or thunder damage, use Channel Divinity to deal maximum damage instead."
+    },
+    {
+     "level": 6,
+     "name": "Thunderbolt Strike",
+     "summary": "When you deal lightning damage to a Large or smaller creature, you can push it up to 10 ft away."
+    },
+    {
+     "level": 8,
+     "name": "Divine Strike",
+     "summary": "Once per turn on a weapon hit, add 1d8 thunder damage; 2d8 at level 14."
+    },
+    {
+     "level": 17,
+     "name": "Stormborn",
+     "summary": "Gain a flying speed equal to your walking speed while outdoors and not underground."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "fog cloud",
+      "thunderwave"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "gust of wind",
+      "shatter"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "call lightning",
+      "sleet storm"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "control water",
+      "ice storm"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "destructive wave",
+      "insect plague"
+     ]
+    }
+   ],
+   "grantedProficiencies": [
+    "Martial weapons",
+    "Heavy armor"
+   ],
+   "notes2024": ""
+  },
+  {
+   "name": "Trickery",
+   "summary": "Mischief-makers serving gods of thieves and rebels who prefer deception and pranks to open confrontation.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Blessing of the Trickster",
+     "summary": "Action: touch a willing creature other than you to grant advantage on Dexterity (Stealth) checks for 1 hour or until you use this again."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Invoke Duplicity",
+     "summary": "Action: create an illusory duplicate within 30 ft for 1 minute (concentration). Move it 30 ft as a bonus action (stays within 120 ft), cast spells as if from its space, and gain advantage on attacks against a creature that can see it when you and the duplicate are both within 5 ft of it."
+    },
+    {
+     "level": 6,
+     "name": "Channel Divinity: Cloak of Shadows",
+     "summary": "Action: turn invisible for a short time (until your next turn ends); you reappear if you attack or cast a spell."
+    },
+    {
+     "level": 8,
+     "name": "Divine Strike",
+     "summary": "Once per turn on a weapon hit, add 1d8 poison damage; 2d8 at level 14."
+    },
+    {
+     "level": 17,
+     "name": "Improved Duplicity",
+     "summary": "Invoke Duplicity creates up to four duplicates; you can move any number of them as one bonus action."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "charm person",
+      "disguise self"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "mirror image",
+      "pass without trace"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "blink",
+      "dispel magic"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "dimension door",
+      "polymorph"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "dominate person",
+      "modify memory"
+     ]
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": ""
+  },
+  {
+   "name": "War",
+   "summary": "Battle-priests of gods of war who fight on the front line and bless warriors.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Bonus Proficiencies",
+     "summary": "Gain martial weapon and heavy armor proficiency."
+    },
+    {
+     "level": 1,
+     "name": "War Priest",
+     "summary": "When you take the Attack action, make one weapon attack as a bonus action. Uses equal to Wisdom modifier (min 1), recharge on long rest."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Guided Strike",
+     "summary": "After seeing an attack roll but before the result is declared, gain +10 to that roll."
+    },
+    {
+     "level": 6,
+     "name": "Channel Divinity: War God's Blessing",
+     "summary": "Reaction: grant +10 to an attack roll of a creature within 30 ft, chosen after the roll but before the result is declared."
+    },
+    {
+     "level": 8,
+     "name": "Divine Strike",
+     "summary": "Once per turn on a weapon hit, add 1d8 damage of the same type as the weapon; 2d8 at level 14."
+    },
+    {
+     "level": 17,
+     "name": "Avatar of Battle",
+     "summary": "Gain resistance to bludgeoning, piercing, and slashing damage from nonmagical attacks."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "divine favor",
+      "shield of faith"
+     ]
+    },
+    {
+     "level": 3,
+     "spells": [
+      "magic weapon",
+      "spiritual weapon"
+     ]
+    },
+    {
+     "level": 5,
+     "spells": [
+      "crusader's mantle",
+      "spirit guardians"
+     ]
+    },
+    {
+     "level": 7,
+     "spells": [
+      "freedom of movement",
+      "stoneskin"
+     ]
+    },
+    {
+     "level": 9,
+     "spells": [
+      "flame strike",
+      "hold monster"
+     ]
+    }
+   ],
+   "grantedProficiencies": [
+    "Martial weapons",
+    "Heavy armor"
+   ],
+   "notes2024": ""
+  }
+ ]
+}

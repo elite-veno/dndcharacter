@@ -1,0 +1,338 @@
+{
+ "class": "Druid",
+ "source": "2014 PHB",
+ "subclassLabel": "Druid Circle",
+ "subclassLevel": 2,
+ "subclasses": [
+  {
+   "name": "Circle of the Land",
+   "summary": "Mystics and sages who guard ancient oral lore and hold rites in sacred groves and stone circles. Their magic is colored by the terrain where they were initiated.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Bonus Cantrip",
+     "summary": "Learn one extra druid cantrip."
+    },
+    {
+     "level": 2,
+     "name": "Natural Recovery",
+     "summary": "Once per long rest, during a short rest, recover expended spell slots whose combined level is at most half druid level (rounded up); no slot of 6th level or higher."
+    },
+    {
+     "level": 3,
+     "name": "Circle Spells",
+     "summary": "Choose a land type (arctic, coast, desert, forest, grassland, mountain, swamp, Underdark). At druid levels 3, 5, 7, 9 gain the listed spells as always-prepared that don't count against prepared limit."
+    },
+    {
+     "level": 6,
+     "name": "Land's Stride",
+     "summary": "Nonmagical difficult terrain costs no extra movement; pass through nonmagical plants unharmed and unslowed; advantage on saves against magically created or manipulated plants that impede movement."
+    },
+    {
+     "level": 10,
+     "name": "Nature's Ward",
+     "summary": "Elementals and fey cannot charm or frighten you, and you have immunity to poison and to disease."
+    },
+    {
+     "level": 14,
+     "name": "Nature's Sanctuary",
+     "summary": "When a beast or plant attacks you, it makes a Wisdom save against your spell save DC; on a failure it must pick another target or the attack misses automatically; on a success it is immune for 24 hours. Creature knows of the effect beforehand."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "choice": "Arctic",
+     "level": 3,
+     "spells": [
+      "hold person",
+      "spike growth"
+     ]
+    },
+    {
+     "choice": "Arctic",
+     "level": 5,
+     "spells": [
+      "sleet storm",
+      "slow"
+     ]
+    },
+    {
+     "choice": "Arctic",
+     "level": 7,
+     "spells": [
+      "freedom of movement",
+      "ice storm"
+     ]
+    },
+    {
+     "choice": "Arctic",
+     "level": 9,
+     "spells": [
+      "commune with nature",
+      "cone of cold"
+     ]
+    },
+    {
+     "choice": "Coast",
+     "level": 3,
+     "spells": [
+      "mirror image",
+      "misty step"
+     ]
+    },
+    {
+     "choice": "Coast",
+     "level": 5,
+     "spells": [
+      "water breathing",
+      "water walk"
+     ]
+    },
+    {
+     "choice": "Coast",
+     "level": 7,
+     "spells": [
+      "control water",
+      "freedom of movement"
+     ]
+    },
+    {
+     "choice": "Coast",
+     "level": 9,
+     "spells": [
+      "conjure elemental",
+      "scrying"
+     ]
+    },
+    {
+     "choice": "Desert",
+     "level": 3,
+     "spells": [
+      "blur",
+      "silence"
+     ]
+    },
+    {
+     "choice": "Desert",
+     "level": 5,
+     "spells": [
+      "create food and water",
+      "protection from energy"
+     ]
+    },
+    {
+     "choice": "Desert",
+     "level": 7,
+     "spells": [
+      "blight",
+      "hallucinatory terrain"
+     ]
+    },
+    {
+     "choice": "Desert",
+     "level": 9,
+     "spells": [
+      "insect plague",
+      "wall of stone"
+     ]
+    },
+    {
+     "choice": "Forest",
+     "level": 3,
+     "spells": [
+      "barkskin",
+      "spider climb"
+     ]
+    },
+    {
+     "choice": "Forest",
+     "level": 5,
+     "spells": [
+      "call lightning",
+      "plant growth"
+     ]
+    },
+    {
+     "choice": "Forest",
+     "level": 7,
+     "spells": [
+      "divination",
+      "freedom of movement"
+     ]
+    },
+    {
+     "choice": "Forest",
+     "level": 9,
+     "spells": [
+      "commune with nature",
+      "tree stride"
+     ]
+    },
+    {
+     "choice": "Grassland",
+     "level": 3,
+     "spells": [
+      "invisibility",
+      "pass without trace"
+     ]
+    },
+    {
+     "choice": "Grassland",
+     "level": 5,
+     "spells": [
+      "daylight",
+      "haste"
+     ]
+    },
+    {
+     "choice": "Grassland",
+     "level": 7,
+     "spells": [
+      "divination",
+      "freedom of movement"
+     ]
+    },
+    {
+     "choice": "Grassland",
+     "level": 9,
+     "spells": [
+      "dream",
+      "insect plague"
+     ]
+    },
+    {
+     "choice": "Mountain",
+     "level": 3,
+     "spells": [
+      "spider climb",
+      "spike growth"
+     ]
+    },
+    {
+     "choice": "Mountain",
+     "level": 5,
+     "spells": [
+      "lightning bolt",
+      "meld into stone"
+     ]
+    },
+    {
+     "choice": "Mountain",
+     "level": 7,
+     "spells": [
+      "stone shape",
+      "stoneskin"
+     ]
+    },
+    {
+     "choice": "Mountain",
+     "level": 9,
+     "spells": [
+      "passwall",
+      "wall of stone"
+     ]
+    },
+    {
+     "choice": "Swamp",
+     "level": 3,
+     "spells": [
+      "darkness",
+      "Melf's acid arrow"
+     ]
+    },
+    {
+     "choice": "Swamp",
+     "level": 5,
+     "spells": [
+      "water walk",
+      "stinking cloud"
+     ]
+    },
+    {
+     "choice": "Swamp",
+     "level": 7,
+     "spells": [
+      "freedom of movement",
+      "locate creature"
+     ]
+    },
+    {
+     "choice": "Swamp",
+     "level": 9,
+     "spells": [
+      "insect plague",
+      "scrying"
+     ]
+    },
+    {
+     "choice": "Underdark",
+     "level": 3,
+     "spells": [
+      "spider climb",
+      "web"
+     ]
+    },
+    {
+     "choice": "Underdark",
+     "level": 5,
+     "spells": [
+      "gaseous form",
+      "stinking cloud"
+     ]
+    },
+    {
+     "choice": "Underdark",
+     "level": 7,
+     "spells": [
+      "greater invisibility",
+      "stone shape"
+     ]
+    },
+    {
+     "choice": "Underdark",
+     "level": 9,
+     "spells": [
+      "cloudkill",
+      "insect plague"
+     ]
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": "2024 PHB: chosen at level 3; land types are arid, polar, temperate, tropical; Land's Aid at 3, Natural Recovery moves to 6 and also allows a free Circle spell cast once per long rest; Nature's Ward at 10 and Nature's Sanctuary at 14 are kept; Land's Stride is replaced."
+  },
+  {
+   "name": "Circle of the Moon",
+   "summary": "Fierce guardians of the deep wilds who gather under the full moon. They shift between beast forms as readily as the moon changes phase.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Combat Wild Shape",
+     "summary": "Use Wild Shape as a bonus action. While in beast form, use a bonus action to expend a spell slot and heal 1d8 HP per level of the slot."
+    },
+    {
+     "level": 2,
+     "name": "Circle Forms",
+     "summary": "Wild Shape into beasts up to CR 1, ignoring the Max. CR column of the Beast Shapes table (other limits still apply). At 6th level the cap becomes druid level divided by 3, rounded down."
+    },
+    {
+     "level": 6,
+     "name": "Primal Strike",
+     "summary": "Your beast-form attacks count as magical for overcoming resistance and immunity to nonmagical damage."
+    },
+    {
+     "level": 10,
+     "name": "Elemental Wild Shape",
+     "summary": "Spend two Wild Shape uses at once to become an air, earth, fire, or water elemental."
+    },
+    {
+     "level": 14,
+     "name": "Thousand Forms",
+     "summary": "Cast alter self at will."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": "2024 PHB: chosen at level 3; gains Circle Forms (Moon stat blocks, AC 13+Wis, temporary HP), Circle Spells, Improved Circle Forms at 6, Moonlight Step at 10, Lunar Form at 14; Combat Wild Shape, Primal Strike, Elemental Wild Shape and Thousand Forms are gone."
+  }
+ ]
+}

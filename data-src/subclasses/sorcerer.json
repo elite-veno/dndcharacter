@@ -1,0 +1,15 @@
+{"class":"Sorcerer","source":"2014 PHB","subclassLabel":"Sorcerous Origin","subclassLevel":1,"subclasses":[
+{"name":"Draconic Bloodline","summary":"Your magic stems from dragon blood, inherited from an ancestor or gained through a pact, and it slowly gives you draconic traits.","features":[
+{"level":1,"name":"Dragon Ancestor","summary":"Pick a dragon type; its damage type (acid, lightning, fire, poison or cold) powers later features. You speak, read and write Draconic, and your proficiency bonus is doubled on Charisma checks made when dealing with dragons."},
+{"level":1,"name":"Draconic Resilience","summary":"Hit point maximum rises by 1 at level 1 and by 1 each further sorcerer level. Unarmored AC is 13 + Dexterity modifier."},
+{"level":6,"name":"Elemental Affinity","summary":"Spells dealing your ancestry's damage type gain your Charisma modifier as extra damage. You may spend 1 sorcery point to become resistant to that damage type for an hour."},
+{"level":14,"name":"Dragon Wings","summary":"As a bonus action, sprout wings for a flying speed equal to your current speed; dismiss them as a bonus action. You can't manifest the wings while wearing armor unless it is made to accommodate them, and ill-fitting clothing may be destroyed when they appear."},
+{"level":18,"name":"Draconic Presence","summary":"As an action, spend 5 sorcery points to create a 60-foot aura of awe or fear for 1 minute (concentration). Hostile creatures starting their turn in it must succeed on a Wisdom save or be charmed (awe) or frightened (fear); a successful save grants immunity for 24 hours."}],
+"grantedSpells":[],"grantedProficiencies":[],"notes2024":""},
+{"name":"Wild Magic","summary":"Your power arises from the chaotic forces beneath creation, so your spellcasting is unpredictable and can trigger random surges.","features":[
+{"level":1,"name":"Wild Magic Surge","summary":"After casting a sorcerer spell of 1st level or higher, the DM may have you roll a d20; on a 1 you roll on the Wild Magic Surge table for a random effect."},
+{"level":1,"name":"Tides of Chaos","summary":"Gain advantage on one attack roll, ability check or saving throw; usable again after a long rest. Until then, the DM may trigger a surge after a sorcerer spell of 1st level or higher, which also restores this use."},
+{"level":6,"name":"Bend Luck","summary":"Reaction plus 2 sorcery points: when a creature you can see makes an attack, check or save, roll 1d4 and add or subtract it from the roll, after the roll but before its effects."},
+{"level":14,"name":"Controlled Chaos","summary":"Each time a Wild Magic Surge is triggered, you may roll twice and take whichever result you prefer."},
+{"level":18,"name":"Spell Bombardment","summary":"When a damage die of a spell shows its maximum value, choose one such die and roll it again, adding the result. Once per turn."}],
+"grantedSpells":[],"grantedProficiencies":[],"notes2024":""}]}

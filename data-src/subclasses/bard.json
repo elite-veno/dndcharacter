@@ -1,0 +1,14 @@
+{"class":"Bard","source":"2014 PHB","subclassLabel":"Bard College","subclassLevel":3,"subclasses":[
+{"name":"College of Lore","summary":"Scholarly and irreverent performers who gather stories and knowledge from every source, loyal to truth and beauty rather than crowns or gods. They puncture pretension and are broadly skilled.","features":[
+{"level":3,"name":"Bonus Proficiencies","summary":"Gain proficiency in any three skills of your choice."},
+{"level":3,"name":"Cutting Words","summary":"As a reaction, spend a Bardic Inspiration use to roll the die and subtract it from an attack roll, ability check, or damage roll of a creature you can see within 60 feet. Can be used after the roll but before the outcome is declared (or before damage is dealt). Fails against creatures that can't hear you or are immune to charm."},
+{"level":6,"name":"Additional Magical Secrets","summary":"Learn two spells of your choice from any class's list, of a level you can cast or cantrips. They count as bard spells but do not count against spells known."},
+{"level":14,"name":"Peerless Skill","summary":"When you make an ability check, you may spend a Bardic Inspiration use, roll the die, and add it to the check, even after seeing the d20 result but before learning success or failure."}],
+"grantedSpells":[],"grantedProficiencies":["Any three skills"],"notes2024":""},
+{"name":"College of Valor","summary":"Daring skalds who sing the deeds of past and present heroes at mead halls and bonfires, inspiring others to heroism while joining the fight themselves.","features":[
+{"level":3,"name":"Bonus Proficiencies","summary":"Training with medium armor, shields, and martial weapons is added to your proficiencies."},
+{"level":3,"name":"Combat Inspiration","summary":"A creature holding your Bardic Inspiration die can add it to a weapon damage roll it just made, or use its reaction to add it to its AC against one attack, after seeing the roll but before the result is known."},
+{"level":6,"name":"Extra Attack","summary":"Attack twice instead of once when you take the Attack action."},
+{"level":14,"name":"Battle Magic","summary":"Once you cast a bard spell using your action, you may follow it with a single weapon attack made as a bonus action."}],
+"grantedSpells":[],"grantedProficiencies":["Medium armor","Shields","Martial weapons"],"notes2024":""}
+]}
