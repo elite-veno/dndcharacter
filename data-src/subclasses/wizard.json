@@ -275,6 +275,41 @@
    "grantedSpells": [],
    "grantedProficiencies": [],
    "notes2024": ""
+  },
+  {
+   "name": "War Magic",
+   "source": "2014 Xanathar's",
+   "summary": "The Wizard tradition that blends defensive and offensive magic on the battlefield. War mages react to danger with magical protection, act fast in combat, and channel stored energy into extra force damage.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Arcane Deflection",
+     "summary": "As a reaction when you are hit by an attack or fail a saving throw, you gain +2 AC against that attack or +4 on that saving throw, potentially changing the result. After using it, you can cast only cantrips (no leveled spells) until the end of your next turn."
+    },
+    {
+     "level": 2,
+     "name": "Tactical Wit",
+     "summary": "You add your Intelligence modifier to your initiative rolls."
+    },
+    {
+     "level": 6,
+     "name": "Power Surge",
+     "summary": "You keep a pool of surges, with a maximum equal to your Intelligence modifier (minimum 1). You start each long rest with one surge (if you have none, you gain one), and you gain one whenever you successfully end a spell with dispel magic or counterspell. Once per turn, when you damage a creature or object with a wizard spell, you can spend one surge to deal extra force damage equal to half your wizard level."
+    },
+    {
+     "level": 10,
+     "name": "Durable Magic",
+     "summary": "While you are concentrating on a spell, you gain a +2 bonus to AC and to all saving throws."
+    },
+    {
+     "level": 14,
+     "name": "Deflecting Shroud",
+     "summary": "Whenever you use Arcane Deflection, magical energy arcs out to up to three creatures of your choice within 60 feet of you, each taking force damage equal to half your wizard level."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
   }
  ]
 }

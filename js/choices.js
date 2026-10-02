@@ -44,12 +44,19 @@ const subclassGrants = (c) => (chosenSubclass(c)?.grantedProficiencies || []).ma
 
 /** Subclass-granted proficiencies that are not armor, weapons or concrete tools (shown as text on the sheet). */
 export function subclassOtherProficiencies(c) {
-  return (chosenSubclass(c)?.grantedProficiencies || []).filter((g) => !/armor|^shields?$|weapons/i.test(g) && !subclassToolName(g));
+  return (chosenSubclass(c)?.grantedProficiencies || []).filter((g) => !/armor|^shields?$|weapons/i.test(g) && !subclassToolName(g) && !SKILL_BY_NAME[g.toLowerCase()]);
+}
+
+const SKILL_BY_NAME = Object.fromEntries(SKILLS.map((s) => [s.name.toLowerCase(), s]));
+
+/** Fixed skill proficiencies a subclass grants outright (a grant that is exactly a skill name, e.g. Scout: Nature, Survival). */
+export function subclassFixedSkills(c) {
+  return (chosenSubclass(c)?.grantedProficiencies || []).map((g) => SKILL_BY_NAME[g.toLowerCase()]?.id).filter(Boolean);
 }
 
 /** A concrete tool proficiency granted by a subclass (kit / tools), or null for open choices and other grants. */
 export function subclassToolName(g) {
-  return /(kit|tools?)$/i.test(g) && !/\b(one|any|your choice)\b/i.test(g) ? g : null;
+  return /(kit|tools?|supplies)$/i.test(g) && !/\b(one|any|your choice)\b/i.test(g) ? g : null;
 }
 
 export function subclassToolList(c) {

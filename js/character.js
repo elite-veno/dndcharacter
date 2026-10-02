@@ -10,7 +10,7 @@ import * as R from './rules.js';
 import {
   FIGHTING_STYLE_LEVEL, ORDERS, expertiseSlots, masteryOptions, spellCounts, classSpellOptions, classToolChoice,
   classFixedTools, featChoiceSpec, featAbilityOptions, featAbilityCap, magicInitiateOptions, levelSlots, armorTrainingOf,
-  weaponProficiencyOf, extraSkillPicks, chosenSubclass, subclassToolList,
+  weaponProficiencyOf, extraSkillPicks, chosenSubclass, subclassToolList, subclassFixedSkills,
 } from './choices.js';
 import { equippedArmor, hasShieldEquipped, choiceSlots, slotValue, goldLeft } from './inventory.js';
 
@@ -140,6 +140,8 @@ export function skillGrants(c) {
   if (bg) bg.skills.forEach((skill) => grants.push({ skill, source: `${bg.name} background`, step: null }));
   c.classSkills.forEach((skill) => grants.push({ skill, source: 'Class skills', step: 'class' }));
   for (const pick of extraSkillPicks(c)) (c.extraSkills[pick.key] || []).forEach((skill) => grants.push({ skill, source: pick.label, step: 'class' }));
+  const subName = chosenSubclass(c)?.name;
+  subclassFixedSkills(c).forEach((skill) => grants.push({ skill, source: subName, step: null }));
   const sp = c.speciesChoices;
   if (c.speciesId === 'human' && sp.skill) grants.push({ skill: sp.skill, source: 'Human Skillful', step: 'species' });
   if (c.speciesId === 'elf' && sp.keenSenses) grants.push({ skill: sp.keenSenses, source: 'Elf Keen Senses', step: 'species' });

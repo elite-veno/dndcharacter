@@ -108,6 +108,159 @@
    "grantedSpells": [],
    "grantedProficiencies": [],
    "notes2024": ""
+  },
+  {
+   "name": "Inquisitive",
+   "source": "2014 Xanathar's",
+   "summary": "A rogue detective who reads people and spots clues better than anyone, seeing through lies and illusions. Studying a foe's behavior lets you land Sneak Attacks without needing an ally or advantage.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Ear for Deceit",
+     "summary": "When you make a Wisdom (Insight) check to tell whether someone is lying, any d20 roll of 7 or lower counts as an 8."
+    },
+    {
+     "level": 3,
+     "name": "Eye for Detail",
+     "summary": "As a bonus action, you can make a Wisdom (Perception) check to spot a hidden creature or object, or an Intelligence (Investigation) check to uncover or decipher clues."
+    },
+    {
+     "level": 3,
+     "name": "Insightful Fighting",
+     "summary": "As a bonus action, make a Wisdom (Insight) check against a creature you can see and that can see or hear you, contested by its Charisma (Deception). On a success, for the next minute (or until you successfully use this again) you can Sneak Attack that creature even without advantage on the attack, provided you don't have disadvantage and aren't ruled out by other Sneak Attack conditions. On a failure, you can't try again on that creature until a long rest."
+    },
+    {
+     "level": 9,
+     "name": "Steady Eye",
+     "summary": "You have advantage on Wisdom (Perception) and Intelligence (Investigation) checks if you moved no more than half your speed during the turn."
+    },
+    {
+     "level": 13,
+     "name": "Unerring Eye",
+     "summary": "As an action, you sense whether illusions, shapechangers, or other magic meant to deceive is within 30 feet of you, provided you aren't blinded or deafened. This reveals only that such magic is present, not what it is. You can use it a number of times equal to your Wisdom modifier (minimum 1), regaining all uses on a long rest."
+    },
+    {
+     "level": 17,
+     "name": "Eye for Weakness",
+     "summary": "While Insightful Fighting is active against a creature, your Sneak Attack deals an extra 3d6 damage to it."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
+  },
+  {
+   "name": "Mastermind",
+   "source": "2014 Xanathar's",
+   "summary": "A spymaster-style rogue who excels at deception, reading people and coordinating allies. Gains disguise and forgery skills, a long-range bonus-action Help, insight into foes' relative strength, and eventually mind-reading immunity.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Master of Intrigue",
+     "summary": "You gain proficiency with the disguise kit, the forgery kit, and one gaming set of your choice, and you learn two languages of your choice. You can also copy another person's speech patterns and accent after listening to them speak for at least 1 minute; a listener who hears the imitation notices nothing amiss unless a Wisdom (Insight) check says otherwise."
+    },
+    {
+     "level": 3,
+     "name": "Master of Tactics",
+     "summary": "You can take the Help action as a bonus action. When you use Help to distract an enemy so an ally's attack gets advantage, the enemy can be up to 30 feet from you instead of the normal 5 feet."
+    },
+    {
+     "level": 9,
+     "name": "Insightful Manipulator",
+     "summary": "After spending at least 1 minute observing or talking with a creature outside of combat, you can ask the DM to compare it to you in two of these areas: Intelligence score, Wisdom score, Charisma score, and class levels (if any). The DM tells you whether the creature is your equal, superior, or inferior in each of the two chosen areas."
+    },
+    {
+     "level": 13,
+     "name": "Misdirection",
+     "summary": "When a creature makes an attack against you while another creature within 5 feet of you is giving you at least three-quarters cover from the attacker, you can use your reaction to make the attack hit that other creature instead of you."
+    },
+    {
+     "level": 17,
+     "name": "Soul of Deceit",
+     "summary": "Your mind can't be read by telepathy or any other means unless you allow it. You can show false surface thoughts by making a Charisma (Deception) check contested by the reader's Wisdom (Insight) check. Magic that would force you to speak the truth, such as zone of truth, doesn't compel you, and magical means can't determine whether you are lying."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [
+    "Disguise Kit",
+    "Forgery Kit",
+    "One gaming set of your choice",
+    "Two languages of your choice"
+   ],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
+  },
+  {
+   "name": "Scout",
+   "source": "2014 Xanathar's",
+   "summary": "A wilderness-savvy rogue who skirmishes across the battlefield, excels at Nature and Survival, and grows steadily faster. Late features let the Scout set up allies with an opening strike and squeeze in an extra Sneak Attack.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Skirmisher",
+     "summary": "As a reaction when an enemy finishes its turn within 5 feet of you, you may move up to half your speed. This movement does not provoke opportunity attacks."
+    },
+    {
+     "level": 3,
+     "name": "Survivalist",
+     "summary": "You gain proficiency in Nature and Survival. Your proficiency bonus is doubled for ability checks using either skill (expertise)."
+    },
+    {
+     "level": 9,
+     "name": "Superior Mobility",
+     "summary": "Your walking speed increases by 10 feet. If you have a climbing or swimming speed, it increases by the same amount."
+    },
+    {
+     "level": 13,
+     "name": "Ambush Master",
+     "summary": "You have advantage on initiative rolls. In addition, the first creature you hit during the first round of a combat becomes vulnerable to your allies: until the start of your next turn, attack rolls against that creature have advantage."
+    },
+    {
+     "level": 17,
+     "name": "Sudden Strike",
+     "summary": "When you take the Attack action, you can make one extra attack as a bonus action. That extra attack may benefit from Sneak Attack even if you already used Sneak Attack this turn, but you still cannot Sneak Attack the same target more than once in a turn."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [
+    "Nature",
+    "Survival"
+   ],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
+  },
+  {
+   "name": "Swashbuckler",
+   "source": "2014 Xanathar's",
+   "summary": "A charismatic, mobile duelist who slips away from melee foes without provoking, fights well one-on-one, and wins fights through charm, taunting and flair.",
+   "features": [
+    {
+     "level": 3,
+     "name": "Fancy Footwork",
+     "summary": "On your turn, any creature you make a melee attack against cannot make opportunity attacks against you for the remainder of that turn, whether or not the attack hits."
+    },
+    {
+     "level": 3,
+     "name": "Rakish Audacity",
+     "summary": "You add your Charisma modifier to your initiative rolls. You can also use Sneak Attack without advantage on the attack roll when the target is the only creature within 5 feet of you, provided you have no disadvantage on the roll and all other Sneak Attack requirements are met."
+    },
+    {
+     "level": 9,
+     "name": "Panache",
+     "summary": "As an action, make a Charisma (Persuasion) check contested by a creature's Wisdom (Insight) check; the creature must be able to hear you and share a language with you. If you win against a hostile creature, it has disadvantage on attack rolls against anyone but you and cannot make opportunity attacks against anyone but you. This lasts 1 minute, and ends early if an ally of yours attacks it or casts a spell on it, or if you and it are more than 60 feet apart. If you win against a non-hostile creature, it is charmed by you for 1 minute and treats you as a friendly acquaintance; the charm ends immediately if you or your allies do something harmful to it."
+    },
+    {
+     "level": 13,
+     "name": "Elegant Maneuver",
+     "summary": "As a bonus action, you gain advantage on the next Dexterity (Acrobatics) or Strength (Athletics) check you make during the same turn."
+    },
+    {
+     "level": 17,
+     "name": "Master Duelist",
+     "summary": "When you miss with an attack roll, you can roll it again with advantage. Once you use this, you must finish a short or long rest before using it again."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": ""
   }
  ]
 }
