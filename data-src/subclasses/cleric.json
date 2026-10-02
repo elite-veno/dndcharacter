@@ -551,7 +551,7 @@
     {
      "level": 2,
      "name": "Channel Divinity: Artisan's Blessing",
-     "summary": "Perform a 1-hour ritual (which can be done during a short rest) using a Channel Divinity use, at a forge or similar workspace, to create a nonmagical metal item worth up to 100 gp, such as a weapon, armor, ammunition, tools or another metal object. The item appears in an unoccupied space within 60 feet of you and the work consumes the ritual's time rather than materials."
+     "summary": "Perform a 1-hour ritual (which can be done during a short rest) using a Channel Divinity use, at a forge or similar workspace, to create a metal item. The creation coalesces in an unoccupied space within 5 feet of you. During the ritual you must lay out metal (coins count) of value equal to the item, and that metal is consumed. The item is nonmagical, includes metal, and is worth at most 100 gp: a simple or martial weapon, armor, 10 pieces of ammunition, a set of tools, or another metal object."
     },
     {
      "level": 6,

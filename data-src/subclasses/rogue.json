@@ -172,7 +172,7 @@
     {
      "level": 13,
      "name": "Misdirection",
-     "summary": "When a creature makes an attack against you while another creature within 5 feet of you is giving you at least three-quarters cover from the attacker, you can use your reaction to make the attack hit that other creature instead of you."
+     "summary": "When you are targeted by an attack while a creature within 5 feet of you is granting you cover against that attack, you can use your reaction to have the attack target that creature instead of you."
     },
     {
      "level": 17,

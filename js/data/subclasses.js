@@ -143,7 +143,7 @@ export const SUBCLASSES = [
    {
     "level": 3,
     "name": "Storm Aura",
-    "desc": "Pick Desert, Sea, or Tundra when you enter your rage; as a bonus action while raging you create a 10-foot-radius aura around you that lasts until the rage ends and moves with you. When it is created and at the start of each of your turns, it triggers. The aura's number is 2 at level 3, 3 at level 10, 4 at level 15, and 5 at level 20. Desert: every creature of your choice in the aura takes fire damage equal to the number. Sea: choose one creature you can see in the aura; it makes a Dexterity save (DC 8 + proficiency bonus + Constitution modifier) and takes lightning damage equal to the number on a failure, or half on a success. Tundra: each creature of your choice in the aura, including you, gains temporary hit points equal to the number."
+    "desc": "Pick Desert, Sea, or Tundra when you enter your rage. While raging you emanate a 10-foot aura that does not extend through total cover. Its effect activates when you enter your rage, and you can activate it again on each of your turns as a bonus action. Desert: all other creatures in the aura take 2 fire damage, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th. Sea: choose one other creature you can see in the aura; it makes a Dexterity save (DC 8 + proficiency bonus + Constitution modifier) and takes 1d6 lightning damage on a failure, or half on a success; the damage rises to 2d6 at 10th level, 3d6 at 15th, and 4d6 at 20th. Tundra: each creature of your choice in the aura, including you, gains 2 temporary hit points, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th."
    },
    {
     "level": 6,
@@ -177,7 +177,7 @@ export const SUBCLASSES = [
    {
     "level": 3,
     "name": "Divine Fury",
-    "desc": "While raging, the first creature you hit with a weapon attack on each of your turns takes extra damage equal to 1d6 plus half your barbarian level (rounded down). You choose radiant or necrotic as the damage type when you take this path."
+    "desc": "While raging, the first creature you hit with a weapon attack on each of your turns takes extra damage equal to 1d6 plus half your barbarian level (rounded down). The extra damage is necrotic or radiant, and you choose the type each time you deal it."
    },
    {
     "level": 3,
@@ -202,7 +202,7 @@ export const SUBCLASSES = [
   ],
   "grantedSpells": [],
   "grantedProficiencies": [],
-  "notes2024": "The 2024 Player's Handbook reprints the Zealot revised: Divine Fury (1d6 + half level), Warrior of the Gods (4d12 pool), Fanatical Focus, Zealous Presence, and Rage of the Gods at 14 in place of Rage Beyond Death."
+  "notes2024": "The 2024 Player's Handbook reprints the Zealot revised: Divine Fury (1d6 + half level, necrotic or radiant chosen each time), Warrior of the Gods (4d12 pool), Fanatical Focus, Zealous Presence, and Rage of the Gods at 14 in place of Rage Beyond Death."
  },
  {
   "id": "college-of-lore",
@@ -290,7 +290,7 @@ export const SUBCLASSES = [
    {
     "level": 3,
     "name": "Mantle of Inspiration",
-    "desc": "As a bonus action, you spend one use of Bardic Inspiration and choose a number of creatures within 60 feet equal to your Charisma modifier (minimum 1). You roll your Bardic Inspiration die, and each chosen creature gains temporary hit points equal to twice the number rolled. Each of them can also use its reaction to move up to its speed without provoking opportunity attacks."
+    "desc": "As a bonus action, you spend one use of Bardic Inspiration and choose a number of creatures within 60 feet equal to your Charisma modifier (minimum 1). You roll your Bardic Inspiration die, and each chosen creature gains temporary hit points equal to 5 plus twice the number rolled on your Bardic Inspiration die. Each of them can also use its reaction to move up to its speed without provoking opportunity attacks."
    },
    {
     "level": 3,
@@ -1009,7 +1009,7 @@ export const SUBCLASSES = [
    {
     "level": 2,
     "name": "Channel Divinity: Artisan's Blessing",
-    "desc": "Perform a 1-hour ritual (which can be done during a short rest) using a Channel Divinity use, at a forge or similar workspace, to create a nonmagical metal item worth up to 100 gp, such as a weapon, armor, ammunition, tools or another metal object. The item appears in an unoccupied space within 60 feet of you and the work consumes the ritual's time rather than materials."
+    "desc": "Perform a 1-hour ritual (which can be done during a short rest) using a Channel Divinity use, at a forge or similar workspace, to create a metal item. The creation coalesces in an unoccupied space within 5 feet of you. During the ritual you must lay out metal (coins count) of value equal to the item, and that metal is consumed. The item is nonmagical, includes metal, and is worth at most 100 gp: a simple or martial weapon, armor, 10 pieces of ammunition, a set of tools, or another metal object."
    },
    {
     "level": 6,
@@ -1544,7 +1544,7 @@ export const SUBCLASSES = [
    {
     "level": 2,
     "name": "Balm of the Summer Court",
-    "desc": "You gain a pool of d6s equal to your druid level, refreshed on a long rest. As a bonus action, pick a creature you can see within 120 feet and spend up to half your druid level (rounded up) of the dice from the pool. Roll them: the target heals the rolled total plus one extra hit point per die spent, and also gains one temporary hit point per die spent."
+    "desc": "You gain a pool of d6s equal to your druid level, refreshed on a long rest. As a bonus action, choose an ally you can see within 120 feet and spend up to half your druid level (rounded up) in dice from the pool. Roll them, and the target regains hit points equal to the total. The target also gains 1 temporary hit point per die spent."
    },
    {
     "level": 6,
@@ -2517,7 +2517,7 @@ export const SUBCLASSES = [
    {
     "level": 3,
     "name": "Channel Divinity: Rebuke the Violent",
-    "desc": "As a reaction when a creature within 30 feet that you can see deals damage to someone other than itself, use Channel Divinity to force the attacker to make a Wisdom save. On a failure it takes radiant damage equal to the damage it just dealt; on a success it takes half that amount."
+    "desc": "Immediately after an attacker within 30 feet of you (that you can see) deals damage with an attack against a creature other than you, you can use your reaction and Channel Divinity. The attacker makes a Wisdom save: on a failure it takes radiant damage equal to the damage it just dealt, on a success half as much."
    },
    {
     "level": 7,
@@ -3280,7 +3280,7 @@ export const SUBCLASSES = [
    {
     "level": 13,
     "name": "Misdirection",
-    "desc": "When a creature makes an attack against you while another creature within 5 feet of you is giving you at least three-quarters cover from the attacker, you can use your reaction to make the attack hit that other creature instead of you."
+    "desc": "When you are targeted by an attack while a creature within 5 feet of you is granting you cover against that attack, you can use your reaction to have the attack target that creature instead of you."
    },
    {
     "level": 17,
@@ -3507,7 +3507,7 @@ export const SUBCLASSES = [
    {
     "level": 1,
     "name": "Eyes of the Dark",
-    "desc": "You gain darkvision out to 120 feet. Once you reach sorcerer level 3, you also learn the darkness spell, which does not count against your spells known. You can cast it by spending 2 sorcery points, and when cast that way it needs no components and you can see through the darkness it creates."
+    "desc": "You gain darkvision out to 120 feet. Once you reach sorcerer level 3, you also learn the darkness spell, which does not count against your spells known. You can cast it by spending 2 sorcery points or by expending a spell slot. If you cast it with sorcery points, you can see through the darkness the spell creates."
    },
    {
     "level": 1,
@@ -4316,7 +4316,7 @@ export const SUBCLASSES = [
    {
     "level": 6,
     "name": "Power Surge",
-    "desc": "You keep a pool of surges, with a maximum equal to your Intelligence modifier (minimum 1). You start each long rest with one surge (if you have none, you gain one), and you gain one whenever you successfully end a spell with dispel magic or counterspell. Once per turn, when you damage a creature or object with a wizard spell, you can spend one surge to deal extra force damage equal to half your wizard level."
+    "desc": "You have a number of power surges equal to your Intelligence modifier (minimum 1). Whenever you finish a long rest, your surges reset to one. If you end a short rest with no surges, you gain one. You gain one whenever you successfully end a spell with dispel magic or counterspell. Once per turn, when you deal damage to a creature or object with a wizard spell, you can spend one surge to deal extra force damage equal to half your wizard level."
    },
    {
     "level": 10,

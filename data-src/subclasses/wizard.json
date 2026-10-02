@@ -294,7 +294,7 @@
     {
      "level": 6,
      "name": "Power Surge",
-     "summary": "You keep a pool of surges, with a maximum equal to your Intelligence modifier (minimum 1). You start each long rest with one surge (if you have none, you gain one), and you gain one whenever you successfully end a spell with dispel magic or counterspell. Once per turn, when you damage a creature or object with a wizard spell, you can spend one surge to deal extra force damage equal to half your wizard level."
+     "summary": "You have a number of power surges equal to your Intelligence modifier (minimum 1). Whenever you finish a long rest, your surges reset to one. If you end a short rest with no surges, you gain one. You gain one whenever you successfully end a spell with dispel magic or counterspell. Once per turn, when you deal damage to a creature or object with a wizard spell, you can spend one surge to deal extra force damage equal to half your wizard level."
     },
     {
      "level": 10,

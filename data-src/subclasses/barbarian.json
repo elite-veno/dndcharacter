@@ -119,7 +119,7 @@
         {
           "level": 3,
           "name": "Storm Aura",
-          "summary": "Pick Desert, Sea, or Tundra when you enter your rage; as a bonus action while raging you create a 10-foot-radius aura around you that lasts until the rage ends and moves with you. When it is created and at the start of each of your turns, it triggers. The aura's number is 2 at level 3, 3 at level 10, 4 at level 15, and 5 at level 20. Desert: every creature of your choice in the aura takes fire damage equal to the number. Sea: choose one creature you can see in the aura; it makes a Dexterity save (DC 8 + proficiency bonus + Constitution modifier) and takes lightning damage equal to the number on a failure, or half on a success. Tundra: each creature of your choice in the aura, including you, gains temporary hit points equal to the number."
+          "summary": "Pick Desert, Sea, or Tundra when you enter your rage. While raging you emanate a 10-foot aura that does not extend through total cover. Its effect activates when you enter your rage, and you can activate it again on each of your turns as a bonus action. Desert: all other creatures in the aura take 2 fire damage, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th. Sea: choose one other creature you can see in the aura; it makes a Dexterity save (DC 8 + proficiency bonus + Constitution modifier) and takes 1d6 lightning damage on a failure, or half on a success; the damage rises to 2d6 at 10th level, 3d6 at 15th, and 4d6 at 20th. Tundra: each creature of your choice in the aura, including you, gains 2 temporary hit points, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th."
         },
         {
           "level": 6,
@@ -149,7 +149,7 @@
         {
           "level": 3,
           "name": "Divine Fury",
-          "summary": "While raging, the first creature you hit with a weapon attack on each of your turns takes extra damage equal to 1d6 plus half your barbarian level (rounded down). You choose radiant or necrotic as the damage type when you take this path."
+          "summary": "While raging, the first creature you hit with a weapon attack on each of your turns takes extra damage equal to 1d6 plus half your barbarian level (rounded down). The extra damage is necrotic or radiant, and you choose the type each time you deal it."
         },
         {
           "level": 3,
@@ -174,7 +174,7 @@
       ],
       "grantedSpells": [],
       "grantedProficiencies": [],
-      "notes2024": "The 2024 Player's Handbook reprints the Zealot revised: Divine Fury (1d6 + half level), Warrior of the Gods (4d12 pool), Fanatical Focus, Zealous Presence, and Rage of the Gods at 14 in place of Rage Beyond Death."
+      "notes2024": "The 2024 Player's Handbook reprints the Zealot revised: Divine Fury (1d6 + half level, necrotic or radiant chosen each time), Warrior of the Gods (4d12 pool), Fanatical Focus, Zealous Presence, and Rage of the Gods at 14 in place of Rage Beyond Death."
     }
   ]
 }
