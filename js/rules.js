@@ -197,10 +197,63 @@ export function maxHitPoints({ hitDie, level, conMod, bonusPerLevel = 0, flatBon
   return hpAtLevel1(hitDie, conMod) + (level - 1) * hpPerLevelFixed(hitDie, conMod) + bonusPerLevel * level + flatBonus;
 }
 
+/**
+ * Level-by-level HP: [{ level, gain, running }] using the fixed-average method. Level 1 uses the Hit Die maximum.
+ * `total` always equals maxHitPoints for the same inputs.
+ */
+export function hpProgression({ hitDie, level, conMod, bonusPerLevel = 0, flatBonus = 0 }) {
+  assertLevel(level);
+  const levels = [];
+  let running = flatBonus;
+  for (let l = 1; l <= level; l++) {
+    const gain = (l === 1 ? hpAtLevel1(hitDie, conMod) : hpPerLevelFixed(hitDie, conMod)) + bonusPerLevel;
+    running += gain;
+    levels.push({ level: l, gain, running });
+  }
+  return { levels, total: running, first: hpAtLevel1(hitDie, conMod), perLevel: hpPerLevelFixed(hitDie, conMod) };
+}
+
 /** Total Hit Point Dice equal character level. */
 export const hitDiceTotal = (level) => level;
 
 // ---------------------------------------------------------------- armor class
+
+/** Dexterity modifier that counts toward armor: full when uncapped, limited by the cap, or none for heavy armor. */
+export function armorDex(armor, mods) {
+  if (armor.dexCap === null) return mods.dex;
+  return armor.dexCap > 0 ? Math.min(mods.dex, armor.dexCap) : 0;
+}
+
+/**
+ * Armor Class as an ordered list of terms. The total is the single source of truth for calculateAC, so the sheet's
+ * explanation can never drift from the number. Returns { mode, terms: [{ label, value, kind, note? }], total }.
+ * mode: 'armor' | 'barbarian' | 'monk' | 'unarmored'.
+ */
+export function acTerms({ armor = null, shield = false, mods, unarmoredDefense = null, defenseStyle = false, bonus = 0 }) {
+  const terms = [];
+  let mode;
+  if (armor && armor.category !== 'shield') {
+    mode = 'armor';
+    terms.push({ label: armor.name, value: armor.baseAC, kind: 'base' });
+    terms.push({
+      label: 'Dex', value: armorDex(armor, mods), kind: 'dex',
+      note: armor.dexCap === null ? 'no cap' : armor.dexCap > 0 ? `max ${armor.dexCap}` : 'heavy armor adds no Dex',
+    });
+    if (defenseStyle) terms.push({ label: 'Defense style', value: 1, kind: 'style' });
+  } else if (unarmoredDefense === 'barbarian') {
+    mode = 'barbarian';
+    terms.push({ label: 'Base', value: 10, kind: 'base' }, { label: 'Dex', value: mods.dex, kind: 'dex' }, { label: 'Con', value: mods.con, kind: 'ability' });
+  } else if (unarmoredDefense === 'monk' && !shield) {
+    mode = 'monk';
+    terms.push({ label: 'Base', value: 10, kind: 'base' }, { label: 'Dex', value: mods.dex, kind: 'dex' }, { label: 'Wis', value: mods.wis, kind: 'ability' });
+  } else {
+    mode = 'unarmored';
+    terms.push({ label: 'Base', value: 10, kind: 'base' }, { label: 'Dex', value: mods.dex, kind: 'dex' });
+  }
+  if (shield) terms.push({ label: 'Shield', value: 2, kind: 'shield' });
+  if (bonus) terms.push({ label: 'Other bonus', value: bonus, kind: 'bonus' });
+  return { mode, terms, total: terms.reduce((sum, t) => sum + t.value, 0) };
+}
 
 /**
  * Compute Armor Class.
@@ -208,28 +261,19 @@ export const hitDiceTotal = (level) => level;
  * unarmoredDefense: 'barbarian' | 'monk' | null, defenseStyle: Defense fighting style, bonus: other flat bonuses.
  * Returns { ac, formula }.
  */
-export function calculateAC({ armor = null, shield = false, mods, unarmoredDefense = null, defenseStyle = false, bonus = 0 }) {
-  let ac;
+export function calculateAC(args) {
+  const { armor = null, shield = false, unarmoredDefense = null, defenseStyle = false, bonus = 0, mods } = args;
+  const { total: ac } = acTerms(args);
   let formula;
   if (armor && armor.category !== 'shield') {
-    let dex = 0;
-    if (armor.dexCap === null) dex = mods.dex;
-    else if (armor.dexCap > 0) dex = Math.min(mods.dex, armor.dexCap);
-    ac = armor.baseAC + dex;
+    const dex = armorDex(armor, mods);
     formula = `${armor.name}: ${armor.baseAC}${dex ? ` ${formatMod(dex)} Dex` : ''}`;
-    if (defenseStyle) { ac += 1; formula += ' +1 Defense'; }
-  } else if (unarmoredDefense === 'barbarian') {
-    ac = 10 + mods.dex + mods.con;
-    formula = '10 + Dex + Con (Unarmored Defense)';
-  } else if (unarmoredDefense === 'monk' && !shield) {
-    ac = 10 + mods.dex + mods.wis;
-    formula = '10 + Dex + Wis (Unarmored Defense)';
-  } else {
-    ac = 10 + mods.dex;
-    formula = '10 + Dex (unarmored)';
-  }
-  if (shield) { ac += 2; formula += ' +2 Shield'; }
-  if (bonus) { ac += bonus; formula += ` ${formatMod(bonus)}`; }
+    if (defenseStyle) formula += ' +1 Defense';
+  } else if (unarmoredDefense === 'barbarian') formula = '10 + Dex + Con (Unarmored Defense)';
+  else if (unarmoredDefense === 'monk' && !shield) formula = '10 + Dex + Wis (Unarmored Defense)';
+  else formula = '10 + Dex (unarmored)';
+  if (shield) formula += ' +2 Shield';
+  if (bonus) formula += ` ${formatMod(bonus)}`;
   return { ac, formula };
 }
 
@@ -539,6 +583,27 @@ export function featuresAtLevel(classId, level, { includeSubclass = true, subcla
   return list.sort((a, b) => a.level - b.level);
 }
 
+/** Channel Divinity uses: Cleric 2 (level 2), 3 (6), 4 (18); Paladin 2 (level 3), 3 (11). */
+export function channelDivinityUses(classId, level) {
+  if (classId === 'cleric') return level >= 18 ? 4 : level >= 6 ? 3 : level >= 2 ? 2 : 0;
+  if (classId === 'paladin') return level >= 11 ? 3 : level >= 3 ? 2 : 0;
+  return 0;
+}
+
+/** Wild Shape uses per Long Rest: 2 from level 2, 3 at level 6, 4 at level 17. */
+export const wildShapeUses = (level) => (level >= 17 ? 4 : level >= 6 ? 3 : level >= 2 ? 2 : 0);
+
+/** Indomitable uses (Fighter): 1 at level 9, 2 at 13, 3 at 17. */
+export const indomitableUses = (level) => (level >= 17 ? 3 : level >= 13 ? 2 : level >= 9 ? 1 : 0);
+
+/** Free Hunter's Mark casts from Favored Enemy (Ranger): 2 at level 1, +1 at 5, 9, 13 and 17. */
+export const favoredEnemyUses = (level) => 2 + Math.floor((level - 1) / 4);
+
+/** Battle Master superiority dice: { count, die } (4 at level 3, 5 at 7, 6 at 15; d8, d10 at 10, d12 at 18). */
+export function superiorityDice(level) {
+  return { count: level >= 15 ? 6 : level >= 7 ? 5 : 4, die: level >= 18 ? 12 : level >= 10 ? 10 : 8 };
+}
+
 /** Level-dependent resources for the sheet. Returns only the keys relevant for the class. */
 export function classResources(classId, level, scores) {
   const mods = abilityMods(scores);
@@ -547,9 +612,12 @@ export function classResources(classId, level, scores) {
   switch (classId) {
     case 'barbarian': return { rages: cls.rages[idx] >= 99 ? 'Unlimited' : cls.rages[idx], rageDamage: cls.rageDamage[idx] };
     case 'bard': return { inspirationDie: cls.inspirationDie[idx], inspirationUses: Math.max(1, mods.cha) };
-    case 'fighter': return { secondWind: level >= 10 ? 4 : level >= 4 ? 3 : 2, actionSurge: level >= 17 ? 2 : level >= 2 ? 1 : 0, extraAttacks: level >= 20 ? 3 : level >= 11 ? 2 : level >= 5 ? 1 : 0 };
+    case 'fighter': return { secondWind: level >= 10 ? 4 : level >= 4 ? 3 : 2, actionSurge: level >= 17 ? 2 : level >= 2 ? 1 : 0, indomitable: indomitableUses(level), extraAttacks: level >= 20 ? 3 : level >= 11 ? 2 : level >= 5 ? 1 : 0 };
     case 'monk': return { martialArtsDie: martialArtsDieSize(level), focusPoints: level >= 2 ? level : 0, focusSaveDC: 8 + proficiencyBonus(level) + mods.wis };
-    case 'paladin': return { layOnHands: 5 * level, channelDivinity: level >= 11 ? 3 : level >= 3 ? 2 : 0 };
+    case 'paladin': return { layOnHands: 5 * level, channelDivinity: channelDivinityUses('paladin', level) };
+    case 'cleric': return { channelDivinity: channelDivinityUses('cleric', level) };
+    case 'druid': return { wildShape: wildShapeUses(level) };
+    case 'ranger': return { favoredEnemy: favoredEnemyUses(level) };
     case 'rogue': return { sneakAttack: `${Math.ceil(level / 2)}d6` };
     case 'sorcerer': return { sorceryPoints: level >= 2 ? level : 0 };
     case 'warlock': return { invocations: cls.invocations[idx] };

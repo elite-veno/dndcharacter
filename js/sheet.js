@@ -20,6 +20,9 @@ import { spellsTab, spellEntries } from './sheet/spells.js';
 import { inventoryTab } from './sheet/inventory.js';
 import { featuresTab, notesTab } from './sheet/features.js';
 import { changeLevel, openAsiModal, pendingAsi } from './sheet/level.js';
+import { progressionTab } from './sheet/progression.js';
+import { nextUnlock } from './progression.js';
+import { calculationsTab } from './sheet/calculations.js';
 import { openAppearancePanel, portraitSrc } from './sheet/appearance.js';
 
 const fmt = R.formatMod;
@@ -31,7 +34,7 @@ export function renderSheet(root, character) {
   const c = character;
   c.sheet = normalizeSheet(c.sheet, { gold: deriveCharacter(c).gold });
   setLastSheet(c.id);
-  const view = { tab: 'actions', targetAC: null, lastCrit: {}, castLevel: {}, hpAmount: '', concDC: null };
+  const view = { tab: 'actions', calcOpen: null, calcFocus: null, targetAC: null, lastCrit: {}, castLevel: {}, hpAmount: '', concDC: null };
   const tray = createDiceTray();
   const host = h('div', { class: 'sheet-host' });
   mount(root, host, tray.el);
@@ -157,11 +160,25 @@ export function renderSheet(root, character) {
     toast('Long Rest finished.');
   }
 
+  // ---------------------------------------------------------------- Calculations tab
+
+  /** Jump to a row of the Calculations tab ('ac', 'hp', 'spell-dc', ...). */
+  function showCalc(rowId) {
+    view.tab = 'calculations';
+    view.calcFocus = rowId;
+    render();
+  }
+
+  const calcLink = (rowId, label = 'Show calculation') => h('button', {
+    type: 'button', class: 'link-btn calc-link', title: 'See how this number is calculated', onclick: () => showCalc(rowId),
+  }, label);
+
   // ---------------------------------------------------------------- context handed to panels
+
 
   function makeCtx() {
     return {
-      c, d, s: c.sheet, view, tray, update, save, rerender: render, toast, d20, heal,
+      c, d, s: c.sheet, view, tray, update, save, rerender: render, toast, d20, heal, showCalc,
       weaponOpts: (key) => { c.sheet.weaponOpts[key] = c.sheet.weaponOpts[key] || {}; return c.sheet.weaponOpts[key]; },
     };
   }
@@ -171,11 +188,11 @@ export function renderSheet(root, character) {
   function render() {
     const scrollY = window.scrollY;
     const focusIndex = focusables().indexOf(document.activeElement);
-    const openDetails = [...host.querySelectorAll('details')].map((el) => el.open);
+    const openDetails = [...host.querySelectorAll('details:not(.calc-group)')].map((el) => el.open);
     d = deriveCharacter(c);
     if (c.sheet.hp.current !== null && c.sheet.hp.current > d.hp) c.sheet.hp.current = d.hp;
     mount(host, buildSheet(makeCtx()));
-    host.querySelectorAll('details').forEach((el, i) => { if (openDetails[i]) el.open = true; });
+    host.querySelectorAll('details:not(.calc-group)').forEach((el, i) => { if (openDetails[i]) el.open = true; });
     if (focusIndex >= 0) focusables()[focusIndex]?.focus({ preventScroll: true });
     window.scrollTo({ top: scrollY });
   }
@@ -222,7 +239,18 @@ export function renderSheet(root, character) {
           h('a', { class: 'btn small', href: '#/' }, 'All characters'))),
       h('div', { class: 'head-stats' },
         h('div', { class: 'stat' }, h('span', { class: 'stat-label' }, 'Proficiency'), h('span', { class: 'stat-value' }, fmt(d.pb))),
+        nextUnlockStat(),
         h('div', { class: 'stat' }, h('span', { class: 'stat-label' }, 'Roll next d20'), tray.modeControl())));
+  }
+
+  /** Compact "Next unlock" stat in the header; opens the Progression tab. */
+  function nextUnlockStat() {
+    const next = d.cls ? nextUnlock({ classId: c.classId, level: d.level, subclassId: c.subclassId }) : null;
+    return h('div', { class: 'stat next-unlock' }, h('span', { class: 'stat-label' }, 'Next unlock'),
+      h('button', {
+        type: 'button', class: 'link-btn next-unlock-btn', title: 'See what you unlock and when',
+        onclick: () => { view.tab = 'progression'; render(); },
+      }, next ? (next.now ? next.text : `Level ${next.level}: ${next.text}`) : 'Everything unlocked'));
   }
 
   function bannerView(ctx) {
@@ -310,13 +338,13 @@ export function renderSheet(root, character) {
 
     return panel(null,
       h('div', { class: 'vitals' },
-        stat('Armor Class', h('span', { class: 'stat-value big' }, d.ac.ac), d.ac.formula, untrained ? h('span', { class: 'tag bad' }, 'Untrained armor') : null),
+        stat('Armor Class', h('span', { class: 'stat-value big' }, d.ac.ac), d.ac.formula, [untrained ? h('span', { class: 'tag bad' }, 'Untrained armor') : null, calcLink('ac')]),
         stat('Initiative', rollButton(fmt(d.initiative), (e) => d20({ label: 'Initiative', bonus: d.initiative, e, kind: 'check', ability: 'dex' }), { cls: 'big', label: `Roll initiative ${fmt(d.initiative)}` }), 'Dexterity'),
         stat('Speed', h('span', { class: 'stat-value big' }, `${speed} ft`), s.exhaustion ? `Exhaustion -${5 * s.exhaustion} ft` : (speed === 0 && d.speed ? 'Condition' : d.darkvision ? `Darkvision ${d.darkvision} ft` : null)),
         stat('Hit Dice', h('span', { class: 'stat-value big' }, `${hitDiceLeft(d.level, s.hitDiceUsed)}/${d.level}`), `d${d.hitDie}`)),
       h('div', { class: 'hp-block' },
         h('div', { class: 'hp-numbers', 'aria-live': 'polite' },
-          h('span', { class: 'hp-label' }, 'Hit Points'),
+          h('span', { class: 'hp-label' }, 'Hit Points'), calcLink('hp'),
           h('strong', { class: `hp-now${now === 0 ? ' zero' : ''}` }, now), h('span', { class: 'hp-max' }, `/ ${maxHp()}`),
           hp.temp ? h('span', { class: 'tag good' }, `+${hp.temp} temp`) : null),
         h('div', { class: 'hp-bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': maxHp(), 'aria-valuenow': now, 'aria-label': 'Hit points' },
@@ -383,6 +411,8 @@ export function renderSheet(root, character) {
       hasSpells && { id: 'spells', label: 'Spells', render: spellsTab },
       { id: 'inventory', label: 'Inventory', render: inventoryTab },
       { id: 'features', label: 'Features', render: featuresTab },
+      { id: 'progression', label: 'Progression', render: progressionTab },
+      { id: 'calculations', label: 'Calculations', render: calculationsTab },
       { id: 'notes', label: 'Notes', render: notesTab },
     ].filter(Boolean);
     if (!tabs.some((t) => t.id === view.tab)) view.tab = 'actions';

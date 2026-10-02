@@ -142,19 +142,19 @@ export function resourceDefs({ classId, speciesId, level, scores }) {
   switch (classId) {
     case 'barbarian': add('rage', 'Rage', r.rages === 'Unlimited' ? 0 : r.rages, 1, 'Short Rest: regain one use.'); break;
     case 'bard': add('bardic', `Bardic Inspiration (d${r.inspirationDie})`, r.inspirationUses, level >= 5 ? 'all' : 0, 'Charisma modifier uses.'); break;
-    case 'cleric': add('channel', 'Channel Divinity', level >= 18 ? 4 : level >= 6 ? 3 : level >= 2 ? 2 : 0, 1, 'Short Rest: regain one use.'); break;
-    case 'druid': add('wildshape', 'Wild Shape', level >= 17 ? 4 : level >= 6 ? 3 : level >= 2 ? 2 : 0, 1, 'Short Rest: regain one use.'); break;
+    case 'cleric': add('channel', 'Channel Divinity', r.channelDivinity, 1, 'Short Rest: regain one use.'); break;
+    case 'druid': add('wildshape', 'Wild Shape', r.wildShape, 1, 'Short Rest: regain one use.'); break;
     case 'fighter':
       add('secondwind', 'Second Wind', r.secondWind, 1, 'Short Rest: regain one use.');
       add('actionsurge', 'Action Surge', r.actionSurge, 'all');
-      add('indomitable', 'Indomitable', level >= 17 ? 3 : level >= 13 ? 2 : level >= 9 ? 1 : 0);
+      add('indomitable', 'Indomitable', r.indomitable);
       break;
     case 'monk': add('focus', 'Focus Points', r.focusPoints, 'all'); break;
     case 'paladin':
       add('layonhands', 'Lay on Hands (HP pool)', r.layOnHands);
       add('channel', 'Channel Divinity', r.channelDivinity, 1, 'Short Rest: regain one use.');
       break;
-    case 'ranger': add('hunters', "Favored Enemy (free Hunter's Mark)", 2 + Math.floor((level - 1) / 4), 0); break;
+    case 'ranger': add('hunters', "Favored Enemy (free Hunter's Mark)", r.favoredEnemy, 0); break;
     case 'sorcerer': add('sorcery', 'Sorcery Points', r.sorceryPoints); break;
     case 'wizard': add('arcrecovery', 'Arcane Recovery', 1, 0, 'Once per day on a Short Rest.'); break;
     default: break;

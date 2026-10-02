@@ -222,9 +222,17 @@ export function deriveCharacter(c) {
 
   const hitDie = cls ? cls.hitDie : 8;
   const hp = R.maxHitPoints({ hitDie, level, conMod: mods.con, bonusPerLevel: species?.hpPerLevelBonus || 0 });
-  const ac = R.calculateAC({ armor, shield, mods, unarmoredDefense: cls?.unarmoredDefense || null, defenseStyle });
+  const acArgs = { armor, shield, mods, unarmoredDefense: cls?.unarmoredDefense || null, defenseStyle };
+  const ac = R.calculateAC(acArgs);
   const classBonus = cls ? R.classSpeedBonus(cls.id, level, { armor, shield }) : 0;
   const speed = R.walkingSpeed({ base: baseSpeed, armor, strength: scores.str, bonus: classBonus });
+  // Inputs behind the headline numbers, so the Calculations tab explains exactly what was computed.
+  const calc = {
+    armor, shield, defenseStyle, ac: R.acTerms(acArgs),
+    speed: { base: baseSpeed, classBonus, strengthPenalty: armor && !R.meetsArmorStrength(armor, scores.str) ? 10 : 0 },
+    hpBonusPerLevel: species?.hpPerLevelBonus || 0,
+    jackOfAllTrades: jack,
+  };
 
   const resistances = [];
   if (c.speciesId === 'dwarf') resistances.push('poison');
@@ -235,7 +243,7 @@ export function deriveCharacter(c) {
     level, cls, bg, species, lineage,
     subclass: chosenSubclass({ ...c, level }),
     subclassSpells: R.subclassSpellsAtLevel(chosenSubclass({ ...c, level }), level, c.subclassChoice),
-    breakdown, scores, mods, pb, hitDie, hp, ac, speed, darkvision, resistances, feats, armorTraining,
+    breakdown, scores, mods, pb, hitDie, hp, ac, speed, calc, darkvision, resistances, feats, armorTraining,
     weaponProficiency: weaponProficiencyOf(c),
     initiative: R.initiativeBonus({ scores, level, alert: feats.some((f) => f.id === 'alert') }),
     saves: R.savingThrows({ scores, level, proficientSaves: cls ? cls.savingThrows : [] }),

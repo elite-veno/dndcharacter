@@ -40,22 +40,40 @@ export function featuresTab(ctx) {
     c.invocations.length ? panel('Eldritch Invocations', h('p', {}, c.invocations.join(', ').replace(/-/g, ' '))) : null);
 }
 
+/** Choose (or switch) the subclass; the first granted-spell choice (e.g. Circle of the Land terrain) is preselected. */
+export function setSubclass(ctx, id) {
+  const { d } = ctx;
+  ctx.update((x) => { x.subclassId = id; x.subclassChoice = subclassChoices(d.cls.subclass.find((y) => y.id === id))[0] || null; });
+}
+
+/** The subclass dropdown, shared by the Features and Progression tabs. */
+export function subclassPicker(ctx, id = null) {
+  const { c, d } = ctx;
+  return field(SUBCLASS_LABELS[d.cls.id] || 'Subclass', select({
+    id, options: d.cls.subclass.map((x) => ({ value: x.id, label: x.name })), value: c.subclassId, placeholder: 'Choose...',
+    onChange: (v) => setSubclass(ctx, v),
+  }));
+}
+
+/** The terrain-style choice of the chosen subclass, or null when it has none. */
+export function subclassChoiceField(ctx) {
+  const { c, d } = ctx;
+  const choices = subclassChoices(d.subclass);
+  return choices.length ? field('Terrain', select({ options: choices.map((o) => ({ value: o, label: o })), value: c.subclassChoice, onChange: (v) => ctx.update((x) => { x.subclassChoice = v; }) })) : null;
+}
+
 function subclassPanel(ctx) {
   const { c, d } = ctx;
   if (!d.cls || d.level < 3) return null;
   const label = SUBCLASS_LABELS[d.cls.id] || 'Subclass';
   const sub = d.subclass;
-  const picker = field(label, select({
-    options: d.cls.subclass.map((x) => ({ value: x.id, label: x.name })), value: c.subclassId, placeholder: 'Choose...',
-    onChange: (v) => ctx.update((x) => { x.subclassId = v; x.subclassChoice = subclassChoices(d.cls.subclass.find((y) => y.id === v))[0] || null; }),
-  }));
+  const picker = subclassPicker(ctx);
   if (!sub) return panel(`${label}`, picker, h('p', { class: 'notice warn' }, `Choose a ${label} to gain its features.`));
-  const choices = subclassChoices(sub);
   const spells = d.subclassSpells || [];
   const other = subclassOtherProficiencies(c);
   return panel(`${sub.name} (${sub.source})`,
     picker,
-    choices.length ? field('Terrain', select({ options: choices.map((o) => ({ value: o, label: o })), value: c.subclassChoice, onChange: (v) => ctx.update((x) => { x.subclassChoice = v; }) })) : null,
+    subclassChoiceField(ctx),
     h('p', {}, sub.summary),
     h('p', { class: 'hint' }, `Subclass from the 2014 Player's Handbook; chosen at level 3 under the 2024 rules.${sub.notes2024 ? ` 2024 note: ${sub.notes2024}` : ''}`),
     other.length ? h('p', {}, h('strong', {}, 'Other proficiencies: '), other.join('; ')) : null,
