@@ -20,6 +20,63 @@ const table = (head, rows, caption) => h('div', { class: 'table-wrap info-item' 
     h('thead', {}, h('tr', {}, head.map((c) => h('th', { scope: 'col' }, c)))),
     h('tbody', {}, rows.map((r) => h('tr', {}, r.map((c, i) => h(i === 0 ? 'th' : 'td', i === 0 ? { scope: 'row' } : {}, c)))))));
 
+/** One or two short worked examples per action (shown under the rules text). */
+const ACTION_EXAMPLES = {
+  Attack: [
+    'A level 5 Fighter (Str +3, Proficiency +3) swings a longsword: d20 + 6 against the goblin\'s AC 15. A total of 15 or more hits, and a hit deals 1d8 + 3 damage. With Extra Attack she makes two such swings.',
+    'Throwing a handaxe from 20 feet is also an Attack action: use the same bonus (Str or Dex per the weapon), and a thrown weapon uses its normal range.',
+  ],
+  Dash: [
+    'Speed 30 ft. Using Dash gives you 30 ft. extra movement, so you can move up to 60 ft. this turn: running to the far side of a room to reach the archer.',
+    'In difficult terrain every foot still costs double, so with Speed 30 and Dash you cross only 30 ft. of rubble (60 ft. of movement / 2).',
+  ],
+  Disengage: [
+    'You are in melee with an ogre and want to retreat to the cleric. Take Disengage, then walk away: the ogre cannot use its Reaction for an Opportunity Attack when you leave its reach.',
+    'It only protects your own movement this turn; allies next to the ogre are not affected.',
+  ],
+  Dodge: [
+    'Three bandits are shooting at your Rogue, who has no good attack this turn. She takes Dodge: until her next turn every attack roll against her has Disadvantage (if the attacker can see her), and she has Advantage on Dexterity saves such as against a Fireball.',
+    'If you are Incapacitated or your Speed drops to 0, the benefit ends.',
+  ],
+  Help: [
+    'Ability check: the Rogue is proficient in Thieves\' Tools and picks a lock. The Wizard uses Help (he must be proficient too) so the Rogue rolls the check with Advantage.',
+    'Attack: the Barbarian stands next to a troll and uses Help to distract it. The Paladin\'s next attack against the troll before the start of the Barbarian\'s next turn has Advantage.',
+  ],
+  Hide: [
+    'Standing behind a stone pillar (Three-Quarters Cover) your Ranger rolls Dexterity (Stealth): d20 + 5 = 17 against DC 15. She is Invisible until she attacks, casts a spell or is found.',
+    'Hiding in plain sight with no cover or heavy obscurement is not possible: the DM will not allow the action.',
+  ],
+  Influence: [
+    'The Bard tries to convince the guard to let the party in: Charisma (Persuasion), d20 + 5 against a DM-set DC (for example 15 for a bribable guard).',
+    'The Barbarian growls at a thug: Charisma (Intimidation). The Druid calms a wild boar with Wisdom (Animal Handling).',
+  ],
+  Magic: [
+    'The Wizard casts Fire Bolt (casting time: Action): a ranged spell attack, d20 + 6 against AC, dealing 2d10 fire damage at level 5.',
+    'Activating a magic item whose description says it uses the Magic action (for example a wand) also uses this action. Drinking a potion is different: that is a Bonus Action.',
+  ],
+  Ready: [
+    '"If the cultist steps through the door, I shoot him." Take Ready with the trigger "a cultist steps through the door". When it happens (before your next turn) you use your Reaction to attack. You do not get the attack if the trigger never occurs.',
+    'Readying a spell: the Wizard readies Magic Missile with the same trigger. She casts it when the trigger happens, uses the slot immediately, and must keep Concentration until then.',
+  ],
+  Search: [
+    'The party hears something in the corridor. The Ranger uses Search: Wisdom (Perception) d20 + 5 against the DM\'s DC to spot the hidden tripwire.',
+    'Tracking footprints in mud is Wisdom (Survival); working out what poison killed a guard is Wisdom (Medicine).',
+  ],
+  Study: [
+    'The Wizard examines a strange rune: Intelligence (Arcana) d20 + 5, DC 15, to recall what it does.',
+    'Looking through the library for a clue about the baron\'s family is Intelligence (History) or (Investigation), depending on whether he remembers or deduces.',
+  ],
+  Utilize: [
+    'Pulling a lever, lighting a torch with a tinderbox or tying a rope around a post are done with Utilize. Opening an unlocked door or drawing a weapon is instead your free object interaction.',
+    'Donning or doffing a Shield also costs the Utilize action.',
+  ],
+};
+const exampleBlock = (name) => {
+  const list = ACTION_EXAMPLES[name];
+  if (!list) return null;
+  return h('div', { class: 'info-example' }, h('strong', {}, list.length > 1 ? 'Examples' : 'Example'), h('ul', {}, list.map((t) => h('li', { html: t }))));
+};
+
 const skillsByAbility = (id) => SKILLS.filter((s) => s.ability === id).map((s) => s.name).join(', ') || 'None';
 
 /** Worked AC examples are computed with the real rules engine so they never drift from the sheet. */
@@ -120,7 +177,7 @@ export const SECTIONS = [
     id: 'actions', title: 'The Actions list',
     build: () => [
       p('On your turn you take one of these (or a feature\'s special action). Several features give extra attacks or additional actions.'),
-      ...ACTIONS.map((a) => item(a.name, a.desc)),
+      ...ACTIONS.flatMap((a) => [item(a.name, a.desc), exampleBlock(a.name)]).filter(Boolean),
       tip('Not sure what to do? Attack if an enemy is close, Magic if you have a spell, otherwise Dodge, Help or Dash. You can always try improvising something and ask the DM.'),
     ],
   },
