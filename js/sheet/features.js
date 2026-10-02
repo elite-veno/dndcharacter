@@ -75,7 +75,7 @@ function subclassPanel(ctx) {
     picker,
     subclassChoiceField(ctx),
     h('p', {}, sub.summary),
-    h('p', { class: 'hint' }, `Subclass from the 2014 Player's Handbook; chosen at level 3 under the 2024 rules.${sub.notes2024 ? ` 2024 note: ${sub.notes2024}` : ''}`),
+    h('p', { class: 'hint' }, `Subclass from ${sub.source}; chosen at level 3 under the 2024 rules.${sub.notes2024 ? ` 2024 note: ${sub.notes2024}` : ''}`),
     other.length ? h('p', {}, h('strong', {}, 'Other proficiencies: '), other.join('; ')) : null,
     spells.length ? h('p', {}, h('strong', {}, 'Granted spells: '), spells.map((g) => `${g.name}${g.kind === 'ritual' ? ' (ritual only)' : ''}`).join(', ')) : null);
 }

@@ -390,10 +390,11 @@ test('subclass data: all source subclasses present, every class has >= 2', () =>
     for (const s of j.subclasses) assert.ok(subclassesFor(classId).some((x) => x.name === s.name), s.name);
   }
   assert.equal(SUBCLASSES.length, total);
-  assert.ok(total >= 37);
+  assert.equal(total, 46); // 40 PHB + 6 new ranger subclasses
+  assert.equal(subclassesFor('ranger').length, 8);
   assert.equal(new Set(SUBCLASSES.map((s) => s.id)).size, SUBCLASSES.length);
   for (const s of SUBCLASSES) {
-    assert.equal(s.source, '2014 PHB');
+    assert.ok(/^2014 (PHB|Xanathar's|Tasha's|Fizban's)$/.test(s.source), s.id);
     assert.ok(s.features.length && s.summary, s.id);
     assert.ok(CLASS_BY_ID[s.classId].subclass.includes(s), s.id);
   }

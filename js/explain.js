@@ -332,7 +332,7 @@ function scaling(c, d) {
       d.level < 3 ? 'Unlocks at level 3' : sub ? sub.name : 'Not chosen yet',
       d.level < 3 ? `At level 3 you choose a ${label}: ${options}.`
         : sub ? `Chosen at level 3. Features: ${features}.` : `Choose one of: ${options}.`,
-      `Subclasses come from the 2014 Player's Handbook and are chosen at level 3 under the 2024 rules; their features arrive at the levels shown.`));
+      `Subclasses are 2014 subclasses (Player's Handbook, Xanathar's, Tasha's, Fizban's) and are chosen at level 3 under the 2024 rules; their features arrive at the levels shown.`));
   }
   if (d.spellcasting) rows.push(row('scale-slots', 'Spell slots by level', null, `${R.highestSpellLevel(d.spellcasting.type, d.level)} max slot level`,
     `The class table gives your highest slot level at level ${d.level}: ${R.highestSpellLevel(d.spellcasting.type, d.level)}.`));

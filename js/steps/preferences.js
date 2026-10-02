@@ -50,7 +50,7 @@ export default {
         field('Starting level', levelSelect,
           `Proficiency Bonus +${proficiencyBonus(c.level)}. Level ${c.level} needs ${XP_THRESHOLDS[c.level - 1].toLocaleString('en-US')} XP; higher levels unlock subclasses, spells, feats and more choices.`)),
       sectionTitle('Allowed sources'),
-      notice('Character Forge uses only the System Reference Document 5.2 (SRD 5.2, CC-BY-4.0): 12 classes, the SRD species, backgrounds, feats, spells and equipment of the 2024 rules. Subclasses are the 2014 Player\'s Handbook subclasses (paraphrased), chosen at level 3.'),
+      notice('Character Forge uses only the System Reference Document 5.2 (SRD 5.2, CC-BY-4.0): 12 classes, the SRD species, backgrounds, feats, spells and equipment of the 2024 rules. Subclasses are 2014 subclasses (PHB, Xanathar\'s, Tasha\'s, Fizban\'s; paraphrased), chosen at level 3.'),
       h('ul', { class: 'bullets' },
         h('li', {}, 'Ability scores come from your Background (+2/+1 or +1/+1/+1), not your species.'),
         h('li', {}, 'Every Background grants an Origin feat, two skills and a tool proficiency.'),

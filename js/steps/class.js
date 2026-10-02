@@ -119,7 +119,7 @@ function subclassPicker(ctx, cls) {
   const label = SUBCLASS_LABELS[cls.id] || 'Subclass';
   const chosen = cls.subclass.find((x) => x.id === c.subclassId) || null;
   const wrap = h('div', { class: 'choices' }, sectionTitle(`${label} (subclass)`, 3),
-    notice(`These subclasses come from the 2014 Player's Handbook. The 2024 rules choose every subclass at level ${SUBCLASS_LEVEL}, so features, spells and proficiencies the 2014 book grants earlier are granted at level ${SUBCLASS_LEVEL} when you select one.`));
+    notice(`These are 2014 subclasses (Player's Handbook, Xanathar's, Tasha's, Fizban's); the badge on each card shows its book. The 2024 rules choose every subclass at level ${SUBCLASS_LEVEL}, so features, spells and proficiencies the 2014 books grant earlier are granted at level ${SUBCLASS_LEVEL} when you select one.`));
   const group = h('div', { class: 'card-grid subclass-grid', role: 'radiogroup', 'aria-label': label });
   cls.subclass.forEach((sub) => {
     const on = sub.id === c.subclassId;

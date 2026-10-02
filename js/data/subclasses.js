@@ -1,11 +1,11 @@
-// Subclasses (paraphrased summaries of the 2014 Player's Handbook subclasses).
+// Subclasses (paraphrased summaries of 2014 subclasses from the Player's Handbook, Xanathar's, Tasha's and Fizban's; each entry's source field names its book).
 // The base rules of this app are 2024, so every class chooses its subclass at level 3; features, granted spells and
 // proficiencies that the 2014 book grants earlier (Cleric, Sorcerer, Warlock, Druid, Wizard) are granted at level 3.
 // Generated from data-src/subclasses/*.json. grantedSpells kinds: 'prepared' (always prepared from the given level),
 // 'ritual' (ritual-only access), 'expanded' (added to the class spell list; level = spell level, not character level).
 
 export const SUBCLASS_LEVEL = 3;
-export const SUBCLASS_SOURCE = '2014 PHB';
+export const SUBCLASS_SOURCE = '2014 PHB'; // default source; individual subclasses carry their own source field
 
 export const SUBCLASSES = [
  {
@@ -1750,6 +1750,447 @@ export const SUBCLASSES = [
   "grantedSpells": [],
   "grantedProficiencies": [],
   "notes2024": "The 2024 Beast Master has a Primal Companion (Beast of the Land, Sea, or Sky stat block that scales with level), Exceptional Training, Bestial Fury, and Share Spells."
+ },
+ {
+  "id": "drakewarden",
+  "classId": "ranger",
+  "name": "Drakewarden",
+  "source": "2014 Fizban's",
+  "label": "Ranger Archetype",
+  "sourceLevel": 3,
+  "summary": "A ranger who forms a bond with a draconic spirit that manifests as a drake. The drake fights beside you, later grows wings and becomes a rideable mount, and the pair gain elemental damage, breath attacks and resistances tied to a chosen damage type.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Draconic Gift",
+    "desc": "You learn the Thaumaturgy cantrip (it does not count against your cantrips known; Wisdom is its casting ability) and you learn the Draconic language."
+   },
+   {
+    "level": 3,
+    "name": "Drake Companion",
+    "desc": "As an action you can summon a drake companion in an unoccupied space within 30 feet, once per long rest or by expending a spell slot of 1st level or higher. When summoning it you choose a Draconic Essence damage type: acid, cold, fire, lightning or poison. The drake is a Small creature friendly to you and your allies that acts on your initiative, obeys your commands, and uses your proficiency bonus for its stats; its hit points and bite damage scale with your ranger level and proficiency bonus. It stays until reduced to 0 hit points, you dismiss it, or you summon it again, and it vanishes if you die. If it is killed you can bring it back with a long rest or by summoning it again."
+   },
+   {
+    "level": 7,
+    "name": "Bond of Fang and Scale",
+    "desc": "Your bond deepens. You gain resistance to the damage type of your Draconic Essence, and the drake's bite deals an extra 1d6 damage of that type. When you summon the drake, choose one benefit: it gains a swim speed equal to its walking speed and can breathe air and water, or it grows wings and gains a flying speed equal to your walking speed. The drake also becomes Medium and can serve as your mount; while you ride it, it cannot use the flying speed from this feature."
+   },
+   {
+    "level": 11,
+    "name": "Drake's Breath",
+    "desc": "As an action, you or your drake can exhale a 30-foot cone of destructive energy, dealing 8d6 damage (10d6 at 15th level) of acid, cold, fire, lightning or poison (chosen each use, not tied to the Draconic Essence); Dexterity save against your spell save DC for half. Usable once per long rest, or again by expending a spell slot of 3rd level or higher."
+   },
+   {
+    "level": 15,
+    "name": "Perfected Bond",
+    "desc": "The drake's bite deals another extra 1d6 of its essence damage type (2d6 extra in total), and it grows to Large. It can now use the flying speed from Bond of Fang and Scale while you ride it. Also, when you or the drake take damage while within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Draconic (language)"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook; the 2024 ranger subclasses are Beast Master, Fey Wanderer, Gloom Stalker and Hunter."
+ },
+ {
+  "id": "fey-wanderer",
+  "classId": "ranger",
+  "name": "Fey Wanderer",
+  "source": "2014 Tasha's",
+  "label": "Ranger Archetype",
+  "sourceLevel": 3,
+  "summary": "A Ranger touched by the Feywild who blends fey magic with woodland skill. Fey Wanderers add psychic damage to weapon hits, are charming and persuasive, resist and redirect charm and fear effects, call fey allies, and teleport with Misty Step.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Dreadful Strikes",
+    "desc": "Once on each of your turns, when you hit a creature with a weapon attack, you deal an extra 1d4 psychic damage. This extra damage increases to 1d6 at 11th level."
+   },
+   {
+    "level": 3,
+    "name": "Fey Wanderer Magic",
+    "desc": "You always have certain spells prepared; they do not count against your number of prepared Ranger spells. Charm Person at 3rd level, Misty Step at 5th, Summon Fey at 9th, Dimension Door at 13th, and Mislead at 17th."
+   },
+   {
+    "level": 3,
+    "name": "Otherworldly Glamour",
+    "desc": "Add your Wisdom modifier (minimum +1) to any Charisma check you make. You also gain proficiency in one of these skills of your choice: Deception, Performance, or Persuasion."
+   },
+   {
+    "level": 7,
+    "name": "Beguiling Twist",
+    "desc": "You have advantage on saving throws against being charmed or frightened. In addition, when you or a creature you can see within 120 feet succeeds on a saving throw against being charmed or frightened, you can use your reaction to force a different creature you can see within 120 feet to make a Wisdom saving throw against your spell save DC. On a failure, it is charmed or frightened (your choice, matching the condition that was resisted) for 1 minute. It can repeat the save at the end of each of its turns, ending the effect on a success."
+   },
+   {
+    "level": 11,
+    "name": "Fey Reinforcements",
+    "desc": "You learn Summon Fey (if not already known) and can cast it without a material component. You can also cast it once without expending a spell slot, regaining that use after a long rest. When you cast it this way (or any time you cast it), you may choose to have it not require concentration, in which case its duration becomes 1 minute. Casting it with a spell slot still works normally."
+   },
+   {
+    "level": 15,
+    "name": "Misty Wanderer",
+    "desc": "You can cast Misty Step a number of times equal to your Wisdom modifier (minimum once) without expending a spell slot, regaining all uses after a long rest. When you cast it, you can bring along one willing creature you can see within 5 feet of you; it appears in an unoccupied space within 5 feet of your destination."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "Charm Person"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Misty Step"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "Summon Fey"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "Dimension Door"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "Mislead"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [
+   "One skill of your choice from: Deception, Performance, Persuasion"
+  ],
+  "notes2024": "The 2024 Player's Handbook reprints the Fey Wanderer with revised features."
+ },
+ {
+  "id": "gloom-stalker",
+  "classId": "ranger",
+  "name": "Gloom Stalker",
+  "source": "2014 Xanathar's",
+  "label": "Ranger Archetype",
+  "sourceLevel": 3,
+  "summary": "An ambush specialist who thrives in darkness. Gloom Stalkers strike hard on the opening turn of a fight, see in the dark better than most, hide from creatures that rely on darkvision, and gain protection against mental effects and incoming attacks as they level.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Gloom Stalker Magic",
+    "desc": "You gain extra spells that are always prepared at certain Ranger levels: disguise self (3rd), rope trick (5th), fear (9th), greater invisibility (13th), seeming (17th). They do not count against your number of prepared spells."
+   },
+   {
+    "level": 3,
+    "name": "Dread Ambusher",
+    "desc": "Add your Wisdom modifier to your initiative rolls. On the first turn of any combat, your walking speed rises by 10 feet until that turn ends. If you take the Attack action on that first turn, you make one additional weapon attack as part of it, and if that extra attack hits, it deals an extra 1d8 damage of the weapon's damage type."
+   },
+   {
+    "level": 3,
+    "name": "Umbral Sight",
+    "desc": "You gain darkvision out to 60 feet, or extend your existing darkvision by 30 feet. While you are in darkness, creatures that rely on darkvision to perceive you cannot see you; you are effectively invisible to them in the dark."
+   },
+   {
+    "level": 7,
+    "name": "Iron Mind",
+    "desc": "You gain proficiency in Wisdom saving throws. If you already have it, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
+   },
+   {
+    "level": 11,
+    "name": "Stalker's Flurry",
+    "desc": "Once on each of your turns, when you miss with a weapon attack, you can immediately make another weapon attack as part of the same action."
+   },
+   {
+    "level": 15,
+    "name": "Shadowy Dodge",
+    "desc": "As a reaction when a creature makes an attack roll against you without having advantage on it, you can impose disadvantage on that roll. You must decide this before the outcome of the attack is known."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "disguise self"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "rope trick"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "fear"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "greater invisibility"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "seeming"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [
+   "Wisdom saving throws (level 7; Intelligence or Charisma instead if already proficient in Wisdom)"
+  ],
+  "notes2024": "The 2024 Player's Handbook reprints the Gloom Stalker with the same theme and a reworked Dread Ambusher (an Ambusher's Leap burst of speed and extra damage in place of the first-turn bonus attack) alongside Umbral Sight, Iron Mind, Stalker's Flurry and Shadowy Dodge."
+ },
+ {
+  "id": "horizon-walker",
+  "classId": "ranger",
+  "name": "Horizon Walker",
+  "source": "2014 Xanathar's",
+  "label": "Ranger Archetype",
+  "sourceLevel": 3,
+  "summary": "A ranger who guards the world against threats from other planes. Horizon Walkers sense planar portals, hit foes with bonus force damage, slip into the Ethereal Plane, teleport mid-combat, and shrug off damage by phasing partly out of reality.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Horizon Walker Magic",
+    "desc": "You always have certain spells prepared once you reach the listed ranger levels: protection from evil and good at 3, misty step at 5, haste at 9, banishment at 13 and teleportation circle at 17. They do not count against your number of prepared spells."
+   },
+   {
+    "level": 3,
+    "name": "Detect Portal",
+    "desc": "As an action, you sense the direction and distance to the closest planar portal within 1 mile of you. After using this, you must finish a short or long rest before using it again."
+   },
+   {
+    "level": 3,
+    "name": "Planar Warrior",
+    "desc": "As a bonus action, pick one creature you can see within 30 feet. The next time you hit it with a ranged or melee weapon attack this turn, all of the attack's damage becomes force damage, and it takes an extra 1d8 force damage. The extra damage rises to 2d8 when you reach 11th level."
+   },
+   {
+    "level": 7,
+    "name": "Ethereal Step",
+    "desc": "As a bonus action, you cast the etherealness spell with this feature, without a spell slot or components. The effect ends at the end of the current turn. You must finish a short or long rest before using it again."
+   },
+   {
+    "level": 11,
+    "name": "Distant Strike",
+    "desc": "When you take the Attack action, you may teleport up to 10 feet to an unoccupied space you can see before each attack you make. If you attack at least two different creatures with the action, you make one additional attack, against a third creature."
+   },
+   {
+    "level": 15,
+    "name": "Spectral Defense",
+    "desc": "As a reaction when you take damage from an attack, you gain resistance to all of the damage from that instance of damage."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "protection from evil and good"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "misty step"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "haste"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "banishment"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "teleportation circle"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "The 2024 Player's Handbook does not include Horizon Walker; it remains a 2014 Xanathar's subclass without an official 2024 revision."
+ },
+ {
+  "id": "monster-slayer",
+  "classId": "ranger",
+  "name": "Monster Slayer",
+  "source": "2014 Xanathar's",
+  "label": "Ranger Archetype",
+  "sourceLevel": 3,
+  "summary": "A Ranger archetype built to hunt down dangerous individual foes such as fiends, undead and rogue spellcasters. It reveals a target's defenses, marks prey for bonus damage, shores up your saves against that prey, and can shut down enemy spells and teleportation.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Monster Slayer Magic",
+    "desc": "You always have certain spells prepared, and they do not count against your prepared-spell total: protection from evil and good at 3rd level, zone of truth at 5th, magic circle at 9th, banishment at 13th, and hold monster at 17th."
+   },
+   {
+    "level": 3,
+    "name": "Hunter's Sense",
+    "desc": "As an action, pick a creature within 60 feet and learn whether it has any damage immunities, resistances or vulnerabilities, and which ones. You can do this a number of times equal to your Wisdom modifier (minimum once), regaining all uses on a long rest."
+   },
+   {
+    "level": 3,
+    "name": "Slayer's Prey",
+    "desc": "As a bonus action, designate a creature you can see within 60 feet as your prey. The first time on each of your turns that you hit it with a weapon attack, it takes an extra 1d6 damage. The designation lasts until you finish a short or long rest, or until you designate a different creature."
+   },
+   {
+    "level": 7,
+    "name": "Supernatural Defense",
+    "desc": "Whenever your Slayer's Prey target forces you to make a saving throw or tries to escape your grapple, add 1d6 to your roll (the save or the ability check)."
+   },
+   {
+    "level": 11,
+    "name": "Magic-User's Nemesis",
+    "desc": "As a reaction, when you see a creature within 60 feet casting a spell or teleporting, force it to make a Wisdom save against your spell save DC. On a failure, the spell fails and is wasted, or the teleportation fails. Once used, it recharges after a short or long rest."
+   },
+   {
+    "level": 15,
+    "name": "Slayer's Counter",
+    "desc": "If your Slayer's Prey target makes you roll a saving throw, you can use your reaction to make a weapon attack against it before you roll. If the attack hits, your save automatically succeeds, and the attack's damage still applies as normal."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "protection from evil and good"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "zone of truth"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "magic circle"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "banishment"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "hold monster"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook; the 2024 ranger subclasses are Beast Master, Fey Wanderer, Gloom Stalker and Hunter."
+ },
+ {
+  "id": "swarmkeeper",
+  "classId": "ranger",
+  "name": "Swarmkeeper",
+  "source": "2014 Tasha's",
+  "label": "Ranger Archetype",
+  "sourceLevel": 3,
+  "summary": "A ranger who fights alongside a swarm of tiny nature spirits (sprites, pixies or insects). The swarm shoves enemies around, repositions you, lets you fly briefly and teleports you away when you are hurt, and it grants a small suite of control spells.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Swarmkeeper Magic",
+    "desc": "You learn the Mage Hand cantrip; when you cast it, the hand appears as a cluster of nature spirits. You also always have certain spells prepared at the ranger levels shown (Faerie Fire and Sleep at 3, Hold Person at 5, Gaseous Form at 9, Arcane Eye at 13, Insect Plague at 17); they do not count against your prepared-spell total."
+   },
+   {
+    "level": 3,
+    "name": "Gathered Swarm",
+    "desc": "Once per turn, when you hit a creature with an attack, your swarm can add one effect of your choice. (1) The target takes an extra 1d6 piercing damage. (2) The target must succeed on a Strength saving throw against your spell save DC or be moved up to 15 feet horizontally in a direction you choose. (3) You move up to 5 feet horizontally without provoking opportunity attacks."
+   },
+   {
+    "level": 7,
+    "name": "Writhing Tide",
+    "desc": "As a bonus action, the swarm lifts you, granting a flying speed of 10 feet and the ability to hover for 1 minute. You can use this a number of times equal to your proficiency bonus, regaining all uses on a long rest."
+   },
+   {
+    "level": 11,
+    "name": "Mighty Swarm",
+    "desc": "Gathered Swarm improves: the damage option becomes 1d8 instead of 1d6; a target that fails the Strength save is also knocked prone; and when you choose the self-movement option, the swarm gives you half cover until the start of your next turn."
+   },
+   {
+    "level": 15,
+    "name": "Swarming Dispersal",
+    "desc": "When you take damage, you can use your reaction to gain resistance to that damage type against the triggering damage and teleport up to 30 feet to an unoccupied space you can see, as the swarm scatters and reforms. You can do this a number of times equal to your proficiency bonus, regaining all uses on a long rest."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "Faerie Fire",
+     "Sleep"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Hold Person"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "Gaseous Form"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "Arcane Eye"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "Insect Plague"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook; the 2024 ranger subclasses are Beast Master, Fey Wanderer, Gloom Stalker and Hunter."
  },
  {
   "id": "thief",
