@@ -198,6 +198,167 @@
    ],
    "grantedProficiencies": [],
    "notes2024": "In the 2024 PHB this is the Great Old One Patron with reworked features (e.g. Psychic Spells, Clairvoyant Combatant)."
+  },
+  {
+   "name": "The Celestial",
+   "source": "2014 Xanathar's",
+   "summary": "Your patron is a being of the Upper Planes, and your magic leans toward healing and radiant fire. You gain a pool of healing dice, extra light-themed cantrips, and a spell list full of restorative and fiery spells.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Expanded Spell List",
+     "summary": "The Celestial adds extra spells to the warlock spell list for you, from 1st through 5th spell level (see granted spells)."
+    },
+    {
+     "level": 1,
+     "name": "Bonus Cantrips",
+     "summary": "You learn the light and sacred flame cantrips. They do not count against your number of cantrips known."
+    },
+    {
+     "level": 1,
+     "name": "Healing Light",
+     "summary": "You have a pool of d6s equal to 1 + your warlock level. As a bonus action, pick a creature you can see within 60 feet and spend up to your Charisma modifier (minimum 1) dice from the pool; roll them and the creature regains that many hit points. You regain all spent dice when you finish a long rest."
+    },
+    {
+     "level": 6,
+     "name": "Radiant Soul",
+     "summary": "You gain resistance to radiant damage. When you cast a spell that deals radiant or fire damage, you add your Charisma modifier to one damage roll of that spell against one of its targets."
+    },
+    {
+     "level": 10,
+     "name": "Celestial Resilience",
+     "summary": "Whenever you finish a short or long rest, you gain temporary hit points equal to your warlock level + your Charisma modifier. In addition, choose up to five creatures you can see at the end of that rest; each gains temporary hit points equal to half your warlock level + your Charisma modifier."
+    },
+    {
+     "level": 14,
+     "name": "Searing Vengeance",
+     "summary": "When you would make a death saving throw at the start of your turn, you can instead spring back up: you regain hit points equal to half your hit point maximum and may stand without spending movement. Each creature of your choice within 30 feet then takes radiant damage equal to 2d8 + your Charisma modifier and is blinded until the end of the current turn. Once used, you must finish a long rest before using it again."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "Cure Wounds",
+      "Guiding Bolt"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 2,
+     "spells": [
+      "Flaming Sphere",
+      "Lesser Restoration"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 3,
+     "spells": [
+      "Daylight",
+      "Revivify"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 4,
+     "spells": [
+      "Guardian of Faith",
+      "Wall of Fire"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 5,
+     "spells": [
+      "Flame Strike",
+      "Greater Restoration"
+     ],
+     "kind": "expanded"
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": "The 2024 Player's Handbook reprints this patron as the Celestial Patron with revised features (Healing Light, Radiant Soul, Celestial Resilience, Searing Vengeance)."
+  },
+  {
+   "name": "The Hexblade",
+   "source": "2014 Xanathar's",
+   "summary": "A warlock who pacts with a mysterious force from the Shadowfell, the Hexblade fights as a martial caster in medium armor, using Charisma for weapon attacks. They brand foes with a curse that boosts damage and crit chances, and later raise spectral minions from slain humanoids.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Hexblade's Curse",
+     "summary": "As a bonus action, curse a creature you can see within 30 feet for 1 minute. The curse ends early if the target dies, you die, or you are incapacitated. While it lasts: you add your proficiency bonus to damage rolls against the cursed target; your attack rolls against it score a critical hit on a 19 or 20; and if it dies, you regain hit points equal to your warlock level + your Charisma modifier (minimum 1). Once used, it must be recharged with a short or long rest."
+    },
+    {
+     "level": 1,
+     "name": "Hex Warrior",
+     "summary": "You gain proficiency with medium armor, shields and martial weapons. At the end of a long rest you may touch one weapon you are proficient with that lacks the two-handed property; until your next long rest, you use your Charisma modifier instead of Strength or Dexterity for its attack and damage rolls. If you later take Pact of the Blade, this extends to every pact weapon you create, whatever its type."
+    },
+    {
+     "level": 6,
+     "name": "Accursed Specter",
+     "summary": "When you slay a humanoid, you can have its spirit rise as a specter under your control. It appears in an unoccupied space within 30 feet of the corpse, uses the standard Specter stat block, gains temporary hit points equal to half your warlock level, and adds your Charisma modifier (minimum +0) to its attack rolls. It acts on its own initiative count, obeys your commands, and vanishes at the end of your next long rest. Once used, you must finish a long rest before using it again."
+    },
+    {
+     "level": 10,
+     "name": "Armor of Hexes",
+     "summary": "If the target of your Hexblade's Curse hits you with an attack roll, roll a d6. On a 4 or higher, the attack instead misses you, regardless of its roll."
+    },
+    {
+     "level": 14,
+     "name": "Master of Hexes",
+     "summary": "When a creature cursed by your Hexblade's Curse dies, you can immediately apply the curse to a different creature you can see within 30 feet of the dead one, without expending a use of the feature. You cannot do this if you are incapacitated, and the new curse works normally for the remainder of its duration."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "Shield",
+      "Wrathful Smite"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 2,
+     "spells": [
+      "Blur",
+      "Branding Smite"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 3,
+     "spells": [
+      "Blink",
+      "Elemental Weapon"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 4,
+     "spells": [
+      "Phantasmal Killer",
+      "Staggering Smite"
+     ],
+     "kind": "expanded"
+    },
+    {
+     "level": 5,
+     "spells": [
+      "Banishing Smite",
+      "Cone of Cold"
+     ],
+     "kind": "expanded"
+    }
+   ],
+   "grantedProficiencies": [
+    "Medium armor",
+    "Shields",
+    "Martial weapons"
+   ],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
   }
  ]
 }

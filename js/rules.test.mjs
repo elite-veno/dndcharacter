@@ -376,7 +376,8 @@ test('data integrity', () => {
 
 import fs from 'node:fs';
 import { normalizeCharacter, validateStep, deriveCharacter, newCharacter } from './character.js';
-import { armorTrainingOf, weaponProficiencyOf } from './choices.js';
+import { armorTrainingOf, weaponProficiencyOf, subclassToolList, subclassFixedSkills, subclassOtherProficiencies } from './choices.js';
+import { skillGrants } from './character.js';
 
 test('subclass data: all source subclasses present, every class has >= 2', () => {
   const srcDir = new URL('../data-src/subclasses/', import.meta.url);
@@ -390,14 +391,35 @@ test('subclass data: all source subclasses present, every class has >= 2', () =>
     for (const s of j.subclasses) assert.ok(subclassesFor(classId).some((x) => x.name === s.name), s.name);
   }
   assert.equal(SUBCLASSES.length, total);
-  assert.equal(total, 46); // 40 PHB + 6 new ranger subclasses
-  assert.equal(subclassesFor('ranger').length, 8);
+  assert.equal(total, 74); // 40 PHB + 6 Ranger (Xanathar's, Tasha's, Fizban's) + 28 Xanathar's
+  const perClass = { barbarian: 5, bard: 5, cleric: 9, druid: 4, fighter: 6, monk: 6, paladin: 5, ranger: 8, rogue: 7, sorcerer: 5, warlock: 5, wizard: 9 };
+  for (const [id, n] of Object.entries(perClass)) assert.equal(subclassesFor(id).length, n, id);
+  assert.equal(SUBCLASSES.filter((s) => s.source === "2014 Xanathar's").length, 31);
   assert.equal(new Set(SUBCLASSES.map((s) => s.id)).size, SUBCLASSES.length);
   for (const s of SUBCLASSES) {
     assert.ok(/^2014 (PHB|Xanathar's|Tasha's|Fizban's)$/.test(s.source), s.id);
     assert.ok(s.features.length && s.summary, s.id);
     assert.ok(CLASS_BY_ID[s.classId].subclass.includes(s), s.id);
   }
+});
+
+test('Xanathar subclass grants: armor, weapons, tools and fixed skills', () => {
+  const mk = (classId, subclassId, level = 3) => ({ ...newCharacter(), classId, level, subclassId });
+  assert.ok(armorTrainingOf(mk('cleric', 'forge-domain')).includes('heavy'));
+  assert.ok(!armorTrainingOf(mk('cleric', 'grave-domain')).includes('heavy'));
+  const hex = mk('warlock', 'the-hexblade');
+  assert.ok(armorTrainingOf(hex).includes('medium') && armorTrainingOf(hex).includes('shield'));
+  assert.ok(weaponProficiencyOf(hex).categories.includes('martial'));
+  assert.ok(!armorTrainingOf(mk('warlock', 'the-celestial')).includes('medium'));
+  assert.deepEqual(subclassToolList(mk('cleric', 'forge-domain')), ["Smith's Tools"]);
+  assert.deepEqual(subclassToolList(mk('rogue', 'mastermind')), ['Disguise Kit', 'Forgery Kit']);
+  assert.deepEqual(subclassToolList(mk('monk', 'way-of-the-drunken-master')), ["Brewer's Supplies"]);
+  assert.deepEqual(subclassFixedSkills(mk('rogue', 'scout')), ['nature', 'survival']);
+  assert.ok(skillGrants(mk('rogue', 'scout')).some((g) => g.skill === 'survival' && g.source === 'Scout'));
+  assert.deepEqual(subclassFixedSkills(mk('rogue', 'scout', 2)), []);
+  assert.ok(!subclassOtherProficiencies(mk('rogue', 'scout')).length);
+  assert.ok(subclassOtherProficiencies(mk('fighter', 'samurai')).length === 2);
+  assert.ok(R.subclassSpellsAtLevel(R.getSubclass('cleric', 'forge-domain'), 5).some((s) => s.name === 'Elemental Weapon'));
 });
 
 test('featuresAtLevel respects chosen subclass and level', () => {

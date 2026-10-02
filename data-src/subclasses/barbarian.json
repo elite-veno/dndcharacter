@@ -80,6 +80,101 @@
       ],
       "grantedProficiencies": [],
       "notes2024": "2024 PHB renamed it Path of the Wild Heart: Rage of the Wilds (3: Bear/Eagle/Wolf), Aspect of the Wilds (6: Owl/Panther/Salmon, plus Speak with Animals as a ritual), Nature Speaker (10: Commune with Nature), Power of the Wilds (14: Falcon/Lion/Ram). Totem Warrior itself is not in the 2024 PHB."
+    },
+    {
+      "name": "Path of the Ancestral Guardian",
+      "source": "2014 Xanathar's",
+      "summary": "Barbarians of this path call on spectral ancestor warriors to shield their allies. While raging, you draw enemy attention onto yourself, blunt damage dealt to nearby creatures, and later gain spirit divination and retaliatory force damage.",
+      "features": [
+        {
+          "level": 3,
+          "name": "Ancestral Protectors",
+          "summary": "While raging, the first creature you hit with an attack on your turn is haunted by spectral warriors until the start of your next turn. The haunted creature has disadvantage on attack rolls against anyone other than you, and any creature other than you that it damages has resistance to that damage."
+        },
+        {
+          "level": 6,
+          "name": "Spirit Shield",
+          "summary": "While raging, when you see a creature within 30 feet of you take damage, you can use your reaction to have your ancestor spirits reduce that damage by 2d6. The reduction becomes 3d6 at 10th level and 4d6 at 14th level."
+        },
+        {
+          "level": 10,
+          "name": "Consult the Spirits",
+          "summary": "You can cast augury or clairvoyance without a spell slot or material components, by asking your ancestral spirits for guidance (for clairvoyance, the sensor is created by the spirits). Wisdom is your spellcasting ability for it. Once used, you must finish a short or long rest before using it again."
+        },
+        {
+          "level": 14,
+          "name": "Vengeful Ancestors",
+          "summary": "When your Spirit Shield reduces damage, the attacker who dealt that damage takes force damage equal to the amount your spirits prevented."
+        }
+      ],
+      "grantedSpells": [],
+      "grantedProficiencies": [],
+      "notes2024": "Not reprinted in the 2024 Player's Handbook."
+    },
+    {
+      "name": "Path of the Storm Herald",
+      "source": "2014 Xanathar's",
+      "summary": "A raging barbarian who radiates a 10-foot storm aura themed on desert, sea, or tundra, choosing the environment each time they rage. The aura deals damage or grants temporary hit points, and later grants resistances to you and allies plus a stronger environment-specific strike.",
+      "features": [
+        {
+          "level": 3,
+          "name": "Storm Aura",
+          "summary": "Pick Desert, Sea, or Tundra when you enter your rage. While raging you emanate a 10-foot aura that does not extend through total cover. Its effect activates when you enter your rage, and you can activate it again on each of your turns as a bonus action. Desert: all other creatures in the aura take 2 fire damage, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th. Sea: choose one other creature you can see in the aura; it makes a Dexterity save (DC 8 + proficiency bonus + Constitution modifier) and takes 1d6 lightning damage on a failure, or half on a success; the damage rises to 2d6 at 10th level, 3d6 at 15th, and 4d6 at 20th. Tundra: each creature of your choice in the aura, including you, gains 2 temporary hit points, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th."
+        },
+        {
+          "level": 6,
+          "name": "Storm Soul",
+          "summary": "Gain a benefit based on your chosen environment, active whenever you are not wearing heavy armor. Desert: fire resistance, and as an action you can ignite flammable objects in reach that nobody is wearing or carrying. Sea: lightning resistance, the ability to breathe underwater, and a 30-foot swim speed. Tundra: cold resistance, and as an action you can turn water within 5 feet into a 5-foot cube of ice that is not occupied by creatures or objects (it melts after 1 minute); it affects only still water."
+        },
+        {
+          "level": 10,
+          "name": "Shielding Storm",
+          "summary": "Allies of your choice within your storm aura also gain the damage resistance granted by your Storm Soul feature for your chosen environment."
+        },
+        {
+          "level": 14,
+          "name": "Raging Storm",
+          "summary": "Your environment gains a powerful effect. Desert: when a creature within 10 feet hits you with an attack, you can use your reaction to deal fire damage to it equal to half your barbarian level. Sea: when you hit a creature in your aura with an attack, you can force it to make a Strength save (DC 8 + proficiency bonus + Constitution modifier); on a failure it is knocked prone. Tundra: when you activate your aura, you may choose one creature you can see in it; it makes a Strength save (same DC) or its speed becomes 0 until the start of your next turn, as magical frost covers it."
+        }
+      ],
+      "grantedSpells": [],
+      "grantedProficiencies": [],
+      "notes2024": "Not reprinted in the 2024 Player's Handbook."
+    },
+    {
+      "name": "Path of the Zealot",
+      "source": "2014 Xanathar's",
+      "summary": "A divinely driven rager whose weapon hits carry bonus radiant or necrotic damage, who can heal from a pool of d12s, resist failed saves, inspire allies, and keep fighting past 0 hit points while raging.",
+      "features": [
+        {
+          "level": 3,
+          "name": "Divine Fury",
+          "summary": "While raging, the first creature you hit with a weapon attack on each of your turns takes extra damage equal to 1d6 plus half your barbarian level (rounded down). The extra damage is necrotic or radiant, and you choose the type each time you deal it."
+        },
+        {
+          "level": 3,
+          "name": "Warrior of the Gods",
+          "summary": "You have a pool of four d12s used for self-healing. As a bonus action, spend any number of dice from the pool, roll them, and regain that many hit points total. The pool refills on a long rest. The pool grows to 5d12 at 6th level, 6d12 at 12th level, and 7d12 at 17th level. Spells that restore a dead creature to life (such as raise dead) cast on you need no material components."
+        },
+        {
+          "level": 6,
+          "name": "Fanatical Focus",
+          "summary": "Once per rage, when you fail a saving throw, you may reroll it and add your Rage damage bonus to the new roll. You must use the new result."
+        },
+        {
+          "level": 10,
+          "name": "Zealous Presence",
+          "summary": "As a bonus action, choose up to ten other creatures within 60 feet; until the start of your next turn they have advantage on attack rolls and saving throws. Once used, it cannot be used again until a long rest, unless you expend a use of your Rage to restore it."
+        },
+        {
+          "level": 14,
+          "name": "Rage Beyond Death",
+          "summary": "While raging, dropping to 0 hit points does not make you unconscious. You still make death saving throws and suffer the normal effects of taking damage at 0 hit points. If you would die from failed death saves, you instead stay alive until your rage ends, and you die then only if you still have 0 hit points."
+        }
+      ],
+      "grantedSpells": [],
+      "grantedProficiencies": [],
+      "notes2024": "The 2024 Player's Handbook reprints the Zealot revised: Divine Fury (1d6 + half level, necrotic or radiant chosen each time), Warrior of the Gods (4d12 pool), Fanatical Focus, Zealous Presence, and Rage of the Gods at 14 in place of Rage Beyond Death."
     }
   ]
 }

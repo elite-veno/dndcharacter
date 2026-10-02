@@ -333,6 +333,73 @@
    "grantedSpells": [],
    "grantedProficiencies": [],
    "notes2024": "2024 PHB: chosen at level 3; gains Circle Forms (Moon stat blocks, AC 13+Wis, temporary HP), Circle Spells, Improved Circle Forms at 6, Moonlight Step at 10, Lunar Form at 14; Combat Wild Shape, Primal Strike, Elemental Wild Shape and Thousand Forms are gone."
+  },
+  {
+   "name": "Circle of Dreams",
+   "source": "2014 Xanathar's",
+   "summary": "A fey-touched druid circle tied to the Summer Court that focuses on healing allies from a distance, creating hidden resting places, and teleporting around the battlefield and beyond.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Balm of the Summer Court",
+     "summary": "You gain a pool of d6s equal to your druid level, refreshed on a long rest. As a bonus action, choose an ally you can see within 120 feet and spend up to half your druid level (rounded up) in dice from the pool. Roll them, and the target regains hit points equal to the total. The target also gains 1 temporary hit point per die spent."
+    },
+    {
+     "level": 6,
+     "name": "Hearth of Moonlight and Shadow",
+     "summary": "When you take a short or long rest, you can spend the first 10 minutes ritually creating a 30-foot-radius sphere of protection centered on you. For the rest's duration, everyone inside gains a +5 bonus to Wisdom (Perception) and Dexterity (Stealth) checks, and light from fires inside the sphere cannot be seen from outside it."
+    },
+    {
+     "level": 10,
+     "name": "Hidden Paths",
+     "summary": "As a bonus action, you can teleport up to 60 feet to an unoccupied space you can see. Alternatively, as an action you can teleport a willing creature you touch up to 30 feet to an unoccupied space you can see. You have a number of uses equal to your Wisdom modifier (minimum 1), regained on a long rest."
+    },
+    {
+     "level": 14,
+     "name": "Walker in Dreams",
+     "summary": "After finishing a short rest, you can cast dream, scrying, or teleportation circle without a slot or components. When cast this way, teleportation circle opens a portal whose destination is the place where you most recently completed a long rest. Once used, this must wait until you finish a long rest."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
+  },
+  {
+   "name": "Circle of the Shepherd",
+   "source": "2014 Xanathar's",
+   "summary": "Druids who commune with animal spirits and guard beasts and fey. They talk with woodland creatures, call a protective spirit aura, and make their summoned allies tougher and longer-lasting.",
+   "features": [
+    {
+     "level": 2,
+     "name": "Speech of the Woods",
+     "summary": "You learn the Sylvan language. You can also speak with beasts as a natural ability, understanding them and being understood in return."
+    },
+    {
+     "level": 2,
+     "name": "Spirit Totem",
+     "summary": "As a bonus action, you call a spirit of nature to a point you can see within 60 feet. It creates a 30-foot-radius aura around that point that lasts 1 minute (it ends early if you die). It can be used once, regaining on a short or long rest. When you call it, pick one spirit. Bear Spirit: you and each creature of your choice in the aura gain temporary hit points equal to 5 + your druid level, and while in the aura have advantage on Strength checks and Strength saving throws. Hawk Spirit: as a reaction when a creature you can see in the aura makes an attack roll, you may give it advantage on that roll; creatures of your choice in the aura also have advantage on Wisdom (Perception) checks. Unicorn Spirit: you and your allies in the aura have advantage on ability checks to detect other creatures; also, whenever you cast a healing spell with a spell slot, each creature of your choice in the aura regains hit points equal to your druid level."
+    },
+    {
+     "level": 6,
+     "name": "Mighty Summoner",
+     "summary": "Beasts and fey that you conjure with any spell gain 2 extra hit points per Hit Die, and their natural weapon attacks count as magical for overcoming resistance and immunity to nonmagical damage."
+    },
+    {
+     "level": 10,
+     "name": "Guardian Spirit",
+     "summary": "When a beast or fey that you summoned or created with a spell ends its turn inside your Spirit Totem aura, it regains hit points equal to half your druid level."
+    },
+    {
+     "level": 14,
+     "name": "Faithful Summons",
+     "summary": "If you drop to 0 hit points or are incapacitated against your will, you can immediately cast Conjure Animals as if using a 9th-level slot, with no slot, components or concentration cost to you. The summoned creatures appear near you, last 1 hour (or until you dismiss them), and act to protect you. Usable once per long rest."
+    }
+   ],
+   "grantedSpells": [],
+   "grantedProficiencies": [
+    "Sylvan (language)"
+   ],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
   }
  ]
 }

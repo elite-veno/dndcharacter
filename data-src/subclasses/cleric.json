@@ -532,6 +532,171 @@
     "Heavy armor"
    ],
    "notes2024": ""
+  },
+  {
+   "name": "Forge Domain",
+   "source": "2014 Xanathar's",
+   "summary": "A smith-god cleric who wears heavy armor, empowers mundane gear, and crafts metal items with divine rituals. Gains fire resistance, extra armor class, fiery weapon strikes, and eventually fire immunity and tough physical resistances.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Bonus Proficiencies",
+     "summary": "You gain proficiency with heavy armor and with smith's tools."
+    },
+    {
+     "level": 1,
+     "name": "Blessing of the Forge",
+     "summary": "At the end of a long rest, touch one nonmagical suit of armor or one nonmagical simple or martial weapon. Until your next long rest or until you die, it becomes a magic item with a +1 bonus to AC (armor) or to attack and damage rolls (weapon)."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Artisan's Blessing",
+     "summary": "Perform a 1-hour ritual (which can be done during a short rest) using a Channel Divinity use, at a forge or similar workspace, to create a metal item. The creation coalesces in an unoccupied space within 5 feet of you. During the ritual you must lay out metal (coins count) of value equal to the item, and that metal is consumed. The item is nonmagical, includes metal, and is worth at most 100 gp: a simple or martial weapon, armor, 10 pieces of ammunition, a set of tools, or another metal object."
+    },
+    {
+     "level": 6,
+     "name": "Soul of the Forge",
+     "summary": "You gain resistance to fire damage, and while wearing heavy armor you gain a +1 bonus to your Armor Class."
+    },
+    {
+     "level": 8,
+     "name": "Divine Strike",
+     "summary": "Once on each of your turns when you hit a creature with a weapon attack, you deal an extra 1d8 fire damage. At 14th level the extra damage becomes 2d8."
+    },
+    {
+     "level": 17,
+     "name": "Saint of Forge and Fire",
+     "summary": "You become immune to fire damage. While wearing heavy armor, you also have resistance to nonmagical bludgeoning, piercing and slashing damage."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "Identify",
+      "Searing Smite"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 3,
+     "spells": [
+      "Heat Metal",
+      "Magic Weapon"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 5,
+     "spells": [
+      "Elemental Weapon",
+      "Protection from Energy"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 7,
+     "spells": [
+      "Fabricate",
+      "Wall of Fire"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 9,
+     "spells": [
+      "Animate Objects",
+      "Creation"
+     ],
+     "kind": "prepared"
+    }
+   ],
+   "grantedProficiencies": [
+    "Heavy armor",
+    "Smith's Tools"
+   ],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
+  },
+  {
+   "name": "Grave Domain",
+   "source": "2014 Xanathar's",
+   "summary": "A cleric domain about the line between life and death: it protects the dying, senses undead, and punishes foes by making them easier to hurt. It also boosts cantrip damage and heals allies when enemies fall.",
+   "features": [
+    {
+     "level": 1,
+     "name": "Circle of Mortality",
+     "summary": "When you cast a healing spell that restores hit points to a creature at 0 hit points, the healing dice count as their maximum possible result. You also learn the spare the dying cantrip, and it does not count against your cleric cantrips known. Spare the dying has a range of 30 feet when you cast it."
+    },
+    {
+     "level": 1,
+     "name": "Eyes of the Grave",
+     "summary": "As an action, you sense the location of any undead within 60 feet that is not behind total cover and is not protected from divination magic. This lasts until the end of your next turn. You learn only where they are, not what they are. You can use this a number of times equal to your Wisdom modifier (minimum 1), regaining all uses after a long rest."
+    },
+    {
+     "level": 2,
+     "name": "Channel Divinity: Path to the Grave",
+     "summary": "As an action, you use Channel Divinity to curse a creature you can see within 30 feet. The next time you or an ally hits that creature with an attack before the end of your next turn, the creature is vulnerable to all of that attack's damage, and the curse then ends. The curse has no effect on a creature that is immune to the damage of that attack."
+    },
+    {
+     "level": 6,
+     "name": "Sentinel at Death's Door",
+     "summary": "As a reaction, when you or a creature you can see within 30 feet suffers a critical hit, you can turn that hit into a normal hit. Any other effects triggered by the critical hit are negated as well. You can do this a number of times equal to your Wisdom modifier (minimum 1), regaining all uses after a long rest."
+    },
+    {
+     "level": 8,
+     "name": "Potent Spellcasting",
+     "summary": "You add your Wisdom modifier to the damage you deal with any cleric cantrip."
+    },
+    {
+     "level": 17,
+     "name": "Keeper of Souls",
+     "summary": "Once per turn, when an enemy you can see dies within 60 feet of you, you or one ally within 60 feet of you regains hit points equal to the number of hit dice that enemy had (or its level, if it has one). You must not be incapacitated to use this."
+    }
+   ],
+   "grantedSpells": [
+    {
+     "level": 1,
+     "spells": [
+      "bane",
+      "false life"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 3,
+     "spells": [
+      "gentle repose",
+      "ray of enfeeblement"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 5,
+     "spells": [
+      "revivify",
+      "vampiric touch"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 7,
+     "spells": [
+      "blight",
+      "death ward"
+     ],
+     "kind": "prepared"
+    },
+    {
+     "level": 9,
+     "spells": [
+      "antimagic field",
+      "raise dead"
+     ],
+     "kind": "prepared"
+    }
+   ],
+   "grantedProficiencies": [],
+   "notes2024": "Not reprinted in the 2024 Player's Handbook."
   }
  ]
 }

@@ -98,6 +98,113 @@ export const SUBCLASSES = [
   "notes2024": "2024 PHB renamed it Path of the Wild Heart: Rage of the Wilds (3: Bear/Eagle/Wolf), Aspect of the Wilds (6: Owl/Panther/Salmon, plus Speak with Animals as a ritual), Nature Speaker (10: Commune with Nature), Power of the Wilds (14: Falcon/Lion/Ram). Totem Warrior itself is not in the 2024 PHB."
  },
  {
+  "id": "path-of-the-ancestral-guardian",
+  "classId": "barbarian",
+  "name": "Path of the Ancestral Guardian",
+  "source": "2014 Xanathar's",
+  "label": "Primal Path",
+  "sourceLevel": 3,
+  "summary": "Barbarians of this path call on spectral ancestor warriors to shield their allies. While raging, you draw enemy attention onto yourself, blunt damage dealt to nearby creatures, and later gain spirit divination and retaliatory force damage.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Ancestral Protectors",
+    "desc": "While raging, the first creature you hit with an attack on your turn is haunted by spectral warriors until the start of your next turn. The haunted creature has disadvantage on attack rolls against anyone other than you, and any creature other than you that it damages has resistance to that damage."
+   },
+   {
+    "level": 6,
+    "name": "Spirit Shield",
+    "desc": "While raging, when you see a creature within 30 feet of you take damage, you can use your reaction to have your ancestor spirits reduce that damage by 2d6. The reduction becomes 3d6 at 10th level and 4d6 at 14th level."
+   },
+   {
+    "level": 10,
+    "name": "Consult the Spirits",
+    "desc": "You can cast augury or clairvoyance without a spell slot or material components, by asking your ancestral spirits for guidance (for clairvoyance, the sensor is created by the spirits). Wisdom is your spellcasting ability for it. Once used, you must finish a short or long rest before using it again."
+   },
+   {
+    "level": 14,
+    "name": "Vengeful Ancestors",
+    "desc": "When your Spirit Shield reduces damage, the attacker who dealt that damage takes force damage equal to the amount your spirits prevented."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "path-of-the-storm-herald",
+  "classId": "barbarian",
+  "name": "Path of the Storm Herald",
+  "source": "2014 Xanathar's",
+  "label": "Primal Path",
+  "sourceLevel": 3,
+  "summary": "A raging barbarian who radiates a 10-foot storm aura themed on desert, sea, or tundra, choosing the environment each time they rage. The aura deals damage or grants temporary hit points, and later grants resistances to you and allies plus a stronger environment-specific strike.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Storm Aura",
+    "desc": "Pick Desert, Sea, or Tundra when you enter your rage. While raging you emanate a 10-foot aura that does not extend through total cover. Its effect activates when you enter your rage, and you can activate it again on each of your turns as a bonus action. Desert: all other creatures in the aura take 2 fire damage, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th. Sea: choose one other creature you can see in the aura; it makes a Dexterity save (DC 8 + proficiency bonus + Constitution modifier) and takes 1d6 lightning damage on a failure, or half on a success; the damage rises to 2d6 at 10th level, 3d6 at 15th, and 4d6 at 20th. Tundra: each creature of your choice in the aura, including you, gains 2 temporary hit points, rising to 3 at 5th level, 4 at 10th, 5 at 15th, and 6 at 20th."
+   },
+   {
+    "level": 6,
+    "name": "Storm Soul",
+    "desc": "Gain a benefit based on your chosen environment, active whenever you are not wearing heavy armor. Desert: fire resistance, and as an action you can ignite flammable objects in reach that nobody is wearing or carrying. Sea: lightning resistance, the ability to breathe underwater, and a 30-foot swim speed. Tundra: cold resistance, and as an action you can turn water within 5 feet into a 5-foot cube of ice that is not occupied by creatures or objects (it melts after 1 minute); it affects only still water."
+   },
+   {
+    "level": 10,
+    "name": "Shielding Storm",
+    "desc": "Allies of your choice within your storm aura also gain the damage resistance granted by your Storm Soul feature for your chosen environment."
+   },
+   {
+    "level": 14,
+    "name": "Raging Storm",
+    "desc": "Your environment gains a powerful effect. Desert: when a creature within 10 feet hits you with an attack, you can use your reaction to deal fire damage to it equal to half your barbarian level. Sea: when you hit a creature in your aura with an attack, you can force it to make a Strength save (DC 8 + proficiency bonus + Constitution modifier); on a failure it is knocked prone. Tundra: when you activate your aura, you may choose one creature you can see in it; it makes a Strength save (same DC) or its speed becomes 0 until the start of your next turn, as magical frost covers it."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "path-of-the-zealot",
+  "classId": "barbarian",
+  "name": "Path of the Zealot",
+  "source": "2014 Xanathar's",
+  "label": "Primal Path",
+  "sourceLevel": 3,
+  "summary": "A divinely driven rager whose weapon hits carry bonus radiant or necrotic damage, who can heal from a pool of d12s, resist failed saves, inspire allies, and keep fighting past 0 hit points while raging.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Divine Fury",
+    "desc": "While raging, the first creature you hit with a weapon attack on each of your turns takes extra damage equal to 1d6 plus half your barbarian level (rounded down). The extra damage is necrotic or radiant, and you choose the type each time you deal it."
+   },
+   {
+    "level": 3,
+    "name": "Warrior of the Gods",
+    "desc": "You have a pool of four d12s used for self-healing. As a bonus action, spend any number of dice from the pool, roll them, and regain that many hit points total. The pool refills on a long rest. The pool grows to 5d12 at 6th level, 6d12 at 12th level, and 7d12 at 17th level. Spells that restore a dead creature to life (such as raise dead) cast on you need no material components."
+   },
+   {
+    "level": 6,
+    "name": "Fanatical Focus",
+    "desc": "Once per rage, when you fail a saving throw, you may reroll it and add your Rage damage bonus to the new roll. You must use the new result."
+   },
+   {
+    "level": 10,
+    "name": "Zealous Presence",
+    "desc": "As a bonus action, choose up to ten other creatures within 60 feet; until the start of your next turn they have advantage on attack rolls and saving throws. Once used, it cannot be used again until a long rest, unless you expend a use of your Rage to restore it."
+   },
+   {
+    "level": 14,
+    "name": "Rage Beyond Death",
+    "desc": "While raging, dropping to 0 hit points does not make you unconscious. You still make death saving throws and suffer the normal effects of taking damage at 0 hit points. If you would die from failed death saves, you instead stay alive until your rage ends, and you die then only if you still have 0 hit points."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "The 2024 Player's Handbook reprints the Zealot revised: Divine Fury (1d6 + half level, necrotic or radiant chosen each time), Warrior of the Gods (4d12 pool), Fanatical Focus, Zealous Presence, and Rage of the Gods at 14 in place of Rage Beyond Death."
+ },
+ {
   "id": "college-of-lore",
   "classId": "bard",
   "name": "College of Lore",
@@ -170,6 +277,116 @@ export const SUBCLASSES = [
    "Martial weapons"
   ],
   "notes2024": ""
+ },
+ {
+  "id": "college-of-glamour",
+  "classId": "bard",
+  "name": "College of Glamour",
+  "source": "2014 Xanathar's",
+  "label": "Bard College",
+  "sourceLevel": 3,
+  "summary": "Fey-touched bards who weave enchanting magic to inspire allies with temporary hit points and free movement, charm crowds with a performance, and radiate a commanding presence that compels obedience and deters attackers.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Mantle of Inspiration",
+    "desc": "As a bonus action, you spend one use of Bardic Inspiration and choose a number of creatures within 60 feet equal to your Charisma modifier (minimum 1). You roll your Bardic Inspiration die, and each chosen creature gains temporary hit points equal to 5 plus twice the number rolled on your Bardic Inspiration die. Each of them can also use its reaction to move up to its speed without provoking opportunity attacks."
+   },
+   {
+    "level": 3,
+    "name": "Enthralling Performance",
+    "desc": "If you perform for at least 1 minute (song, speech, dance, etc.), then when you finish you may target a number of humanoids within 60 feet equal to your Charisma modifier (minimum 1) that watched and listened and can see you. Each must succeed on a Wisdom save against your spell save DC or be charmed by you. A charmed target idolizes you, praises you, and obeys reasonable requests that are not harmful to it, for 1 hour. The charm ends early on a target if you or your companions harm it. Once used, it recharges after a short or long rest."
+   },
+   {
+    "level": 6,
+    "name": "Mantle of Majesty",
+    "desc": "As a bonus action, you cast Command (using no spell slot) and take on an unearthly appearance for 1 minute. During that time, you can cast Command as a bonus action on each of your turns without using a slot. Creatures charmed by you automatically fail their saving throw against these castings. The effect ends early if you are incapacitated or die. Once used, it recharges after a long rest."
+   },
+   {
+    "level": 14,
+    "name": "Unbreakable Majesty",
+    "desc": "As a bonus action, you assume a magnificent presence for 1 minute or until you are incapacitated. While active, the first time on a turn that a creature attacks you, it must make a Charisma save against your spell save DC. On a failure, it cannot attack you this turn and must pick another target or forfeit the attack. On a success, it may attack, but it has disadvantage on saving throws against your spells and bard features until the end of its next turn. Once used, it recharges after a short or long rest."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "The 2024 Player's Handbook reprints College of Glamour revised, adding Beguiling Magic at level 3 and reworking Mantle of Inspiration, Mantle of Majesty and Unbreakable Majesty."
+ },
+ {
+  "id": "college-of-swords",
+  "classId": "bard",
+  "name": "College of Swords",
+  "source": "2014 Xanathar's",
+  "label": "Bard College",
+  "sourceLevel": 3,
+  "summary": "A martial bard college of dueling performers who fight with blades as a show. They gain medium armor, scimitars, a fighting style, an extra attack, and spend Bardic Inspiration dice on showy weapon flourishes.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Bonus Proficiencies",
+    "desc": "You gain proficiency with medium armor and the scimitar. Any melee weapon you are proficient with can serve as your spellcasting focus for bard spells."
+   },
+   {
+    "level": 3,
+    "name": "Fighting Style",
+    "desc": "Choose either the Dueling or the Two-Weapon Fighting fighting style."
+   },
+   {
+    "level": 3,
+    "name": "Blade Flourish",
+    "desc": "When you take the Attack action on your turn, your walking speed rises by 10 feet until the end of that turn. If a weapon attack you make as part of that action hits a creature, you may spend one Bardic Inspiration die to perform one flourish of your choice, rolling the die for its effect. You can use only one flourish per turn. Defensive Flourish: add the die roll to the weapon's damage and also to your AC until the start of your next turn. Slashing Flourish: add the die roll to the damage dealt to the target and to the damage dealt to every other creature of your choice you can see within 5 feet of you (the same rolled amount to each). Mobile Flourish: add the die roll to the damage, and shove the target up to 5 feet plus the die roll in a straight line away from you; you can then use your reaction to move to an unoccupied space within 5 feet of the target using your walking speed."
+   },
+   {
+    "level": 6,
+    "name": "Extra Attack",
+    "desc": "You can attack twice, rather than once, whenever you take the Attack action on your turn."
+   },
+   {
+    "level": 14,
+    "name": "Master's Flourish",
+    "desc": "Whenever you use a Blade Flourish option, you can roll a d6 and use that result in place of spending a Bardic Inspiration die."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Medium armor",
+   "Scimitar"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "college-of-whispers",
+  "classId": "bard",
+  "name": "College of Whispers",
+  "source": "2014 Xanathar's",
+  "label": "Bard College",
+  "sourceLevel": 3,
+  "summary": "Bards of this college are spies and manipulators who deal in secrets, fear and stolen identities. They turn Bardic Inspiration into psychic weapon damage, terrify lone targets, impersonate the dead, and eventually bend foes to their will with the secrets they hold.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Psychic Blades",
+    "desc": "When you hit a creature with a weapon attack, you may spend one use of Bardic Inspiration to add extra psychic damage. The bonus is 2d6, rising to 3d6 at 5th level, 5d6 at 10th level and 8d6 at 15th level. You choose after seeing the hit but before damage is rolled, and you can do this at most once per turn."
+   },
+   {
+    "level": 3,
+    "name": "Words of Terror",
+    "desc": "If you spend at least 1 minute talking privately with a humanoid, it must make a Wisdom save against your spell save DC or become frightened of you or of another creature you name. The fear lasts 1 hour, or ends early if the target is attacked or harmed, or sees its allies attacked or harmed. A target that fails the save forgets you tried this. Once used, you must finish a short or long rest before using it again."
+   },
+   {
+    "level": 6,
+    "name": "Mantle of Whispers",
+    "desc": "As a reaction when a humanoid dies within 30 feet of you, you capture its shadow. As an action you can wear that shadow like a disguise, taking on the dead creature's appearance and gaining access to its surface thoughts and general knowledge, and you can imitate its speech and mannerisms. The disguise lasts 1 hour or until you end it as a bonus action. Once used, you must finish a short or long rest before capturing another shadow."
+   },
+   {
+    "level": 14,
+    "name": "Shadow Lore",
+    "desc": "As an action, choose a creature within 30 feet that can understand you. It must make a Wisdom save against your spell save DC or be charmed by you for 8 hours, or until you or your allies harm it. Believing you know its dark secrets, the charmed creature obeys your commands out of fear, though it will not take actions that are plainly self-destructive. A creature that succeeds is unaware you tried to affect it. Once used, you must finish a long rest before using it again."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  },
  {
   "id": "knowledge",
@@ -771,6 +988,179 @@ export const SUBCLASSES = [
   "notes2024": ""
  },
  {
+  "id": "forge-domain",
+  "classId": "cleric",
+  "name": "Forge Domain",
+  "source": "2014 Xanathar's",
+  "label": "Divine Domain",
+  "sourceLevel": 1,
+  "summary": "A smith-god cleric who wears heavy armor, empowers mundane gear, and crafts metal items with divine rituals. Gains fire resistance, extra armor class, fiery weapon strikes, and eventually fire immunity and tough physical resistances.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Bonus Proficiencies",
+    "desc": "You gain proficiency with heavy armor and with smith's tools."
+   },
+   {
+    "level": 1,
+    "name": "Blessing of the Forge",
+    "desc": "At the end of a long rest, touch one nonmagical suit of armor or one nonmagical simple or martial weapon. Until your next long rest or until you die, it becomes a magic item with a +1 bonus to AC (armor) or to attack and damage rolls (weapon)."
+   },
+   {
+    "level": 2,
+    "name": "Channel Divinity: Artisan's Blessing",
+    "desc": "Perform a 1-hour ritual (which can be done during a short rest) using a Channel Divinity use, at a forge or similar workspace, to create a metal item. The creation coalesces in an unoccupied space within 5 feet of you. During the ritual you must lay out metal (coins count) of value equal to the item, and that metal is consumed. The item is nonmagical, includes metal, and is worth at most 100 gp: a simple or martial weapon, armor, 10 pieces of ammunition, a set of tools, or another metal object."
+   },
+   {
+    "level": 6,
+    "name": "Soul of the Forge",
+    "desc": "You gain resistance to fire damage, and while wearing heavy armor you gain a +1 bonus to your Armor Class."
+   },
+   {
+    "level": 8,
+    "name": "Divine Strike",
+    "desc": "Once on each of your turns when you hit a creature with a weapon attack, you deal an extra 1d8 fire damage. At 14th level the extra damage becomes 2d8."
+   },
+   {
+    "level": 17,
+    "name": "Saint of Forge and Fire",
+    "desc": "You become immune to fire damage. While wearing heavy armor, you also have resistance to nonmagical bludgeoning, piercing and slashing damage."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 1,
+    "spells": [
+     "Identify",
+     "Searing Smite"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 3,
+    "spells": [
+     "Heat Metal",
+     "Magic Weapon"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Elemental Weapon",
+     "Protection from Energy"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 7,
+    "spells": [
+     "Fabricate",
+     "Wall of Fire"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "Animate Objects",
+     "Creation"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [
+   "Heavy armor",
+   "Smith's Tools"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "grave-domain",
+  "classId": "cleric",
+  "name": "Grave Domain",
+  "source": "2014 Xanathar's",
+  "label": "Divine Domain",
+  "sourceLevel": 1,
+  "summary": "A cleric domain about the line between life and death: it protects the dying, senses undead, and punishes foes by making them easier to hurt. It also boosts cantrip damage and heals allies when enemies fall.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Circle of Mortality",
+    "desc": "When you cast a healing spell that restores hit points to a creature at 0 hit points, the healing dice count as their maximum possible result. You also learn the spare the dying cantrip, and it does not count against your cleric cantrips known. Spare the dying has a range of 30 feet when you cast it."
+   },
+   {
+    "level": 1,
+    "name": "Eyes of the Grave",
+    "desc": "As an action, you sense the location of any undead within 60 feet that is not behind total cover and is not protected from divination magic. This lasts until the end of your next turn. You learn only where they are, not what they are. You can use this a number of times equal to your Wisdom modifier (minimum 1), regaining all uses after a long rest."
+   },
+   {
+    "level": 2,
+    "name": "Channel Divinity: Path to the Grave",
+    "desc": "As an action, you use Channel Divinity to curse a creature you can see within 30 feet. The next time you or an ally hits that creature with an attack before the end of your next turn, the creature is vulnerable to all of that attack's damage, and the curse then ends. The curse has no effect on a creature that is immune to the damage of that attack."
+   },
+   {
+    "level": 6,
+    "name": "Sentinel at Death's Door",
+    "desc": "As a reaction, when you or a creature you can see within 30 feet suffers a critical hit, you can turn that hit into a normal hit. Any other effects triggered by the critical hit are negated as well. You can do this a number of times equal to your Wisdom modifier (minimum 1), regaining all uses after a long rest."
+   },
+   {
+    "level": 8,
+    "name": "Potent Spellcasting",
+    "desc": "You add your Wisdom modifier to the damage you deal with any cleric cantrip."
+   },
+   {
+    "level": 17,
+    "name": "Keeper of Souls",
+    "desc": "Once per turn, when an enemy you can see dies within 60 feet of you, you or one ally within 60 feet of you regains hit points equal to the number of hit dice that enemy had (or its level, if it has one). You must not be incapacitated to use this."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 1,
+    "spells": [
+     "bane",
+     "false life"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 3,
+    "spells": [
+     "gentle repose",
+     "ray of enfeeblement"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "revivify",
+     "vampiric touch"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 7,
+    "spells": [
+     "blight",
+     "death ward"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "antimagic field",
+     "raise dead"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
   "id": "circle-of-the-land",
   "classId": "druid",
   "name": "Circle of the Land",
@@ -1143,6 +1533,81 @@ export const SUBCLASSES = [
   "notes2024": "2024 PHB: chosen at level 3; gains Circle Forms (Moon stat blocks, AC 13+Wis, temporary HP), Circle Spells, Improved Circle Forms at 6, Moonlight Step at 10, Lunar Form at 14; Combat Wild Shape, Primal Strike, Elemental Wild Shape and Thousand Forms are gone."
  },
  {
+  "id": "circle-of-dreams",
+  "classId": "druid",
+  "name": "Circle of Dreams",
+  "source": "2014 Xanathar's",
+  "label": "Druid Circle",
+  "sourceLevel": 2,
+  "summary": "A fey-touched druid circle tied to the Summer Court that focuses on healing allies from a distance, creating hidden resting places, and teleporting around the battlefield and beyond.",
+  "features": [
+   {
+    "level": 2,
+    "name": "Balm of the Summer Court",
+    "desc": "You gain a pool of d6s equal to your druid level, refreshed on a long rest. As a bonus action, choose an ally you can see within 120 feet and spend up to half your druid level (rounded up) in dice from the pool. Roll them, and the target regains hit points equal to the total. The target also gains 1 temporary hit point per die spent."
+   },
+   {
+    "level": 6,
+    "name": "Hearth of Moonlight and Shadow",
+    "desc": "When you take a short or long rest, you can spend the first 10 minutes ritually creating a 30-foot-radius sphere of protection centered on you. For the rest's duration, everyone inside gains a +5 bonus to Wisdom (Perception) and Dexterity (Stealth) checks, and light from fires inside the sphere cannot be seen from outside it."
+   },
+   {
+    "level": 10,
+    "name": "Hidden Paths",
+    "desc": "As a bonus action, you can teleport up to 60 feet to an unoccupied space you can see. Alternatively, as an action you can teleport a willing creature you touch up to 30 feet to an unoccupied space you can see. You have a number of uses equal to your Wisdom modifier (minimum 1), regained on a long rest."
+   },
+   {
+    "level": 14,
+    "name": "Walker in Dreams",
+    "desc": "After finishing a short rest, you can cast dream, scrying, or teleportation circle without a slot or components. When cast this way, teleportation circle opens a portal whose destination is the place where you most recently completed a long rest. Once used, this must wait until you finish a long rest."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "circle-of-the-shepherd",
+  "classId": "druid",
+  "name": "Circle of the Shepherd",
+  "source": "2014 Xanathar's",
+  "label": "Druid Circle",
+  "sourceLevel": 2,
+  "summary": "Druids who commune with animal spirits and guard beasts and fey. They talk with woodland creatures, call a protective spirit aura, and make their summoned allies tougher and longer-lasting.",
+  "features": [
+   {
+    "level": 2,
+    "name": "Speech of the Woods",
+    "desc": "You learn the Sylvan language. You can also speak with beasts as a natural ability, understanding them and being understood in return."
+   },
+   {
+    "level": 2,
+    "name": "Spirit Totem",
+    "desc": "As a bonus action, you call a spirit of nature to a point you can see within 60 feet. It creates a 30-foot-radius aura around that point that lasts 1 minute (it ends early if you die). It can be used once, regaining on a short or long rest. When you call it, pick one spirit. Bear Spirit: you and each creature of your choice in the aura gain temporary hit points equal to 5 + your druid level, and while in the aura have advantage on Strength checks and Strength saving throws. Hawk Spirit: as a reaction when a creature you can see in the aura makes an attack roll, you may give it advantage on that roll; creatures of your choice in the aura also have advantage on Wisdom (Perception) checks. Unicorn Spirit: you and your allies in the aura have advantage on ability checks to detect other creatures; also, whenever you cast a healing spell with a spell slot, each creature of your choice in the aura regains hit points equal to your druid level."
+   },
+   {
+    "level": 6,
+    "name": "Mighty Summoner",
+    "desc": "Beasts and fey that you conjure with any spell gain 2 extra hit points per Hit Die, and their natural weapon attacks count as magical for overcoming resistance and immunity to nonmagical damage."
+   },
+   {
+    "level": 10,
+    "name": "Guardian Spirit",
+    "desc": "When a beast or fey that you summoned or created with a spell ends its turn inside your Spirit Totem aura, it regains hit points equal to half your druid level."
+   },
+   {
+    "level": 14,
+    "name": "Faithful Summons",
+    "desc": "If you drop to 0 hit points or are incapacitated against your will, you can immediately cast Conjure Animals as if using a 9th-level slot, with no slot, components or concentration cost to you. The summoned creatures appear near you, last 1 hour (or until you dismiss them), and act to protect you. Usable once per long rest."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Sylvan (language)"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
   "id": "champion",
   "classId": "fighter",
   "name": "Champion",
@@ -1270,6 +1735,155 @@ export const SUBCLASSES = [
   "grantedSpells": [],
   "grantedProficiencies": [],
   "notes2024": "The 2024 version lets you pick spells from the wizard list more flexibly and reworks Eldritch Strike and War Magic."
+ },
+ {
+  "id": "arcane-archer",
+  "classId": "fighter",
+  "name": "Arcane Archer",
+  "source": "2014 Xanathar's",
+  "label": "Martial Archetype",
+  "sourceLevel": 3,
+  "summary": "A fighter who studies an elven archery tradition and infuses shortbow or longbow arrows with magic. You pick a growing list of Arcane Shot effects (a couple of uses per rest), gain a little nature or arcane lore, and later get magical arrows and the ability to redirect missed shots.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Arcane Archer Lore",
+    "desc": "Gain proficiency in either Arcana or Nature (your choice). You also learn the prestidigitation or druidcraft cantrip (your choice); Intelligence is its spellcasting ability."
+   },
+   {
+    "level": 3,
+    "name": "Arcane Shot",
+    "desc": "You learn two Arcane Shot options, and learn another at levels 7, 10, 15 and 18 (you may swap one known option for another whenever you gain a fighter level). Once per turn, when you fire an arrow from a shortbow or longbow as part of the Attack action, you may apply one option to that attack, deciding after the attack hits (except for Seeking and Piercing Arrow, which replace the attack roll). You have two uses, regained on a short or long rest. Save DC = 8 + proficiency bonus + Intelligence modifier. The option damage dice rise (2d6 to 4d6, 1d6 to 2d6) at 18th level."
+   },
+   {
+    "level": 3,
+    "name": "Arcane Shot Options (1)",
+    "desc": "Banishing Arrow: extra 2d6 force; target makes a Charisma save or is banished to a harmless demiplane (incapacitated, speed 0) until the end of your next turn, then returns. Beguiling Arrow: extra 2d6 psychic; target makes a Wisdom save or becomes charmed by a creature of your choice within 30 ft of it until the start of your next turn. Bursting Arrow: extra 2d6 force to the target and to each creature within 10 ft of it, no save. Enfeebling Arrow: extra 2d6 necrotic; target makes a Constitution save or its weapon attack damage is halved until the start of your next turn."
+   },
+   {
+    "level": 3,
+    "name": "Arcane Shot Options (2)",
+    "desc": "Grasping Arrow: extra 2d6 poison, and the target's speed drops by 10 ft; it also takes 2d6 slashing the first time each turn it moves 1+ ft without teleporting, for 1 minute, unless it uses an action to make an Athletics check against your save DC to remove the effect. Piercing Arrow: no attack roll; the arrow forms a 1-ft-wide line out to the weapon's normal range and each creature in it makes a Dexterity save, taking normal weapon damage plus 1d6 piercing on a failure and half that on a success. Seeking Arrow: no attack roll; pick a creature you have seen within the last minute, and the arrow curves around obstacles (ignoring half and three-quarters cover) toward it; if there is a path and it is in range, the target makes a Dexterity save and on a failure takes the arrow's damage plus 1d6 force (nothing on a success), and you learn where it is. Shadow Arrow: extra 2d6 psychic; target makes a Wisdom save or cannot see beyond 5 ft until the start of your next turn."
+   },
+   {
+    "level": 7,
+    "name": "Magic Arrow",
+    "desc": "Any nonmagical arrow you fire from a shortbow or longbow counts as magical for the purpose of overcoming resistance and immunity to nonmagical attacks."
+   },
+   {
+    "level": 7,
+    "name": "Curving Shot",
+    "desc": "When an attack with an arcane-shot-capable bow misses a target, you may use a bonus action to redirect the arrow and reroll the attack against a different target within 60 ft of the original target."
+   },
+   {
+    "level": 15,
+    "name": "Ever-Ready Shot",
+    "desc": "If you roll initiative and have no Arcane Shot uses left, you regain one use."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Arcana or Nature (choose one skill)"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "cavalier",
+  "classId": "fighter",
+  "name": "Cavalier",
+  "source": "2014 Xanathar's",
+  "label": "Martial Archetype",
+  "sourceLevel": 3,
+  "summary": "A mounted-combat and battlefield-control fighter who marks foes to draw their attention, shields allies, and punishes enemies that try to slip past. Strong on a mount but effective on foot as a defender.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Bonus Proficiency",
+    "desc": "Gain proficiency in one of these skills: Animal Handling, History, Insight, Performance, or Persuasion. Alternatively, learn one language of your choice."
+   },
+   {
+    "level": 3,
+    "name": "Born to the Saddle",
+    "desc": "You have advantage on saving throws made to avoid falling off your mount. If you fall off and the drop is 10 feet or less, you land on your feet unless incapacitated. Mounting or dismounting costs you only 5 feet of movement instead of half your speed."
+   },
+   {
+    "level": 3,
+    "name": "Unwavering Mark",
+    "desc": "When you hit a creature with a melee weapon attack, you can mark it until the end of your next turn. While a marked creature is within 5 feet of you, it has disadvantage on attack rolls against any target other than you. If a marked creature deals damage to someone other than you, you can use a bonus action on your next turn to make a special melee weapon attack against it with advantage; on a hit it takes extra damage equal to half your fighter level. The mark ends early if you are incapacitated or die, or if another creature marks the target. You can use this a number of times equal to your Strength modifier (minimum 1) and regain all uses on a long rest."
+   },
+   {
+    "level": 7,
+    "name": "Warding Maneuver",
+    "desc": "As a reaction when you or an ally within 5 feet of you that you can see is hit by an attack, roll a d8 and add it to the target's AC against that attack, possibly turning the hit into a miss. If the attack still hits, the target has resistance to the attack's damage. You can use this a number of times equal to your Constitution modifier (minimum 1) and regain all uses on a long rest. You cannot use it while incapacitated."
+   },
+   {
+    "level": 10,
+    "name": "Hold the Line",
+    "desc": "Creatures provoke an opportunity attack from you when they move 5 feet or more while within your reach. When you hit a creature with an opportunity attack, its speed becomes 0 for the rest of the current turn."
+   },
+   {
+    "level": 15,
+    "name": "Ferocious Charger",
+    "desc": "Once per turn, when you hit a creature with a melee attack after moving at least 10 feet in a straight line toward it immediately beforehand, you can force it to make a Strength saving throw (DC 8 + your proficiency bonus + your Strength modifier) or be knocked prone."
+   },
+   {
+    "level": 18,
+    "name": "Vigilant Defender",
+    "desc": "In combat, you get a special extra reaction on each creature's turn, including your own. You can use it only for opportunity attacks, and it does not use up your normal reaction."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "One skill from Animal Handling, History, Insight, Performance, or Persuasion (or one language of your choice)"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "samurai",
+  "classId": "fighter",
+  "name": "Samurai",
+  "source": "2014 Xanathar's",
+  "label": "Martial Archetype",
+  "sourceLevel": 3,
+  "summary": "A fighter built on unyielding resolve who channels a burst of focus to attack with advantage and shrug off blows. Gains social poise, sturdier mental saves, extra attacks when attacking with advantage, and a last-ditch extra turn when near death.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Bonus Proficiency",
+    "desc": "You gain proficiency in one of these skills of your choice: History, Insight, Performance, or Persuasion. Alternatively, you may learn one language of your choice instead."
+   },
+   {
+    "level": 3,
+    "name": "Fighting Spirit",
+    "desc": "As a bonus action on your turn, you can enter a state of heightened focus. Until the end of the current turn, you have advantage on weapon attack rolls, and you gain 5 temporary hit points. The temporary hit points rise to 10 at 10th level and 15 at 15th level. You can use this feature three times, and all expended uses return when you finish a long rest."
+   },
+   {
+    "level": 7,
+    "name": "Elegant Courtier",
+    "desc": "Whenever you make a Charisma (Persuasion) check, add your Wisdom modifier to the roll. You also gain proficiency in Wisdom saving throws; if you already had that proficiency, you instead gain proficiency in either Intelligence or Charisma saving throws (your choice)."
+   },
+   {
+    "level": 10,
+    "name": "Tireless Spirit",
+    "desc": "When you roll initiative and have no uses of Fighting Spirit remaining, you regain one use of it."
+   },
+   {
+    "level": 15,
+    "name": "Rapid Strike",
+    "desc": "Once per turn, if you have advantage on a weapon attack roll, you may give up that advantage to make one extra attack with the same weapon as part of the same Attack action."
+   },
+   {
+    "level": 18,
+    "name": "Strength Before Death",
+    "desc": "When damage would reduce you to 0 hit points, you can use your reaction to delay falling unconscious and immediately take an extra turn, interrupting the current one. While you have 0 hit points during that extra turn, damage causes death saving throw failures as normal (you die if you accumulate three); when the extra turn ends, you fall unconscious if you are still at 0 hit points. Once used, you must finish a long rest before using it again."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "One skill from History, Insight, Performance, or Persuasion (or one language of your choice)",
+   "Wisdom saving throws (from 7th level; Intelligence or Charisma instead if already proficient in Wisdom)"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  },
  {
   "id": "way-of-the-open-hand",
@@ -1442,6 +2056,119 @@ export const SUBCLASSES = [
   "grantedSpells": [],
   "grantedProficiencies": [],
   "notes2024": "Renamed Warrior of the Elements in the 2024 PHB, with a different, simplified design (Elemental Attunement toggle, elemental damage on strikes, Elemental Burst), and the discipline list is gone."
+ },
+ {
+  "id": "way-of-the-drunken-master",
+  "classId": "monk",
+  "name": "Way of the Drunken Master",
+  "source": "2014 Xanathar's",
+  "label": "Monastic Tradition",
+  "sourceLevel": 3,
+  "summary": "A monk who fights with a seemingly sloppy, stumbling style that is actually precise, staying mobile and slipping out of harm's way. Flurry of Blows grants free disengaging and extra speed, and ki powers redirect misses and shrug off disadvantage.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Bonus Proficiencies",
+    "desc": "You gain proficiency in the Performance skill and in brewer's supplies."
+   },
+   {
+    "level": 3,
+    "name": "Drunken Technique",
+    "desc": "Whenever you use Flurry of Blows, you also gain the benefit of the Disengage action and your walking speed increases by 10 feet until the end of the current turn."
+   },
+   {
+    "level": 6,
+    "name": "Tipsy Sway",
+    "desc": "You gain two defensive movement tricks. Leap to Your Feet: standing up from prone costs you only 5 feet of movement. Redirect Attack: when a creature misses you with a melee attack, you can spend 1 ki point as a reaction to make that attack hit a different creature of your choice within 5 feet of you instead."
+   },
+   {
+    "level": 11,
+    "name": "Drunkard's Luck",
+    "desc": "When you make an ability check, attack roll, or saving throw with disadvantage, you can spend 2 ki points to cancel the disadvantage for that roll."
+   },
+   {
+    "level": 17,
+    "name": "Intoxicated Frenzy",
+    "desc": "When you use Flurry of Blows, you can make up to three additional attacks with it, for a total of five, as long as each attack in that Flurry targets a different creature (unless fewer creatures are available)."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Performance",
+   "Brewer's Supplies"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "way-of-the-kensei",
+  "classId": "monk",
+  "name": "Way of the Kensei",
+  "source": "2014 Xanathar's",
+  "label": "Monastic Tradition",
+  "sourceLevel": 3,
+  "summary": "Monks of this tradition treat chosen weapons as an extension of their martial art, using them with monk features, defending with them and, later, empowering them with ki. They also practice a refined craft such as calligraphy or painting.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Path of the Kensei",
+    "desc": "Choose two kensei weapons: one melee and one ranged, each a simple or martial weapon lacking the heavy and special properties (a longsword and a longbow are the sample picks). You become proficient with them, and they count as monk weapons for you while you wield them. You pick one more kensei weapon (any type meeting the same limits) at 6th, 11th and 17th level. Three benefits apply while using them. Agile Parry: if you make an unarmed strike as part of the Attack action while holding a kensei melee weapon, you gain +2 AC until the start of your next turn. Kensei's Shot: as a bonus action on your turn, make ranged attacks with a kensei weapon deal an extra 1d4 damage on a hit until the turn ends. Way of the Brush: gain proficiency with your choice of calligrapher's supplies or painter's supplies."
+   },
+   {
+    "level": 6,
+    "name": "One with the Blade",
+    "desc": "Magic Kensei Weapons: your kensei weapon attacks count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks. Deft Strike: when you hit a target with a kensei weapon, you may spend 1 ki point to add your Martial Arts die to the damage; usable once per turn."
+   },
+   {
+    "level": 11,
+    "name": "Sharpen the Blade",
+    "desc": "As a bonus action, spend up to 3 ki points to give one kensei weapon you touch a bonus to attack and damage rolls equal to the ki spent. The bonus lasts 1 minute, requires no concentration, and ends early if you use this feature again."
+   },
+   {
+    "level": 17,
+    "name": "Unerring Accuracy",
+    "desc": "Once on each of your turns, if you miss with an attack using a monk weapon, you can reroll the attack roll."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "One melee and one ranged kensei weapon (one more at levels 6, 11 and 17)",
+   "Calligrapher's supplies or painter's supplies (choose one)"
+  ],
+  "notes2024": ""
+ },
+ {
+  "id": "way-of-the-sun-soul",
+  "classId": "monk",
+  "name": "Way of the Sun Soul",
+  "source": "2014 Xanathar's",
+  "label": "Monastic Tradition",
+  "sourceLevel": 3,
+  "summary": "Sun Soul monks channel ki into radiant energy, hurling bolts of light at range, blasting areas with fire and radiance, and eventually glowing with a protective solar aura that scorches attackers.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Radiant Sun Bolt",
+    "desc": "You gain a ranged spell attack, range 30 ft, that you are proficient with. It deals radiant damage equal to your Martial Arts die plus your Dexterity modifier. When you take the Attack action, you can replace one of your attacks with a sun bolt. In addition, if you use the Attack action and make a sun bolt attack as part of it, you can spend 1 ki point to make two more sun bolt attacks as a bonus action that turn."
+   },
+   {
+    "level": 6,
+    "name": "Searing Arc Strike",
+    "desc": "Right after taking the Attack action on your turn, you can spend 2 ki points to cast burning hands as a bonus action, without expending a spell slot. You can pay extra ki points to cast it at a higher level, +1 spell level per extra ki point. The total ki spent on the spell (the 2 base plus extras) cannot exceed half your monk level, rounded down."
+   },
+   {
+    "level": 11,
+    "name": "Searing Sunburst",
+    "desc": "As an action, you create a 20-foot-radius sphere of burning radiant light centered on a point within 150 feet. Each creature in it must succeed on a Constitution saving throw (your ki save DC) or take 2d6 radiant damage; creatures with total cover are unaffected. You can spend up to 3 ki points to add 2d6 radiant damage for each point spent."
+   },
+   {
+    "level": 17,
+    "name": "Sun Shield",
+    "desc": "You constantly shed bright light in a 30-foot radius and dim light for another 30 feet. When a creature within 5 feet hits you with a melee attack, you can use your reaction to deal radiant damage to it equal to 5 + your Wisdom modifier."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  },
  {
   "id": "oath-of-devotion",
@@ -1682,6 +2409,176 @@ export const SUBCLASSES = [
   ],
   "grantedProficiencies": [],
   "notes2024": ""
+ },
+ {
+  "id": "oath-of-conquest",
+  "classId": "paladin",
+  "name": "Oath of Conquest",
+  "source": "2014 Xanathar's",
+  "label": "Sacred Oath",
+  "sourceLevel": 3,
+  "summary": "A paladin sworn to crush chaos and impose order through strength, who terrifies enemies, pins frightened foes in place with a damaging aura, and punishes those who strike them. Their capstone turns them into a near-unstoppable war leader for a minute.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Oath Spells",
+    "desc": "You always have certain spells prepared once you reach the listed paladin levels; they do not count against your prepared spell total."
+   },
+   {
+    "level": 3,
+    "name": "Channel Divinity: Conquering Presence",
+    "desc": "As an action, you spend a Channel Divinity use to project dread. Each creature of your choice within 30 feet that can see you must succeed on a Wisdom save against your spell save DC or be frightened of you for 1 minute. A frightened creature repeats the save at the end of each of its turns, ending the effect on a success."
+   },
+   {
+    "level": 3,
+    "name": "Channel Divinity: Guided Strike",
+    "desc": "When you make an attack roll, you can spend a Channel Divinity use to add +10 to that roll. You decide after seeing the d20 result but before the DM says whether the attack hits or misses."
+   },
+   {
+    "level": 7,
+    "name": "Aura of Conquest",
+    "desc": "While you are conscious, you project a 10-foot aura (30 feet at paladin level 18). Any frightened creature in the aura has its speed reduced to 0 and takes psychic damage equal to half your paladin level at the start of each of its turns."
+   },
+   {
+    "level": 15,
+    "name": "Scornful Rebuke",
+    "desc": "Whenever a creature hits you with an attack, it takes psychic damage equal to your Charisma modifier (minimum 1), provided you are not incapacitated."
+   },
+   {
+    "level": 20,
+    "name": "Invincible Conqueror",
+    "desc": "As an action, you gain a 1-minute transformation: you have resistance to all damage; when you take the Attack action you can make one extra attack as part of it; and your weapon attacks score a critical hit on a roll of 19 or 20. Usable once per long rest."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "Armor of Agathys",
+     "Command"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Hold Person",
+     "Spiritual Weapon"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "Bestow Curse",
+     "Fear"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "Dominate Beast",
+     "Stoneskin"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "Cloudkill",
+     "Dominate Person"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "oath-of-redemption",
+  "classId": "paladin",
+  "name": "Oath of Redemption",
+  "source": "2014 Xanathar's",
+  "label": "Sacred Oath",
+  "sourceLevel": 3,
+  "summary": "A pacifist-leaning oath that favors talking down conflict and shielding others, even at personal cost, believing almost anyone can be redeemed. Its paladins turn aside violence, absorb harm meant for allies, and punish only those who strike first.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Tenets of Redemption",
+    "desc": "The oath asks you to seek peace first, to protect others by taking harm on yourself, to give foes the chance to change, and to use force only as a last resort. Sparing and guiding the wicked is valued over killing them."
+   },
+   {
+    "level": 3,
+    "name": "Channel Divinity: Emissary of Peace",
+    "desc": "As a bonus action, use Channel Divinity to gain a +5 bonus to Charisma (Persuasion) checks for 10 minutes."
+   },
+   {
+    "level": 3,
+    "name": "Channel Divinity: Rebuke the Violent",
+    "desc": "Immediately after an attacker within 30 feet of you (that you can see) deals damage with an attack against a creature other than you, you can use your reaction and Channel Divinity. The attacker makes a Wisdom save: on a failure it takes radiant damage equal to the damage it just dealt, on a success half as much."
+   },
+   {
+    "level": 7,
+    "name": "Aura of the Guardian",
+    "desc": "As a reaction when an ally within 10 feet takes damage, you magically take that damage instead. This transfer ignores any resistance or immunity you have and the damage cannot be reduced in any way. The range grows to 30 feet at 18th level."
+   },
+   {
+    "level": 15,
+    "name": "Protective Spirit",
+    "desc": "A holy presence guards you. At the end of each of your turns, if you are below half your hit point maximum and not incapacitated, you regain 1d6 + half your paladin level hit points."
+   },
+   {
+    "level": 20,
+    "name": "Emissary of Redemption",
+    "desc": "You become an embodiment of peace. You have resistance to all damage dealt by other creatures, and whenever a creature damages you, it takes radiant damage equal to half the damage you took after resistance. This protection ends until you finish a long rest if you make an attack, cast a spell, or deal damage to any creature other than yourself."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "Sanctuary",
+     "Sleep"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Calm Emotions",
+     "Hold Person"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 9,
+    "spells": [
+     "Counterspell",
+     "Hypnotic Pattern"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 13,
+    "spells": [
+     "Otiluke's Resilient Sphere",
+     "Stoneskin"
+    ],
+    "kind": "prepared"
+   },
+   {
+    "level": 17,
+    "spells": [
+     "Hold Monster",
+     "Wall of Force"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  },
  {
   "id": "hunter",
@@ -2313,6 +3210,175 @@ export const SUBCLASSES = [
   "notes2024": ""
  },
  {
+  "id": "inquisitive",
+  "classId": "rogue",
+  "name": "Inquisitive",
+  "source": "2014 Xanathar's",
+  "label": "Roguish Archetype",
+  "sourceLevel": 3,
+  "summary": "A rogue detective who reads people and spots clues better than anyone, seeing through lies and illusions. Studying a foe's behavior lets you land Sneak Attacks without needing an ally or advantage.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Ear for Deceit",
+    "desc": "When you make a Wisdom (Insight) check to tell whether someone is lying, any d20 roll of 7 or lower counts as an 8."
+   },
+   {
+    "level": 3,
+    "name": "Eye for Detail",
+    "desc": "As a bonus action, you can make a Wisdom (Perception) check to spot a hidden creature or object, or an Intelligence (Investigation) check to uncover or decipher clues."
+   },
+   {
+    "level": 3,
+    "name": "Insightful Fighting",
+    "desc": "As a bonus action, make a Wisdom (Insight) check against a creature you can see and that can see or hear you, contested by its Charisma (Deception). On a success, for the next minute (or until you successfully use this again) you can Sneak Attack that creature even without advantage on the attack, provided you don't have disadvantage and aren't ruled out by other Sneak Attack conditions. On a failure, you can't try again on that creature until a long rest."
+   },
+   {
+    "level": 9,
+    "name": "Steady Eye",
+    "desc": "You have advantage on Wisdom (Perception) and Intelligence (Investigation) checks if you moved no more than half your speed during the turn."
+   },
+   {
+    "level": 13,
+    "name": "Unerring Eye",
+    "desc": "As an action, you sense whether illusions, shapechangers, or other magic meant to deceive is within 30 feet of you, provided you aren't blinded or deafened. This reveals only that such magic is present, not what it is. You can use it a number of times equal to your Wisdom modifier (minimum 1), regaining all uses on a long rest."
+   },
+   {
+    "level": 17,
+    "name": "Eye for Weakness",
+    "desc": "While Insightful Fighting is active against a creature, your Sneak Attack deals an extra 3d6 damage to it."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "mastermind",
+  "classId": "rogue",
+  "name": "Mastermind",
+  "source": "2014 Xanathar's",
+  "label": "Roguish Archetype",
+  "sourceLevel": 3,
+  "summary": "A spymaster-style rogue who excels at deception, reading people and coordinating allies. Gains disguise and forgery skills, a long-range bonus-action Help, insight into foes' relative strength, and eventually mind-reading immunity.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Master of Intrigue",
+    "desc": "You gain proficiency with the disguise kit, the forgery kit, and one gaming set of your choice, and you learn two languages of your choice. You can also copy another person's speech patterns and accent after listening to them speak for at least 1 minute; a listener who hears the imitation notices nothing amiss unless a Wisdom (Insight) check says otherwise."
+   },
+   {
+    "level": 3,
+    "name": "Master of Tactics",
+    "desc": "You can take the Help action as a bonus action. When you use Help to distract an enemy so an ally's attack gets advantage, the enemy can be up to 30 feet from you instead of the normal 5 feet."
+   },
+   {
+    "level": 9,
+    "name": "Insightful Manipulator",
+    "desc": "After spending at least 1 minute observing or talking with a creature outside of combat, you can ask the DM to compare it to you in two of these areas: Intelligence score, Wisdom score, Charisma score, and class levels (if any). The DM tells you whether the creature is your equal, superior, or inferior in each of the two chosen areas."
+   },
+   {
+    "level": 13,
+    "name": "Misdirection",
+    "desc": "When you are targeted by an attack while a creature within 5 feet of you is granting you cover against that attack, you can use your reaction to have the attack target that creature instead of you."
+   },
+   {
+    "level": 17,
+    "name": "Soul of Deceit",
+    "desc": "Your mind can't be read by telepathy or any other means unless you allow it. You can show false surface thoughts by making a Charisma (Deception) check contested by the reader's Wisdom (Insight) check. Magic that would force you to speak the truth, such as zone of truth, doesn't compel you, and magical means can't determine whether you are lying."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Disguise Kit",
+   "Forgery Kit",
+   "One gaming set of your choice",
+   "Two languages of your choice"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "scout",
+  "classId": "rogue",
+  "name": "Scout",
+  "source": "2014 Xanathar's",
+  "label": "Roguish Archetype",
+  "sourceLevel": 3,
+  "summary": "A wilderness-savvy rogue who skirmishes across the battlefield, excels at Nature and Survival, and grows steadily faster. Late features let the Scout set up allies with an opening strike and squeeze in an extra Sneak Attack.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Skirmisher",
+    "desc": "As a reaction when an enemy finishes its turn within 5 feet of you, you may move up to half your speed. This movement does not provoke opportunity attacks."
+   },
+   {
+    "level": 3,
+    "name": "Survivalist",
+    "desc": "You gain proficiency in Nature and Survival. Your proficiency bonus is doubled for ability checks using either skill (expertise)."
+   },
+   {
+    "level": 9,
+    "name": "Superior Mobility",
+    "desc": "Your walking speed increases by 10 feet. If you have a climbing or swimming speed, it increases by the same amount."
+   },
+   {
+    "level": 13,
+    "name": "Ambush Master",
+    "desc": "You have advantage on initiative rolls. In addition, the first creature you hit during the first round of a combat becomes vulnerable to your allies: until the start of your next turn, attack rolls against that creature have advantage."
+   },
+   {
+    "level": 17,
+    "name": "Sudden Strike",
+    "desc": "When you take the Attack action, you can make one extra attack as a bonus action. That extra attack may benefit from Sneak Attack even if you already used Sneak Attack this turn, but you still cannot Sneak Attack the same target more than once in a turn."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Nature",
+   "Survival"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "swashbuckler",
+  "classId": "rogue",
+  "name": "Swashbuckler",
+  "source": "2014 Xanathar's",
+  "label": "Roguish Archetype",
+  "sourceLevel": 3,
+  "summary": "A charismatic, mobile duelist who slips away from melee foes without provoking, fights well one-on-one, and wins fights through charm, taunting and flair.",
+  "features": [
+   {
+    "level": 3,
+    "name": "Fancy Footwork",
+    "desc": "On your turn, any creature you make a melee attack against cannot make opportunity attacks against you for the remainder of that turn, whether or not the attack hits."
+   },
+   {
+    "level": 3,
+    "name": "Rakish Audacity",
+    "desc": "You add your Charisma modifier to your initiative rolls. You can also use Sneak Attack without advantage on the attack roll when the target is the only creature within 5 feet of you, provided you have no disadvantage on the roll and all other Sneak Attack requirements are met."
+   },
+   {
+    "level": 9,
+    "name": "Panache",
+    "desc": "As an action, make a Charisma (Persuasion) check contested by a creature's Wisdom (Insight) check; the creature must be able to hear you and share a language with you. If you win against a hostile creature, it has disadvantage on attack rolls against anyone but you and cannot make opportunity attacks against anyone but you. This lasts 1 minute, and ends early if an ally of yours attacks it or casts a spell on it, or if you and it are more than 60 feet apart. If you win against a non-hostile creature, it is charmed by you for 1 minute and treats you as a friendly acquaintance; the charm ends immediately if you or your allies do something harmful to it."
+   },
+   {
+    "level": 13,
+    "name": "Elegant Maneuver",
+    "desc": "As a bonus action, you gain advantage on the next Dexterity (Acrobatics) or Strength (Athletics) check you make during the same turn."
+   },
+   {
+    "level": 17,
+    "name": "Master Duelist",
+    "desc": "When you miss with an attack roll, you can roll it again with advantage. Once you use this, you must finish a short or long rest before using it again."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": ""
+ },
+ {
   "id": "draconic-bloodline",
   "classId": "sorcerer",
   "name": "Draconic Bloodline",
@@ -2389,6 +3455,138 @@ export const SUBCLASSES = [
   "grantedSpells": [],
   "grantedProficiencies": [],
   "notes2024": ""
+ },
+ {
+  "id": "divine-soul",
+  "classId": "sorcerer",
+  "name": "Divine Soul",
+  "source": "2014 Xanathar's",
+  "label": "Sorcerous Origin",
+  "sourceLevel": 1,
+  "summary": "Your magic springs from a divine spark, giving you access to the cleric spell list alongside sorcerer spells. You gain an alignment-based bonus spell, a once-per-rest die boost, better healing, angelic or bat-like wings, and a powerful self-heal.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Divine Magic Affinity",
+    "desc": "Pick an affinity (Good, Evil, Law, Chaos or Neutrality) when you take this subclass; you learn a matching bonus spell that does not count against your spells known: Good = cure wounds, Evil = inflict wounds, Law = bless, Chaos = bane, Neutrality = protection from evil and good. You may also learn sorcerer spells from the cleric spell list as if they were on the sorcerer list."
+   },
+   {
+    "level": 1,
+    "name": "Favored by the Gods",
+    "desc": "When you fail a saving throw or miss with an attack roll, you can roll 2d4 and add it to the total, possibly turning the failure into a success. Once used, it recharges after a short or long rest."
+   },
+   {
+    "level": 6,
+    "name": "Empowered Healing",
+    "desc": "Once on each of your turns, when you or an ally within 5 feet of you rolls dice to determine healing from a spell, you can spend 1 sorcery point to reroll any number of those dice once."
+   },
+   {
+    "level": 14,
+    "name": "Otherworldly Wings",
+    "desc": "As a bonus action you manifest a pair of spectral wings on your back, either feathered (eagle-like) or leathery (bat-like). You gain a flying speed of 30 feet while they are out. They remain until you dismiss them as a bonus action, or you die or become incapacitated."
+   },
+   {
+    "level": 18,
+    "name": "Unearthly Recovery",
+    "desc": "As a bonus action when you are at half your hit point maximum or fewer, you regain hit points equal to half your hit point maximum. Once used, you must finish a long rest before using it again."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "shadow-magic",
+  "classId": "sorcerer",
+  "name": "Shadow Magic",
+  "source": "2014 Xanathar's",
+  "label": "Sorcerous Origin",
+  "sourceLevel": 1,
+  "summary": "A sorcerer whose power comes from the Shadowfell, gaining superior darkvision, a darkness-based edge in spellcasting, a spectral hound that hinders foes, a pseudo-resurrection, shadow teleportation and finally a damage-resistant shadow form.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Eyes of the Dark",
+    "desc": "You gain darkvision out to 120 feet. Once you reach sorcerer level 3, you also learn the darkness spell, which does not count against your spells known. You can cast it by spending 2 sorcery points or by expending a spell slot. If you cast it with sorcery points, you can see through the darkness the spell creates."
+   },
+   {
+    "level": 1,
+    "name": "Strength of the Grave",
+    "desc": "When damage would drop you to 0 hit points, you can make a Charisma saving throw against DC 5 + the damage taken. On a success you are reduced to 1 hit point instead. This does not work against radiant damage or critical hits. After one success, you cannot use it again until you finish a long rest."
+   },
+   {
+    "level": 6,
+    "name": "Hound of Ill Omen",
+    "desc": "As a bonus action, spend 3 sorcery points to call a spectral hound that targets a creature you can see within 120 feet. The hound appears within 30 feet of that target, uses a dire wolf's statistics but is a Medium monstrosity, and has temporary hit points equal to half your sorcerer level. It uses your spell attack modifier for its bite, and while it is within 5 feet of its target, that target has disadvantage on saving throws against your spells. The hound can move through creatures and objects as if difficult terrain, taking 5 force damage if it ends its turn inside one. It lasts for 5 minutes, or until it or its target is reduced to 0 hit points or the target is no longer within range."
+   },
+   {
+    "level": 14,
+    "name": "Shadow Walk",
+    "desc": "While you are in dim light or darkness, you can use a bonus action to teleport up to 120 feet to an unoccupied space you can see that is also in dim light or darkness."
+   },
+   {
+    "level": 18,
+    "name": "Umbral Form",
+    "desc": "As a bonus action, spend 6 sorcery points to turn into a shadowy form for 1 minute. In this form you have resistance to all damage except force and radiant damage, and you can move through other creatures and objects as if they were difficult terrain, taking 5 force damage if you end your turn inside one. The form ends early if you are incapacitated or die, or if you end it as a bonus action."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 3,
+    "spells": [
+     "darkness"
+    ],
+    "kind": "prepared"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
+ },
+ {
+  "id": "storm-sorcery",
+  "classId": "sorcerer",
+  "name": "Storm Sorcery",
+  "source": "2014 Xanathar's",
+  "label": "Sorcerous Origin",
+  "sourceLevel": 1,
+  "summary": "Your magic is tied to wind and weather. You gain a short burst of flight after casting, deal storm damage around you with lightning and thunder spells, resist those damage types, and eventually become immune and gain a magical flying speed.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Wind Speaker",
+    "desc": "You can speak, read and write Primordial, which also lets you understand its dialects: Aquan, Auran, Ignan and Terran."
+   },
+   {
+    "level": 1,
+    "name": "Tempestuous Magic",
+    "desc": "As a bonus action, right after you cast a spell of 1st level or higher, you can fly up to 10 feet. This movement does not provoke opportunity attacks. No resource is spent; you can do this whenever you cast such a spell."
+   },
+   {
+    "level": 6,
+    "name": "Heart of the Storm",
+    "desc": "You have resistance to lightning and thunder damage. When you cast a spell of 1st level or higher that deals lightning or thunder damage, a storm erupts around you right after the spell resolves. Each creature of your choice within 10 feet of you takes lightning or thunder damage (your choice) equal to half your sorcerer level."
+   },
+   {
+    "level": 6,
+    "name": "Storm Guide",
+    "desc": "You gain control over local weather effects. As an action, you can halt rain falling in a 20-foot-radius sphere centered on you (ended with a bonus action). As a bonus action, you can pick the direction of wind within 100 feet of you; it holds until the end of your next turn. This does not change wind speed."
+   },
+   {
+    "level": 14,
+    "name": "Storm's Fury",
+    "desc": "When a creature hits you with a melee attack, you can use your reaction to blast it with lightning for damage equal to your sorcerer level. The attacker must also make a Strength saving throw against your spell save DC or be pushed in a straight line up to 20 feet away from you."
+   },
+   {
+    "level": 18,
+    "name": "Wind Soul",
+    "desc": "You become immune to lightning and thunder damage and gain a magical flying speed of 60 feet. As an action, you can lower your own flying speed to 30 feet for 1 hour and give a flying speed of 30 feet for 1 hour to a number of creatures within 30 feet of you equal to 3 + your Charisma modifier. Once used, this ability is unavailable until you finish a short or long rest."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [
+   "Primordial (language, plus Aquan, Auran, Ignan, Terran dialects)"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  },
  {
   "id": "the-archfey",
@@ -2614,6 +3812,175 @@ export const SUBCLASSES = [
   ],
   "grantedProficiencies": [],
   "notes2024": "In the 2024 PHB this is the Great Old One Patron with reworked features (e.g. Psychic Spells, Clairvoyant Combatant)."
+ },
+ {
+  "id": "the-celestial",
+  "classId": "warlock",
+  "name": "The Celestial",
+  "source": "2014 Xanathar's",
+  "label": "Otherworldly Patron",
+  "sourceLevel": 1,
+  "summary": "Your patron is a being of the Upper Planes, and your magic leans toward healing and radiant fire. You gain a pool of healing dice, extra light-themed cantrips, and a spell list full of restorative and fiery spells.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Expanded Spell List",
+    "desc": "The Celestial adds extra spells to the warlock spell list for you, from 1st through 5th spell level (see granted spells)."
+   },
+   {
+    "level": 1,
+    "name": "Bonus Cantrips",
+    "desc": "You learn the light and sacred flame cantrips. They do not count against your number of cantrips known."
+   },
+   {
+    "level": 1,
+    "name": "Healing Light",
+    "desc": "You have a pool of d6s equal to 1 + your warlock level. As a bonus action, pick a creature you can see within 60 feet and spend up to your Charisma modifier (minimum 1) dice from the pool; roll them and the creature regains that many hit points. You regain all spent dice when you finish a long rest."
+   },
+   {
+    "level": 6,
+    "name": "Radiant Soul",
+    "desc": "You gain resistance to radiant damage. When you cast a spell that deals radiant or fire damage, you add your Charisma modifier to one damage roll of that spell against one of its targets."
+   },
+   {
+    "level": 10,
+    "name": "Celestial Resilience",
+    "desc": "Whenever you finish a short or long rest, you gain temporary hit points equal to your warlock level + your Charisma modifier. In addition, choose up to five creatures you can see at the end of that rest; each gains temporary hit points equal to half your warlock level + your Charisma modifier."
+   },
+   {
+    "level": 14,
+    "name": "Searing Vengeance",
+    "desc": "When you would make a death saving throw at the start of your turn, you can instead spring back up: you regain hit points equal to half your hit point maximum and may stand without spending movement. Each creature of your choice within 30 feet then takes radiant damage equal to 2d8 + your Charisma modifier and is blinded until the end of the current turn. Once used, you must finish a long rest before using it again."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 1,
+    "spells": [
+     "Cure Wounds",
+     "Guiding Bolt"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 2,
+    "spells": [
+     "Flaming Sphere",
+     "Lesser Restoration"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 3,
+    "spells": [
+     "Daylight",
+     "Revivify"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 4,
+    "spells": [
+     "Guardian of Faith",
+     "Wall of Fire"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Flame Strike",
+     "Greater Restoration"
+    ],
+    "kind": "expanded"
+   }
+  ],
+  "grantedProficiencies": [],
+  "notes2024": "The 2024 Player's Handbook reprints this patron as the Celestial Patron with revised features (Healing Light, Radiant Soul, Celestial Resilience, Searing Vengeance)."
+ },
+ {
+  "id": "the-hexblade",
+  "classId": "warlock",
+  "name": "The Hexblade",
+  "source": "2014 Xanathar's",
+  "label": "Otherworldly Patron",
+  "sourceLevel": 1,
+  "summary": "A warlock who pacts with a mysterious force from the Shadowfell, the Hexblade fights as a martial caster in medium armor, using Charisma for weapon attacks. They brand foes with a curse that boosts damage and crit chances, and later raise spectral minions from slain humanoids.",
+  "features": [
+   {
+    "level": 1,
+    "name": "Hexblade's Curse",
+    "desc": "As a bonus action, curse a creature you can see within 30 feet for 1 minute. The curse ends early if the target dies, you die, or you are incapacitated. While it lasts: you add your proficiency bonus to damage rolls against the cursed target; your attack rolls against it score a critical hit on a 19 or 20; and if it dies, you regain hit points equal to your warlock level + your Charisma modifier (minimum 1). Once used, it must be recharged with a short or long rest."
+   },
+   {
+    "level": 1,
+    "name": "Hex Warrior",
+    "desc": "You gain proficiency with medium armor, shields and martial weapons. At the end of a long rest you may touch one weapon you are proficient with that lacks the two-handed property; until your next long rest, you use your Charisma modifier instead of Strength or Dexterity for its attack and damage rolls. If you later take Pact of the Blade, this extends to every pact weapon you create, whatever its type."
+   },
+   {
+    "level": 6,
+    "name": "Accursed Specter",
+    "desc": "When you slay a humanoid, you can have its spirit rise as a specter under your control. It appears in an unoccupied space within 30 feet of the corpse, uses the standard Specter stat block, gains temporary hit points equal to half your warlock level, and adds your Charisma modifier (minimum +0) to its attack rolls. It acts on its own initiative count, obeys your commands, and vanishes at the end of your next long rest. Once used, you must finish a long rest before using it again."
+   },
+   {
+    "level": 10,
+    "name": "Armor of Hexes",
+    "desc": "If the target of your Hexblade's Curse hits you with an attack roll, roll a d6. On a 4 or higher, the attack instead misses you, regardless of its roll."
+   },
+   {
+    "level": 14,
+    "name": "Master of Hexes",
+    "desc": "When a creature cursed by your Hexblade's Curse dies, you can immediately apply the curse to a different creature you can see within 30 feet of the dead one, without expending a use of the feature. You cannot do this if you are incapacitated, and the new curse works normally for the remainder of its duration."
+   }
+  ],
+  "grantedSpells": [
+   {
+    "level": 1,
+    "spells": [
+     "Shield",
+     "Wrathful Smite"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 2,
+    "spells": [
+     "Blur",
+     "Branding Smite"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 3,
+    "spells": [
+     "Blink",
+     "Elemental Weapon"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 4,
+    "spells": [
+     "Phantasmal Killer",
+     "Staggering Smite"
+    ],
+    "kind": "expanded"
+   },
+   {
+    "level": 5,
+    "spells": [
+     "Banishing Smite",
+     "Cone of Cold"
+    ],
+    "kind": "expanded"
+   }
+  ],
+  "grantedProficiencies": [
+   "Medium armor",
+   "Shields",
+   "Martial weapons"
+  ],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  },
  {
   "id": "school-of-abjuration",
@@ -2926,6 +4293,45 @@ export const SUBCLASSES = [
   "grantedSpells": [],
   "grantedProficiencies": [],
   "notes2024": ""
+ },
+ {
+  "id": "war-magic",
+  "classId": "wizard",
+  "name": "War Magic",
+  "source": "2014 Xanathar's",
+  "label": "Arcane Tradition",
+  "sourceLevel": 2,
+  "summary": "The Wizard tradition that blends defensive and offensive magic on the battlefield. War mages react to danger with magical protection, act fast in combat, and channel stored energy into extra force damage.",
+  "features": [
+   {
+    "level": 2,
+    "name": "Arcane Deflection",
+    "desc": "As a reaction when you are hit by an attack or fail a saving throw, you gain +2 AC against that attack or +4 on that saving throw, potentially changing the result. After using it, you can cast only cantrips (no leveled spells) until the end of your next turn."
+   },
+   {
+    "level": 2,
+    "name": "Tactical Wit",
+    "desc": "You add your Intelligence modifier to your initiative rolls."
+   },
+   {
+    "level": 6,
+    "name": "Power Surge",
+    "desc": "You have a number of power surges equal to your Intelligence modifier (minimum 1). Whenever you finish a long rest, your surges reset to one. If you end a short rest with no surges, you gain one. You gain one whenever you successfully end a spell with dispel magic or counterspell. Once per turn, when you deal damage to a creature or object with a wizard spell, you can spend one surge to deal extra force damage equal to half your wizard level."
+   },
+   {
+    "level": 10,
+    "name": "Durable Magic",
+    "desc": "While you are concentrating on a spell, you gain a +2 bonus to AC and to all saving throws."
+   },
+   {
+    "level": 14,
+    "name": "Deflecting Shroud",
+    "desc": "Whenever you use Arcane Deflection, magical energy arcs out to up to three creatures of your choice within 60 feet of you, each taking force damage equal to half your wizard level."
+   }
+  ],
+  "grantedSpells": [],
+  "grantedProficiencies": [],
+  "notes2024": "Not reprinted in the 2024 Player's Handbook."
  }
 ];
 
