@@ -6,6 +6,7 @@ import { exportCharacter, importCharacterFile } from './transfer.js';
 import { renderSheet } from './sheet.js';
 import { renderInfo } from './info.js';
 import { renderBuilder } from './builder.js';
+import { renderImport } from './import-view.js';
 import { deriveCharacter } from './character.js';
 
 const app = document.getElementById('app');
@@ -16,6 +17,7 @@ const routes = [
   { name: 'build', match: /^\/build$/, render: renderBuild, title: 'Character Builder' },
   { name: 'sheet', match: /^\/sheet(?:\/([\w-]+))?$/, render: renderSheetRoute, title: 'Character Sheet' },
   { name: 'info', match: /^\/info$/, render: renderInfo, title: 'How to Play' },
+  { name: 'import', match: /^\/import$/, render: renderImport, title: 'Import' },
 ];
 
 /** Navigate to a hash route. */

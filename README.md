@@ -64,3 +64,7 @@ Rules content comes only from the **System Reference Document 5.2**, licensed un
 ## Attribution
 
 This work includes material from the System Reference Document 5.2 ("SRD 5.2") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd, licensed under CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/legalcode). Character Forge is an unofficial fan project, not affiliated with or endorsed by Wizards of the Coast.
+
+## Import (PDF to JSON)
+
+The **Import** page reads a PDF in your browser (bundled pdf.js in `vendor/pdfjs`, Apache-2.0, nothing is uploaded), shows/downloads the extracted text as JSON, can draft a custom subclass from it, and installs subclass JSON into this browser (localStorage). Custom subclasses appear in the class step like built-in ones. Scanned PDFs (images only) have no text to extract.
