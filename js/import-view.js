@@ -1,11 +1,12 @@
 // Import page: PDF -> JSON, and JSON -> custom subclasses for this site. Everything stays in the browser.
 
 import { h, toast, confirmDialog } from './ui.js';
-import { extractPdf, draftSubclass } from './pdf-import.js';
+import { extractPdf, draftSubclass, explainPdfError } from './pdf-import.js';
 import { CLASS_IDS, parseSubclassJson, loadCustomSubclasses, saveCustomSubclasses, slugify } from './custom-content.js';
 import { SUBCLASSES } from './data/subclasses.js';
 
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
+const PREVIEW_MAX = 200000; // a multi-MB textarea freezes phones; the full JSON stays in memory for download/copy/draft
 
 function download(name, text) {
   const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
@@ -45,27 +46,41 @@ export function renderImport(root) {
         } }, 'Remove')))) : h('p', { class: 'hint' }, 'None yet.'));
   };
 
-  const fileIn = h('input', { id: 'pdf-file', type: 'file', accept: 'application/pdf,.pdf', onchange: async (e) => {
-    const file = e.target.files && e.target.files[0];
+  async function handleFile(file) {
     if (!file) return;
     status.textContent = `Reading ${file.name}…`;
     dlBtn.disabled = copyBtn.disabled = draftBtn.disabled = true;
     try {
-      extracted = await extractPdf(file, (n, total) => { status.textContent = `Reading page ${n} of ${total}…`; });
+      extracted = await extractPdf(file, (n, total) => { status.textContent = `Reading page ${n} of ${total}…`; }, (msg) => Promise.resolve(window.prompt(msg)));
       const words = extracted.pages.reduce((n, p) => n + p.text.split(/\s+/).filter(Boolean).length, 0);
-      jsonOut.value = JSON.stringify(extracted, null, 2);
+      const full = JSON.stringify(extracted, null, 2);
+      jsonOut.value = full.length > PREVIEW_MAX ? `${full.slice(0, PREVIEW_MAX)}\n… (preview only: ${Math.round(full.length / 1024)} KB in total; use Download .json or Copy for everything)` : full;
       status.textContent = words ? `Done: ${extracted.pages.length} pages, ${words} words.` : 'No text found. This looks like a scanned PDF (images only); text extraction cannot read it.';
       dlBtn.disabled = copyBtn.disabled = false;
       draftBtn.disabled = !words;
     } catch (err) {
       extracted = null;
-      status.textContent = `Could not read that PDF: ${err.message || err}`;
+      jsonOut.value = '';
+      status.textContent = `Could not read that PDF: ${explainPdfError(err)}`;
+      status.classList.add('bad');
+      console.error(err);
     }
+  }
+  const fileIn = h('input', { id: 'pdf-file', type: 'file', accept: 'application/pdf,.pdf', onchange: async (e) => {
+    status.classList.remove('bad');
+    const file = e.target.files && e.target.files[0];
+    await handleFile(file);
+    e.target.value = ''; // allow choosing the same file again
   } });
+  const dropZone = h('div', { class: 'import-drop', tabindex: 0, role: 'button', 'aria-label': 'Drop a PDF here or press Enter to choose one',
+    onclick: () => fileIn.click(), onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } },
+    ondragover: (e) => { e.preventDefault(); dropZone.classList.add('over'); }, ondragleave: () => dropZone.classList.remove('over'),
+    ondrop: (e) => { e.preventDefault(); dropZone.classList.remove('over'); status.classList.remove('bad'); handleFile(e.dataTransfer.files && e.dataTransfer.files[0]); } },
+    'Drop a PDF here, or click to choose one');
 
   dlBtn.addEventListener('click', () => download(`${slugify((extracted.source.fileName || 'pdf').replace(/\.pdf$/i, '')) || 'pdf'}.json`, JSON.stringify(extracted, null, 2)));
   copyBtn.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(jsonOut.value); toast('JSON copied.'); } catch { jsonOut.select(); toast('Press Ctrl+C to copy.'); }
+    try { await navigator.clipboard.writeText(JSON.stringify(extracted, null, 2)); toast('JSON copied.'); } catch { jsonOut.select(); toast('Copy failed: use Download .json instead.'); }
   });
   draftBtn.addEventListener('click', () => {
     const d = draftSubclass(extracted, { classId: classSel.value, name: nameIn.value.trim(), source: srcIn.value.trim() });
@@ -95,6 +110,7 @@ export function renderImport(root) {
       h('h1', {}, 'Import'),
       h('p', { class: 'lead' }, 'Turn a PDF into JSON, then add it to the site as a custom subclass. Everything happens in this browser; your PDF is never uploaded.'),
       h('h2', {}, '1. PDF to JSON'),
+      dropZone,
       h('div', { class: 'field' }, h('label', { for: 'pdf-file' }, 'PDF file'), fileIn),
       status,
       jsonOut,
