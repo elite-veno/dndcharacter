@@ -4,6 +4,8 @@
 // Generated from data-src/subclasses/*.json. grantedSpells kinds: 'prepared' (always prepared from the given level),
 // 'ritual' (ritual-only access), 'expanded' (added to the class spell list; level = spell level, not character level).
 
+import { loadCustomSubclasses } from '../custom-content.js';
+
 export const SUBCLASS_LEVEL = 3;
 export const SUBCLASS_SOURCE = '2014 PHB'; // default source; individual subclasses carry their own source field
 
@@ -4334,6 +4336,10 @@ export const SUBCLASSES = [
   "notes2024": "Not reprinted in the 2024 Player's Handbook."
  }
 ];
+
+// Subclasses the user imported on the Import page (stored in this browser only).
+const builtInIds = new Set(SUBCLASSES.map((x) => x.id));
+for (const c of loadCustomSubclasses()) if (!builtInIds.has(c.id)) SUBCLASSES.push(c);
 
 export const SUBCLASS_BY_ID = Object.fromEntries(SUBCLASSES.map((s) => [s.id, s]));
 export const SUBCLASS_LABELS = {"barbarian":"Primal Path","bard":"Bard College","cleric":"Divine Domain","druid":"Druid Circle","fighter":"Martial Archetype","monk":"Monastic Tradition","paladin":"Sacred Oath","ranger":"Ranger Archetype","rogue":"Roguish Archetype","sorcerer":"Sorcerous Origin","warlock":"Otherworldly Patron","wizard":"Arcane Tradition"};
