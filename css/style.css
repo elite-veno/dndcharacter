@@ -316,3 +316,7 @@ input[type='checkbox'] { width: 1.15rem; height: 1.15rem; accent-color: var(--go
 .import-drop { margin: 0.5rem 0; padding: 1.2rem; text-align: center; border: 2px dashed var(--gold); border-radius: var(--radius); background: var(--panel); color: var(--muted); cursor: pointer; }
 .import-drop:hover, .import-drop.over, .import-drop:focus-visible { background: var(--panel-2); color: var(--text); }
 .hint.bad { color: #8a2233; font-weight: 600; }
+
+.import-warnings { margin: 0.75rem 0; padding: 0.6rem 0.9rem 0.6rem 1.8rem; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--warn); border-radius: 8px; font-size: 0.92rem; }
+.import-result { margin: 0.5rem 0 1.5rem; }
+a.btn[aria-disabled='true'] { opacity: 0.55; }
