@@ -39,10 +39,18 @@ function loadLib() {
 }
 
 /** Extract a PDF File into a plain JSON-serialisable object. */
-export async function extractPdf(file, onProgress = () => {}) {
+export async function extractPdf(file, onProgress = () => {}, askPassword = null) {
   const lib = await loadLib();
   const data = new Uint8Array(await file.arrayBuffer());
-  const pdf = await lib.getDocument({ data }).promise;
+  const task = lib.getDocument({ data });
+  if (askPassword) {
+    task.onPassword = async (update, reason) => {
+      const pw = await askPassword(reason === 2 ? 'Wrong password. Try again:' : 'This PDF is password protected. Enter the password:');
+      if (pw === null || pw === undefined) { task.destroy(); return; }
+      update(pw);
+    };
+  }
+  const pdf = await task.promise;
   const pages = [];
   for (let n = 1; n <= pdf.numPages; n++) {
     const page = await pdf.getPage(n);
@@ -104,4 +112,16 @@ export function draftSubclass(extracted, { classId = 'fighter', name = '', sourc
     summary: intro.join(' ').slice(0, 300), features: features.filter((f) => f.desc || f.name),
     grantedSpells: [], grantedProficiencies: [],
   };
+}
+
+/** Turn pdf.js errors into messages a person can act on. */
+export function explainPdfError(err) {
+  const name = (err && err.name) || '';
+  const msg = (err && err.message) || String(err);
+  if (name === 'PasswordException') return 'This PDF is password protected and no valid password was given.';
+  if (name === 'InvalidPDFException') return 'This file is not a valid PDF (or it is damaged).';
+  if (name === 'MissingPDFException') return 'The PDF could not be found.';
+  if (/vendor\/pdfjs|Setting up fake worker|worker/i.test(msg)) return `The PDF reader could not start (${msg}). Make sure the site is opened from a web address (https://… or http://localhost), not as a local file.`;
+  if (/Destroyed|destroy/i.test(msg)) return 'Cancelled.';
+  return `${msg}. If this keeps happening the PDF may use an unsupported format; try re-saving it as a new PDF (print to PDF) and import that.`;
 }
