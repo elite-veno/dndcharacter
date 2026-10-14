@@ -1,8 +1,8 @@
 // App shell: hash router (#/ characters, #/build wizard, #/sheet/<id>, #/info) and the characters list.
 
 import { h, mount, toast, confirmDialog } from './ui.js';
-import { listCharacters, getCharacter, deleteCharacter, loadDraft, clearDraft, lastSheetCharacter } from './store.js';
-import { exportCharacter, importCharacterFile } from './transfer.js';
+import { listCharacters, getCharacter, deleteCharacter, loadDraft, clearDraft, lastSheetCharacter, storageHealth, requestPersistence } from './store.js';
+import { exportCharacter, exportAllCharacters, importFile } from './transfer.js';
 import { renderSheet } from './sheet.js';
 import { renderInfo } from './info.js';
 import { renderBuilder } from './builder.js';
@@ -34,6 +34,15 @@ function route() {
   found.render(app, ...params);
   window.scrollTo({ top: 0 });
   app.focus({ preventScroll: true });
+}
+
+// Saving relies on localStorage: warn loudly when it is blocked, and ask the browser to keep our data.
+const health = storageHealth();
+if (health.ok) requestPersistence();
+else {
+  document.getElementById('app').before(h('div', { class: 'storage-warning', role: 'alert' },
+    h('strong', {}, 'Your characters cannot be saved in this window. '),
+    'This browser is blocking site storage (a private window, a preview pane or strict privacy settings), so everything will be lost on refresh. Open the site in a normal browser tab, or allow site data for it. Use "Back up all characters" on the home page to keep a copy.'));
 }
 
 window.addEventListener('hashchange', route);
@@ -72,9 +81,9 @@ function importButton() {
       const file = input.files[0];
       if (!file) return;
       try {
-        const saved = await importCharacterFile(file);
-        toast(`Imported ${saved.name || 'character'}.`);
-        go(`/sheet/${saved.id}`);
+        const saved = await importFile(file);
+        toast(saved.length === 1 ? `Imported ${saved[0].name || 'character'}.` : `Imported ${saved.length} characters.`);
+        if (saved.length === 1) go(`/sheet/${saved[0].id}`); else route();
       } catch (err) {
         toast(err.message);
       }
@@ -94,7 +103,9 @@ function renderHome(root) {
       h('div', { class: 'row gap' },
         h('a', { class: 'btn cta', href: '#/build', onclick: () => clearDraft() }, 'Create a new character'),
         draft ? h('a', { class: 'btn', href: '#/build' }, `Resume "${draft.character.name || 'unnamed draft'}"`) : null,
-        importButton())),
+        importButton(),
+        characters.length ? h('button', { type: 'button', class: 'btn', onclick: () => exportAllCharacters(listCharacters()) }, 'Back up all characters') : null),
+      h('p', { class: 'hint' }, 'Characters are saved automatically in this browser and survive refreshes. Back them up occasionally: clearing site data or switching browsers removes them.')),
     h('section', {},
       h('h2', {}, 'My characters'),
       characters.length

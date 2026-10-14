@@ -76,3 +76,27 @@ export function lastSheetCharacter() {
   try { id = localStorage.getItem(LAST_SHEET_KEY); } catch { /* ignore */ }
   return (id && getCharacter(id)) || listCharacters()[0] || null;
 }
+
+/** Is browser storage actually usable? (Blocked in some previews, private windows and sandboxed frames.) */
+export function storageHealth() {
+  try {
+    const key = 'characterforge.healthcheck';
+    localStorage.setItem(key, '1');
+    const ok = localStorage.getItem(key) === '1';
+    localStorage.removeItem(key);
+    return { ok };
+  } catch {
+    return { ok: false };
+  }
+}
+
+/** Ask the browser not to evict our data under storage pressure. Safe to call repeatedly; resolves to true/false/null. */
+export async function requestPersistence() {
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      if (await navigator.storage.persisted()) return true;
+      return await navigator.storage.persist();
+    }
+  } catch { /* ignore */ }
+  return null;
+}
