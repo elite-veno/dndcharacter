@@ -4,6 +4,8 @@ import { h, toast, confirmDialog } from './ui.js';
 import { extractPdf, draftSubclass, explainPdfError } from './pdf-import.js';
 import { CLASS_IDS, parseSubclassJson, loadCustomSubclasses, saveCustomSubclasses, slugify } from './custom-content.js';
 import { SUBCLASSES } from './data/subclasses.js';
+import { ddbToCharacter, parseDdbId, ddbApiUrl } from './ddb-import.js';
+import { saveCharacter } from './store.js';
 
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
 const PREVIEW_MAX = 200000; // a multi-MB textarea freezes phones; the full JSON stays in memory for download/copy/draft
@@ -105,10 +107,72 @@ export function renderImport(root) {
     setTimeout(() => location.reload(), 600);
   } }, 'Add to site');
 
+
+  // ---- D&D Beyond character import
+  const ddbId = h('input', { id: 'ddb-id', type: 'text', inputmode: 'url', placeholder: 'https://www.dndbeyond.com/characters/12345678 or just the number', 'aria-label': 'D&D Beyond character link or id' });
+  const ddbLink = h('a', { class: 'btn', href: '#', target: '_blank', rel: 'noopener', 'aria-disabled': 'true' }, 'Open data link');
+  const ddbText = h('textarea', { id: 'ddb-json', rows: 8, spellcheck: false, 'aria-label': 'D&D Beyond character JSON', placeholder: 'Paste the JSON text of your character here.' });
+  const ddbStatus = h('p', { class: 'hint', role: 'status' });
+  const ddbResult = h('div', { class: 'import-result', 'aria-live': 'polite' });
+  const updateLink = () => {
+    const id = parseDdbId(ddbId.value);
+    ddbLink.href = id ? ddbApiUrl(id) : '#';
+    ddbLink.setAttribute('aria-disabled', id ? 'false' : 'true');
+  };
+  ddbId.addEventListener('input', updateLink);
+  ddbLink.addEventListener('click', (e) => { if (!parseDdbId(ddbId.value)) { e.preventDefault(); ddbStatus.textContent = 'Enter your character link or id first.'; } });
+  const fetchBtn = h('button', { type: 'button', class: 'btn', onclick: async () => {
+    const id = parseDdbId(ddbId.value);
+    if (!id) { ddbStatus.textContent = 'Enter your character link or id first.'; return; }
+    ddbStatus.textContent = 'Trying to fetch…';
+    try {
+      const res = await fetch(ddbApiUrl(id));
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      ddbText.value = JSON.stringify(await res.json());
+      ddbStatus.textContent = 'Fetched. Press "Import character".';
+    } catch (err) {
+      ddbStatus.textContent = 'D&D Beyond does not allow websites to fetch this directly (browser security). Use "Open data link", copy all the text on that page and paste it below. The character must be set to Public in D&D Beyond.';
+    }
+  } }, 'Try to fetch directly');
+  const ddbFile = h('input', { id: 'ddb-file', type: 'file', accept: 'application/json,.json,text/plain,.txt', onchange: async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) { ddbText.value = await file.text(); ddbStatus.textContent = `Loaded ${file.name}. Press "Import character".`; }
+    e.target.value = '';
+  } });
+  const ddbImport = h('button', { type: 'button', class: 'btn cta', onclick: () => {
+    ddbResult.replaceChildren();
+    let result;
+    try {
+      const raw = ddbText.value.trim();
+      if (!raw) throw new Error('Paste the JSON text first.');
+      result = ddbToCharacter(JSON.parse(raw));
+    } catch (err) {
+      ddbStatus.textContent = err instanceof SyntaxError ? 'That text is not valid JSON. Copy the complete text of the data page (it starts with { and ends with }).' : err.message;
+      ddbStatus.classList.add('bad');
+      return;
+    }
+    const saved = saveCharacter(result.character);
+    if (!saved) { ddbStatus.textContent = 'Could not save (browser storage is full or blocked).'; ddbStatus.classList.add('bad'); return; }
+    ddbStatus.classList.remove('bad');
+    ddbStatus.textContent = `Imported: ${result.summary}`;
+    ddbResult.append(
+      h('a', { class: 'btn primary', href: `#/sheet/${saved.id}` }, 'Open the sheet'),
+      result.warnings.length ? h('ul', { class: 'import-warnings' }, result.warnings.map((w) => h('li', {}, w))) : null);
+  } }, 'Import character');
+
   root.append(
     h('section', { class: 'import-page' },
       h('h1', {}, 'Import'),
-      h('p', { class: 'lead' }, 'Turn a PDF into JSON, then add it to the site as a custom subclass. Everything happens in this browser; your PDF is never uploaded.'),
+      h('p', { class: 'lead' }, 'Import a D&D Beyond character, or turn a PDF into JSON and add it to the site as a custom subclass. Everything happens in this browser; nothing is uploaded.'),
+      h('h2', {}, 'D&D Beyond character'),
+      h('p', { class: 'hint' }, 'Bring in a character you made on D&D Beyond (it must be set to Public there). D&D Beyond has no official export, so this reads the character data page: 1) enter your link or id, 2) open the data link, 3) select all text on that page (Ctrl+A) and copy it, 4) paste below and import.'),
+      h('div', { class: 'field' }, h('label', { for: 'ddb-id' }, 'Character link or id'), ddbId),
+      h('div', { class: 'import-actions' }, ddbLink, fetchBtn),
+      h('div', { class: 'field' }, h('label', { for: 'ddb-json' }, 'Character JSON'), ddbText),
+      h('div', { class: 'field' }, h('label', { for: 'ddb-file' }, 'Or load a saved .json/.txt file'), ddbFile),
+      h('div', { class: 'import-actions' }, ddbImport),
+      ddbStatus,
+      ddbResult,
       h('h2', {}, '1. PDF to JSON'),
       dropZone,
       h('div', { class: 'field' }, h('label', { for: 'pdf-file' }, 'PDF file'), fileIn),

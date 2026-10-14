@@ -81,7 +81,7 @@ function importButton() {
       input.value = '';
     },
   });
-  return h('span', {}, input, h('button', { type: 'button', class: 'btn', onclick: () => input.click() }, 'Import from JSON'));
+  return h('span', {}, input, h('button', { type: 'button', class: 'btn', onclick: () => input.click() }, 'Import from JSON'), ' ', h('a', { class: 'btn', href: '#/import' }, 'Import from D&D Beyond'));
 }
 
 function renderHome(root) {
