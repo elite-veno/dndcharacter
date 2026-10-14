@@ -34,7 +34,7 @@ export function renderSheet(root, character) {
   const c = character;
   c.sheet = normalizeSheet(c.sheet, { gold: deriveCharacter(c).gold });
   setLastSheet(c.id);
-  const view = { tab: 'actions', calcOpen: null, calcFocus: null, targetAC: null, lastCrit: {}, castLevel: {}, hpAmount: '', concDC: null };
+  const view = { tab: c.sheet.tab || 'actions', calcOpen: null, calcFocus: null, targetAC: null, lastCrit: {}, castLevel: {}, hpAmount: '', concDC: null };
   const tray = createDiceTray();
   const host = h('div', { class: 'sheet-host' });
   mount(root, host, tray.el);
@@ -420,7 +420,7 @@ export function renderSheet(root, character) {
     return h('div', { class: 'sheet-tabs' },
       h('div', { class: 'tabs', role: 'tablist', 'aria-label': 'Sheet sections' }, tabs.map((t) => h('button', {
         type: 'button', role: 'tab', id: `tab-${t.id}`, class: `tab${t.id === view.tab ? ' active' : ''}`, 'aria-selected': String(t.id === view.tab), 'aria-controls': 'tab-panel',
-        onclick: () => { view.tab = t.id; render(); },
+        onclick: () => { view.tab = t.id; c.sheet.tab = t.id; persist(); render(); },
       }, t.label))),
       h('div', { id: 'tab-panel', role: 'tabpanel', 'aria-labelledby': `tab-${current.id}` }, current.render(ctx)));
   }

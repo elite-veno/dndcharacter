@@ -19,6 +19,18 @@ export function exportCharacter(c) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/** Download every saved character as one backup file. */
+export function exportAllCharacters(list) {
+  const payload = { format: `${FORMAT}-backup`, version: 1, characters: list };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = h('a', { href: url, download: 'character-forge-backup.json' });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 /** Parse exported JSON text into a normalised character (new id). Throws an Error with a readable message. */
 export function parseCharacter(text) {
   let data;
@@ -37,4 +49,17 @@ export async function importCharacterFile(file) {
   const saved = saveCharacter(parseCharacter(await file.text()));
   if (!saved) throw new Error('Could not save: browser storage is full or unavailable.');
   return saved;
+}
+
+/** Import a single-character export OR a backup of many characters. Resolves to the array of saved characters. */
+export async function importFile(file) {
+  const text = await file.text();
+  let data = null;
+  try { data = JSON.parse(text); } catch { /* parseCharacter reports it */ }
+  if (data && data.format === `${FORMAT}-backup` && Array.isArray(data.characters)) {
+    const saved = data.characters.map((raw) => saveCharacter(normalizeCharacter({ ...raw, id: undefined })));
+    if (saved.some((x) => !x)) throw new Error('Could not save all characters: browser storage is full or unavailable.');
+    return saved;
+  }
+  return [await importCharacterFile(file)];
 }
