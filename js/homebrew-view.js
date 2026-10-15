@@ -2,11 +2,12 @@
 
 import { h, toast, confirmDialog } from './ui.js';
 import { field, nextId } from './steps/shared.js';
-import { SPELLS, BUILT_IN_SPELL_IDS, syncCustomSpells } from './data/spells.js';
+import { SPELLS, SPELL_BY_ID, BUILT_IN_SPELL_IDS, syncCustomSpells, syncSpellOverrides } from './data/spells.js';
 import { ABILITIES } from './data/index.js';
 import {
   SPELL_CASTER_CLASSES, SCHOOLS, SAVE_ABILITIES, normalizeSpell, loadCustomSpells, saveCustomSpells, componentsText,
   parseSpellJson, mergeSpellLists, summarize, exportSpellsJson,
+  normalizeOverride, loadSpellOverrides, saveSpellOverrides, exportOverridesJson, parseOverridesJson,
 } from './custom-spells.js';
 
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
@@ -38,7 +39,7 @@ export function spellPreview(spell) {
         h('span', { class: 'tag' }, spell.school),
         spell.concentration ? h('span', { class: 'tag sub' }, 'Concentration') : null,
         spell.ritual ? h('span', { class: 'tag sub' }, 'Ritual') : null,
-        h('span', { class: 'tag custom-tag' }, 'Custom'))),
+        h('span', { class: 'tag custom-tag' }, spell.modified ? 'Modified' : 'Custom'))),
     h('p', { class: 'hint' }, [`Casting time ${spell.castingTime}`, `Range ${spell.range}`, `Duration ${spell.duration}`, componentsText(spell)].filter(Boolean).join(' · ')),
     rollText ? h('p', {}, h('strong', {}, 'Roll: '), rollText.replace(/\s+/g, ' ').trim()) : null,
     spell.classes.length ? h('p', { class: 'hint' }, `Classes: ${spell.classes.map(cap).join(', ')}`) : h('p', { class: 'hint' }, 'No class list: add it to a character as an extra spell.'),
@@ -47,9 +48,11 @@ export function spellPreview(spell) {
     spell.upcast ? h('p', { class: 'hint' }, `+${spell.upcast} per slot level above ${levelLabel(spell.level).toLowerCase()}.`) : null);
 }
 
-export function renderHomebrew(root) {
+export function renderHomebrew(root, editParam = null) {
   let custom = loadCustomSpells(BUILT_IN_SPELL_IDS);
-  let editingId = null;
+  let overrides = loadSpellOverrides(BUILT_IN_SPELL_IDS);
+  let editingId = null; // id of the custom spell being edited
+  let editingBuiltIn = null; // id of the built-in spell being edited
 
   const commit = (list) => {
     custom = list;
@@ -128,7 +131,7 @@ export function renderHomebrew(root) {
   function read() {
     const kind = f.kind.value;
     return {
-      id: editingId || undefined,
+      id: editingBuiltIn || editingId || undefined,
       name: f.name.value, level: Number(f.level.value), school: f.school.value,
       castingTime: f.castingTime.value, range: f.range.value, duration: f.duration.value,
       components: { v: f.v.checked, s: f.s.checked, m: f.m.checked }, material: f.material.value,
@@ -146,7 +149,7 @@ export function renderHomebrew(root) {
     effectBox.hidden = !kind;
     effectBox.querySelector('#hb-typefield').hidden = kind === 'heal';
     effectBox.querySelector('#hb-savefield').hidden = kind !== 'save';
-    const r = normalizeSpell(read(), takenIds());
+    const r = editingBuiltIn ? normalizeOverride(read(), editingBuiltIn) : normalizeSpell(read(), takenIds());
     preview.replaceChildren(h('h3', {}, 'Preview'), r.ok ? spellPreview(r.entry) : h('p', { class: 'hint' }, f.name.value.trim() ? `Not valid yet: ${r.errors.join(' ')}` : 'Give the spell a name to see a preview.'));
     return r;
   }
@@ -155,14 +158,24 @@ export function renderHomebrew(root) {
     const r = refresh();
     if (!r.ok) { msg.textContent = r.errors.join(' '); f.name.focus(); return; }
     msg.textContent = '';
+    if (editingBuiltIn) {
+      overrides = { ...overrides, [editingBuiltIn]: r.entry };
+      if (!saveSpellOverrides(overrides)) toast('Could not save: browser storage is full or unavailable.');
+      syncSpellOverrides(overrides);
+      toast(`${r.entry.name} updated. Reset it any time to get the original back.`);
+      resetForm();
+      drawBuiltins();
+      return;
+    }
     const wasEditing = editingId;
     commit(wasEditing ? custom.map((s) => (s.id === wasEditing ? r.entry : s)) : [...custom, r.entry]);
     toast(`${r.entry.name} ${wasEditing ? 'updated' : 'added'}.`);
     resetForm();
   }
 
-  function fill(spell) {
-    editingId = spell.id;
+  function fill(spell, builtIn = false) {
+    editingBuiltIn = builtIn ? spell.id : null;
+    editingId = builtIn ? null : spell.id;
     f.name.value = spell.name; f.level.value = String(spell.level); f.school.value = spell.school;
     f.castingTime.value = spell.castingTime; f.range.value = spell.range; f.duration.value = spell.duration;
     f.v.checked = !!spell.components?.v; f.s.checked = !!spell.components?.s; f.m.checked = !!spell.components?.m;
@@ -171,7 +184,7 @@ export function renderHomebrew(root) {
     f.kind.value = spell.roll?.kind || ''; f.dice.value = spell.roll?.dice || ''; f.type.value = spell.roll?.type || '';
     f.save.value = spell.roll?.save || 'dex'; f.upcast.value = spell.upcast || '';
     f.description.value = spell.description || ''; f.higher.value = spell.higher || ''; f.summary.value = spell.summary === summarize(spell.description) ? '' : spell.summary;
-    formTitle.textContent = `Edit ${spell.name}`; submitBtn.textContent = 'Save changes'; cancelBtn.hidden = false;
+    formTitle.textContent = builtIn ? `Edit ${spell.name} (built-in)` : `Edit ${spell.name}`; submitBtn.textContent = 'Save changes'; cancelBtn.hidden = false;
     refresh();
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     f.name.focus({ preventScroll: true });
@@ -179,6 +192,7 @@ export function renderHomebrew(root) {
 
   function resetForm() {
     editingId = null;
+    editingBuiltIn = null;
     form.reset();
     f.v.checked = true; f.s.checked = true;
     f.level.value = '1'; f.school.value = 'Evocation';
@@ -206,6 +220,64 @@ export function renderHomebrew(root) {
     toast(note);
     importMsg.append(h('li', { class: 'ok' }, note));
   }
+
+  // ---------------------------------------------------------------- built-in spells: edit, reset
+  const biSearch = h('input', { id: 'bi-search', type: 'search', placeholder: 'Search built-in spells…', 'aria-label': 'Search built-in spells', oninput: () => drawBuiltins() });
+  const biLevel = h('select', { id: 'bi-level', 'aria-label': 'Filter by level', onchange: () => drawBuiltins() },
+    h('option', { value: '' }, 'All levels'), Array.from({ length: 10 }, (_, i) => h('option', { value: String(i) }, levelLabel(i))));
+  const biOnlyModified = h('input', { id: 'bi-mod', type: 'checkbox', onchange: () => drawBuiltins() });
+  const biList = h('div', {});
+  const biMsg = h('ul', { class: 'import-errors', 'aria-live': 'polite' });
+  const biPaste = h('textarea', { id: 'bi-paste', rows: 3, 'aria-label': 'Paste exported spell edits', placeholder: 'Or paste exported edits JSON here…', spellcheck: false });
+
+  async function resetOne(id) {
+    const name = SPELL_BY_ID[id] ? SPELL_BY_ID[id].name : id;
+    if (!(await confirmDialog('Reset spell', `Reset ${name} to the original version?`, 'Reset'))) return;
+    const next = { ...overrides };
+    delete next[id];
+    overrides = next;
+    saveSpellOverrides(overrides);
+    syncSpellOverrides(overrides);
+    if (editingBuiltIn === id) resetForm();
+    toast(`${name} reset.`);
+    drawBuiltins();
+  }
+
+  function drawBuiltins() {
+    const q = biSearch.value.trim().toLowerCase();
+    const lv = biLevel.value;
+    const rows = SPELLS.filter((sp) => BUILT_IN_SPELL_IDS.has(sp.id) && (!q || sp.name.toLowerCase().includes(q)) && (lv === '' || sp.level === Number(lv)) && (!biOnlyModified.checked || sp.modified))
+      .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
+    const edits = Object.keys(overrides).length;
+    const shown = rows.slice(0, 60);
+    biList.replaceChildren(
+      h('p', { class: 'hint', role: 'status' }, `${rows.length} spell${rows.length === 1 ? '' : 's'}${rows.length > shown.length ? ` (showing the first ${shown.length}, search to narrow down)` : ''} · ${edits} edited`),
+      h('ul', { class: 'hb-builtins' }, shown.map((sp) => h('li', {},
+        h('span', { class: 'bi-name' }, sp.name, ' ', h('small', { class: 'hint' }, `${levelLabel(sp.level)} · ${sp.school}`), sp.modified ? h('span', { class: 'tag custom-tag' }, 'Modified') : null),
+        h('span', { class: 'row gap' },
+          h('button', { type: 'button', class: 'btn small', 'aria-label': `Edit ${sp.name}`, onclick: () => fill(sp, true) }, 'Edit'),
+          sp.modified ? h('button', { type: 'button', class: 'btn small danger', 'aria-label': `Reset ${sp.name} to the original`, onclick: () => resetOne(sp.id) }, 'Reset') : null)))));
+  }
+
+  function importEdits(textValue) {
+    const { map, errors } = parseOverridesJson(textValue, BUILT_IN_SPELL_IDS);
+    biMsg.replaceChildren(...errors.map((e) => h('li', {}, e)));
+    const n = Object.keys(map).length;
+    if (n) {
+      overrides = { ...overrides, ...map };
+      saveSpellOverrides(overrides);
+      syncSpellOverrides(overrides);
+      drawBuiltins();
+    }
+    const note = `Imported ${n} edited spell${n === 1 ? '' : 's'}.`;
+    toast(note);
+    biMsg.append(h('li', { class: 'ok' }, note));
+  }
+  const biFile = h('input', { type: 'file', accept: 'application/json,.json', hidden: true, 'aria-label': 'Import spell edits JSON file', onchange: async () => {
+    const file = biFile.files[0];
+    biFile.value = '';
+    if (file) importEdits(await file.text());
+  } });
 
   function drawList() {
     listBox.replaceChildren(
@@ -235,7 +307,33 @@ export function renderHomebrew(root) {
     h('div', { class: 'hb-grid' },
       h('section', { 'aria-labelledby': 'hb-form-title' }, (formTitle.id = 'hb-form-title', formTitle), form),
       h('aside', {}, preview)),
-    h('section', { class: 'hb-saved' }, listBox)));
+    h('section', { class: 'hb-saved' }, listBox),
+    h('section', { class: 'hb-builtin', 'aria-labelledby': 'hb-builtin-title' },
+      h('h2', { id: 'hb-builtin-title' }, 'Edit existing spells'),
+      h('p', { class: 'hint' }, 'Change any built-in spell (damage, range, classes, text…). Your version replaces the original everywhere in this browser, is marked "Modified", and can be reset at any time. Note: Magic Missile and a few special spells keep their built-in roll rules.'),
+      h('div', { class: 'row gap hb-filters' },
+        h('div', { class: 'field' }, h('label', { for: 'bi-search' }, 'Search'), biSearch),
+        h('div', { class: 'field' }, h('label', { for: 'bi-level' }, 'Level'), biLevel),
+        h('div', { class: 'field inline' }, biOnlyModified, h('label', { for: 'bi-mod' }, 'Only modified'))),
+      biList,
+      h('div', { class: 'row gap' },
+        h('button', { type: 'button', class: 'btn', disabled: false, onclick: () => { if (!Object.keys(overrides).length) { toast('No edited spells yet.'); return; } download('characterforge-spell-edits.json', exportOverridesJson(overrides)); } }, 'Export my edits'),
+        h('button', { type: 'button', class: 'btn', onclick: () => biFile.click() }, 'Import edits from file'),
+        h('button', { type: 'button', class: 'btn', onclick: () => { if (biPaste.value.trim()) importEdits(biPaste.value); } }, 'Import pasted edits'),
+        h('button', { type: 'button', class: 'btn danger', onclick: async () => {
+          if (!Object.keys(overrides).length) { toast('Nothing to reset.'); return; }
+          if (!(await confirmDialog('Reset all edits', 'Reset every edited built-in spell to its original?', 'Reset all'))) return;
+          overrides = {};
+          saveSpellOverrides(overrides);
+          syncSpellOverrides(overrides);
+          if (editingBuiltIn) resetForm();
+          drawBuiltins();
+          toast('All built-in spells reset.');
+        } }, 'Reset all edits')),
+      biFile, biPaste, biMsg)));
   refresh();
   drawList();
+  drawBuiltins();
+  const target = editParam && SPELL_BY_ID[editParam];
+  if (target) fill(target, BUILT_IN_SPELL_IDS.has(target.id));
 }

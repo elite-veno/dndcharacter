@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {
   normalizeSpell, parseSpellJson, mergeSpellLists, mergeIntoSpellData, exportSpellsJson, normalizeSpellList,
   loadCustomSpells, saveCustomSpells, uniqueId, summarize, CUSTOM_SPELLS_KEY,
+  normalizeOverride, applySpellOverrides, parseOverridesJson, exportOverridesJson, loadSpellOverrides,
 } from './custom-spells.js';
-import { SPELLS, SPELL_BY_ID, spellsForClass, syncCustomSpells, BUILT_IN_SPELL_IDS } from './data/spells.js';
+import { SPELLS, SPELL_BY_ID, spellsForClass, syncCustomSpells, BUILT_IN_SPELL_IDS, ORIGINAL_SPELLS, syncSpellOverrides } from './data/spells.js';
 import { upcastDice } from './sheet-state.js';
 import { normalizeSheet } from './sheet-state.js';
 
@@ -127,6 +128,32 @@ group('sheet state keeps extra spells and old saves still load', () => {
   assert.deepEqual(normalizeSheet({}).extraSpells, []);
   assert.deepEqual(normalizeSheet({ extraSpells: ['a', 'a', 5, '', 'b'] }).extraSpells, ['a', 'b']);
   assert.deepEqual(normalizeSheet(undefined).extraSpells, []);
+});
+
+group('editing built-in spells: overrides keep the id, apply in place and reset cleanly', () => {
+  const fb = SPELL_BY_ID.fireball;
+  const ref = fb; // identity must survive edits
+  const r = normalizeOverride({ ...JSON.parse(JSON.stringify(ORIGINAL_SPELLS.get('fireball'))), name: 'Fireball', roll: { kind: 'save', save: 'dex', dice: '10d6', type: 'fire' }, classes: ['wizard'] }, 'fireball');
+  assert.ok(r.ok, JSON.stringify(r));
+  assert.equal(r.entry.id, 'fireball'); assert.equal(r.entry.modified, true); assert.equal(r.entry.custom, undefined);
+  syncSpellOverrides({ fireball: r.entry });
+  assert.equal(SPELL_BY_ID.fireball, ref);
+  assert.equal(SPELL_BY_ID.fireball.roll.dice, '10d6');
+  assert.ok(spellsForClass('wizard').includes(ref) && !spellsForClass('sorcerer').includes(ref));
+  assert.equal(ORIGINAL_SPELLS.get('fireball').roll.dice, '8d6');   // the pristine copy is untouched
+  syncSpellOverrides({});
+  assert.equal(SPELL_BY_ID.fireball.roll.dice, '8d6'); assert.equal(SPELL_BY_ID.fireball.modified, undefined);
+  assert.deepEqual(SPELL_BY_ID.fireball.classes, ['sorcerer', 'wizard']);
+  assert.equal(normalizeOverride({ name: '', level: 1, school: 'Evocation' }, 'fireball').ok, false);
+});
+
+group('override export/import round trip and rejects unknown ids', () => {
+  const entry = normalizeOverride({ ...ORIGINAL_SPELLS.get('shield'), range: 'Self (edited)' }, 'shield').entry;
+  const text = exportOverridesJson({ shield: entry });
+  const { map, errors } = parseOverridesJson(text, BUILT_IN_SPELL_IDS);
+  assert.equal(errors.length, 0); assert.equal(map.shield.range, 'Self (edited)');
+  assert.equal(parseOverridesJson(JSON.stringify([{ id: 'not-a-spell', name: 'X', level: 1, school: 'Evocation' }]), BUILT_IN_SPELL_IDS).errors.length, 1);
+  assert.deepEqual(loadSpellOverrides(BUILT_IN_SPELL_IDS), {});   // no localStorage in node
 });
 
 console.log(`${groups} test groups passed`);
