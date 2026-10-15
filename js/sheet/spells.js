@@ -7,7 +7,9 @@ import { spellCounts, classSpellOptions } from '../choices.js';
 import { withModifier } from '../dice.js';
 import { spendSlot, upcastDice } from '../sheet-state.js';
 import { rollButton, panel, pips, disclosure } from './widgets.js';
-import { checkList, counter, spellDetail } from '../steps/shared.js';
+import { checkList, counter, spellDetail, spellLabel } from '../steps/shared.js';
+import { SPELLS } from '../data/spells.js';
+import { componentsText } from '../custom-spells.js';
 
 const fmt = R.formatMod;
 const ABILITY_NAME = Object.fromEntries(ABILITIES.map((a) => [a.id, a.name]));
@@ -60,6 +62,16 @@ export function spellEntries(c, d) {
     const name = FEAT_BY_ID[featId].name;
     (choices.cantrips || []).forEach((id) => SPELL_BY_ID[id] && out.push({ spell: SPELL_BY_ID[id], source: name, ability: choices.ability, kind: 'cantrip' }));
     if (choices.spell && SPELL_BY_ID[choices.spell]) out.push({ spell: SPELL_BY_ID[choices.spell], source: name, ability: choices.ability, kind: 'feat-free', useKey: `fc:${featId}:${choices.spell}` });
+  }
+  // Extra spells the player added by hand, from any class list (including homebrew). They need an ability to cast with.
+  const extras = c.sheet?.extraSpells || [];
+  if (extras.length) {
+    const ability = sc ? sc.ability : ['int', 'wis', 'cha'].reduce((best, a) => (d.mods[a] > d.mods[best] ? a : best), 'cha');
+    for (const id of extras) {
+      const spell = SPELL_BY_ID[id];
+      if (!spell || out.some((e) => e.spell.id === id)) continue;
+      out.push({ spell, source: 'Extra', ability, kind: spell.level === 0 ? 'cantrip' : 'prepared', extra: true });
+    }
   }
   return out;
 }
@@ -120,7 +132,7 @@ function spellCard(ctx, entry, table) {
   if (multi?.auto) dice = `${count}d${multi.auto.match(/d(\d+)/)[1]}+${count}`; // Magic Missile: each dart 1d4 + 1
   else if (roll) {
     if (isCantrip) dice = multi ? roll.dice : R.scaleCantripDice(roll.dice, d.level);
-    else dice = multi ? roll.dice : upcastDice(roll.dice, UPCAST[spell.id], spell.level, castLevel);
+    else dice = multi ? roll.dice : upcastDice(roll.dice, UPCAST[spell.id] || spell.upcast || null, spell.level, castLevel);
   }
   let bonus = 0;
   if (rollKind === 'heal' && HEAL_ADDS_MOD.has(spell.id)) bonus = abilityMod;
@@ -194,6 +206,8 @@ function spellCard(ctx, entry, table) {
     spell.concentration ? h('span', { class: 'tag sub', title: 'Requires Concentration' }, 'Concentration') : null,
     spell.ritual ? h('span', { class: 'tag sub' }, 'Ritual') : null,
     h('span', { class: 'tag' }, source),
+    spell.custom ? h('span', { class: 'tag custom-tag', title: 'Homebrew spell' }, 'Custom') : null,
+    entry.extra ? h('span', { class: 'tag warn-tag', title: 'Added by hand; not on your class spell list' }, 'Outside class list') : null,
     kind === 'feat-free' ? h('span', { class: freeUsed ? 'tag bad' : 'tag good' }, freeUsed ? 'Free cast used' : 'Free cast ready') : null,
   ];
   const multiNote = multi ? `${count} ${multi.noun}${count > 1 ? 's' : ''}: ${multi.auto ? 'all darts hit automatically; the roll adds them together.' : 'roll an attack and damage for each.'}` : null;
@@ -204,7 +218,14 @@ function spellCard(ctx, entry, table) {
       h('div', { class: 'tag-row' }, tags)),
     h('div', { class: 'spell-actions' }, rollControls, h('span', { class: 'btn-pair' }, castControls)),
     multiNote ? h('p', { class: 'hint' }, multiNote) : null,
-    disclosure(`${spellDetail(spell)}`, h('p', {}, spell.summary), h('p', { class: 'hint' }, `Duration: ${spell.duration} · ${spell.school}`)));
+    entry.extra ? h('div', { class: 'row end' }, h('button', {
+      type: 'button', class: 'btn small danger', 'aria-label': `Remove extra spell ${spell.name}`,
+      onclick: () => ctx.update((x) => { x.sheet.extraSpells = x.sheet.extraSpells.filter((id) => id !== spell.id); }),
+    }, 'Remove')) : null,
+    disclosure(`${spellDetail(spell)}`,
+      h('p', {}, spell.description || spell.summary),
+      spell.higher ? h('p', {}, h('strong', {}, 'At higher levels. '), spell.higher) : null,
+      h('p', { class: 'hint' }, `Duration: ${spell.duration} · ${spell.school}${componentsText(spell) ? ` · ${componentsText(spell)}` : ''}`)));
 }
 
 // ---------------------------------------------------------------- manage spells
@@ -216,7 +237,7 @@ function spellManager(ctx) {
   const opts = classSpellOptions(c.classId, counts.maxSpellLevel);
   const draft = { cantrips: c.cantrips.slice(), spellbook: c.spellbook.slice(), spells: c.spells.slice() };
   const body = h('div', {});
-  const toOptions = (list) => list.map((sp) => ({ id: sp.id, label: sp.name, detail: spellDetail(sp) }));
+  const toOptions = (list) => list.map((sp) => ({ id: sp.id, label: spellLabel(sp), detail: spellDetail(sp) }));
 
   const draw = () => {
     body.replaceChildren(
@@ -244,6 +265,52 @@ function spellManager(ctx) {
   draw();
 }
 
+// ---------------------------------------------------------------- extra spells (any spell, outside the class list)
+
+function addSpellDialog(ctx) {
+  const taken = () => new Set([...spellEntries(ctx.c, ctx.d).map((e) => e.spell.id), ...added]);
+  const added = new Set();
+  const q = h('input', { type: 'search', id: 'add-spell-q', placeholder: 'Search by name…', oninput: () => draw() });
+  const lvl = h('select', { id: 'add-spell-level', onchange: () => draw() },
+    h('option', { value: '' }, 'All levels'), h('option', { value: '0' }, 'Cantrips'),
+    Array.from({ length: 9 }, (_, i) => h('option', { value: String(i + 1) }, `Level ${i + 1}`)));
+  const only = h('input', { type: 'checkbox', id: 'add-spell-custom', onchange: () => draw() });
+  const list = h('ul', { class: 'add-spell-list' });
+  const status = h('p', { class: 'hint', role: 'status', 'aria-live': 'polite' });
+  function draw() {
+    const term = q.value.trim().toLowerCase();
+    const have = taken();
+    const rows = SPELLS.filter((sp) => (!term || sp.name.toLowerCase().includes(term)) && (lvl.value === '' || sp.level === Number(lvl.value)) && (!only.checked || sp.custom))
+      .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
+    list.replaceChildren(...rows.slice(0, 80).map((sp) => h('li', { class: 'add-spell-row' },
+      h('div', {}, h('strong', {}, sp.name), sp.custom ? h('span', { class: 'tag custom-tag' }, 'Custom') : null,
+        h('span', { class: 'check-detail' }, `${spellDetail(sp)} · ${sp.classes.map((x) => x[0].toUpperCase() + x.slice(1)).join(', ') || 'No class'}`)),
+      have.has(sp.id)
+        ? h('span', { class: 'tag good' }, added.has(sp.id) ? 'Added' : 'Known')
+        : h('button', {
+          type: 'button', class: 'btn small', 'aria-label': `Add ${sp.name} as an extra spell`,
+          onclick: () => { added.add(sp.id); ctx.update((x) => { x.sheet.extraSpells = [...x.sheet.extraSpells, sp.id]; }); status.textContent = `${sp.name} added to Extra spells.`; draw(); },
+        }, 'Add'))));
+    if (!rows.length) list.append(h('li', { class: 'hint' }, 'No spells match.'));
+    else if (rows.length > 80) list.append(h('li', { class: 'hint' }, `Showing 80 of ${rows.length}. Narrow the search.`));
+  }
+  const body = h('div', {},
+    h('p', { class: 'hint' }, 'Take any spell onto your list, even if your class cannot normally learn it. It is marked "Outside class list" and does not count against your prepared spells.'),
+    h('div', { class: 'row gap' },
+      h('div', { class: 'field' }, h('label', { for: 'add-spell-q' }, 'Search'), q),
+      h('div', { class: 'field' }, h('label', { for: 'add-spell-level' }, 'Level'), lvl),
+      h('div', { class: 'field inline' }, only, h('label', { for: 'add-spell-custom' }, 'Custom only'))),
+    status, list,
+    h('p', { class: 'hint' }, h('a', { href: '#/homebrew' }, 'Create your own spell on the Homebrew page.')));
+  openModal('Add a spell', body, { wide: true });
+  draw();
+  q.focus();
+}
+
+const addSpellPanel = (ctx) => panel('Extra spells',
+  h('p', { class: 'hint' }, 'Add any spell, built-in or homebrew, regardless of your class list. Extra spells are marked and can be removed from their card.'),
+  h('button', { type: 'button', class: 'btn small', onclick: () => addSpellDialog(ctx) }, 'Add a spell'));
+
 // ---------------------------------------------------------------- tab
 
 export function spellsTab(ctx) {
@@ -251,7 +318,7 @@ export function spellsTab(ctx) {
   const sc = d.spellcasting;
   const entries = spellEntries(c, d);
   if (!sc && !entries.length) {
-    return h('div', { class: 'tab-body' }, panel('Spellcasting', h('p', { class: 'empty' }, `${d.cls ? d.cls.name : 'This character'} does not cast spells at this level.`)));
+    return h('div', { class: 'tab-body' }, panel('Spellcasting', h('p', { class: 'empty' }, `${d.cls ? d.cls.name : 'This character'} does not cast spells at this level.`)), addSpellPanel(ctx));
   }
   const table = slotTable(d, s);
   const counts = spellCounts(c);
@@ -284,6 +351,7 @@ export function spellsTab(ctx) {
     slotsPanel(ctx, table),
     ...levels.map((lvl) => panel(lvl === 0 ? 'Cantrips' : `Level ${lvl} spells`,
       h('ul', { class: 'spell-list' }, groups.get(lvl).map((e) => spellCard(ctx, e, table))))),
+    addSpellPanel(ctx),
     spellbookOnly.length ? panel('Spellbook (not prepared)', h('p', { class: 'hint' }, 'You can swap prepared spells after a Long Rest.'), h('p', {}, spellbookOnly.map((sp) => sp.name).join(', '))) : null,
     h('p', { class: 'hint' }, 'Cast spends a slot at the chosen level. Damage and healing dice grow when you cast at a higher level. Cantrip dice grow at character levels 5, 11 and 17.'));
 }

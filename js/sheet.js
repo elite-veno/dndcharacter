@@ -16,7 +16,7 @@ import {
 } from './sheet-state.js';
 import { rollButton, panel, pips, profDot } from './sheet/widgets.js';
 import { actionsTab, resourcesFor } from './sheet/combat.js';
-import { spellsTab, spellEntries } from './sheet/spells.js';
+import { spellsTab } from './sheet/spells.js';
 import { inventoryTab } from './sheet/inventory.js';
 import { featuresTab, notesTab } from './sheet/features.js';
 import { changeLevel, openAsiModal, pendingAsi } from './sheet/level.js';
@@ -405,7 +405,7 @@ export function renderSheet(root, character) {
   // ---------------------------------------------------------------- tabs
 
   function tabsView(ctx) {
-    const hasSpells = !!d.spellcasting || spellEntries(c, d).length > 0;
+    const hasSpells = true; // the Spells tab is always there: any character can add extra spells
     const tabs = [
       { id: 'actions', label: 'Actions', render: actionsTab },
       hasSpells && { id: 'spells', label: 'Spells', render: spellsTab },

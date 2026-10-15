@@ -93,7 +93,7 @@ export function featCard(featId) {
 }
 
 /** Compact spell label with school/level. */
-export const spellLabel = (s) => `${s.name}`;
+export const spellLabel = (s) => (s.custom ? `${s.name} (Custom)` : `${s.name}`);
 export const spellDetail = (s) => `${s.level === 0 ? 'Cantrip' : `Level ${s.level}`} ${s.school}${s.concentration ? ', Concentration' : ''}${s.ritual ? ', Ritual' : ''} · ${s.castingTime} · ${s.range}`;
 
 /** Spell card used in pickers: checkbox options with a detail line. */

@@ -5,6 +5,8 @@
 //  Roll:    A:<dice> <type> = spell attack, S:<abil>:<dice> <type> = saving throw (half on save unless noted),
 //           H:<dice> = healing. Cantrip damage scales at character levels 5, 11 and 17.
 
+import { loadCustomSpells, mergeIntoSpellData } from '../custom-spells.js';
+
 export const SPELL_CLASS_CODES = { B: 'bard', C: 'cleric', D: 'druid', P: 'paladin', R: 'ranger', S: 'sorcerer', L: 'warlock', W: 'wizard' };
 
 const ROWS = `
@@ -326,9 +328,22 @@ function parse(text) {
 export const SPELLS = parse(ROWS);
 export const SPELL_BY_ID = Object.fromEntries(SPELLS.map((s) => [s.id, s]));
 
+// Homebrew spells from the Homebrew page: merged in here so every picker, sheet list and importer sees them.
+// Per-class lists are derived from SPELLS by spellsForClass(), so they include custom spells automatically.
+const builtInIds = new Set(SPELLS.map((s) => s.id));
+export const BUILT_IN_SPELL_COUNT = SPELLS.length;
+mergeIntoSpellData(SPELLS, SPELL_BY_ID, loadCustomSpells(builtInIds));
+export const BUILT_IN_SPELL_IDS = builtInIds;
+
 /** All SRD spells of a given class, optionally filtered by spell level. */
 export function spellsForClass(classId, level = null) {
   return SPELLS.filter((s) => s.classes.includes(classId) && (level === null || s.level === level));
 }
 
 export const SPELL_SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
+
+/** Replace the custom spells in SPELLS / SPELL_BY_ID in place (used by the Homebrew page so changes apply without a reload). */
+export function syncCustomSpells(custom) {
+  for (let i = SPELLS.length - 1; i >= 0; i--) if (SPELLS[i].custom) { delete SPELL_BY_ID[SPELLS[i].id]; SPELLS.splice(i, 1); }
+  mergeIntoSpellData(SPELLS, SPELL_BY_ID, custom);
+}

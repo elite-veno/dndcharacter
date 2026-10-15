@@ -7,6 +7,7 @@ import { renderSheet } from './sheet.js';
 import { renderInfo } from './info.js';
 import { renderBuilder } from './builder.js';
 import { renderImport } from './import-view.js';
+import { renderHomebrew } from './homebrew-view.js';
 import { deriveCharacter } from './character.js';
 
 const app = document.getElementById('app');
@@ -18,6 +19,7 @@ const routes = [
   { name: 'sheet', match: /^\/sheet(?:\/([\w-]+))?$/, render: renderSheetRoute, title: 'Character Sheet' },
   { name: 'info', match: /^\/info$/, render: renderInfo, title: 'How to Play' },
   { name: 'import', match: /^\/import$/, render: renderImport, title: 'Import' },
+  { name: 'homebrew', match: /^\/homebrew$/, render: renderHomebrew, title: 'Homebrew' },
 ];
 
 /** Navigate to a hash route. */

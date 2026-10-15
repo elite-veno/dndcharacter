@@ -24,6 +24,7 @@ export function defaultSheet({ gold = 0 } = {}) {
     attackMode: 'normal',
     appearance: { frame: 'gold', backdrop: 'dusk', theme: 'gold', presetPortrait: null },
     notes: '',
+    extraSpells: [],
   };
 }
 
@@ -37,6 +38,7 @@ export function normalizeSheet(raw, opts = {}) {
   s.resUsed = { ...(raw?.resUsed || {}) };
   s.weaponOpts = { ...(raw?.weaponOpts || {}) };
   s.slotsUsed = base.slotsUsed.map((_, i) => Math.max(0, Number(raw?.slotsUsed?.[i]) || 0));
+  s.extraSpells = [...new Set((Array.isArray(raw?.extraSpells) ? raw.extraSpells : []).filter((id) => typeof id === 'string' && id))];
   s.conditions = Array.isArray(raw?.conditions) ? raw.conditions.slice() : [];
   s.exhaustion = clamp(Number(raw?.exhaustion) || 0, 0, 6);
   return s;
