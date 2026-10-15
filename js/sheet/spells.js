@@ -7,7 +7,8 @@ import { spellCounts, classSpellOptions } from '../choices.js';
 import { withModifier } from '../dice.js';
 import { spendSlot, upcastDice } from '../sheet-state.js';
 import { rollButton, panel, pips, disclosure } from './widgets.js';
-import { checkList, counter, spellDetail, spellLabel } from '../steps/shared.js';
+import { checkList, counter, spellDetail, spellLabel, spellFilterBar } from '../steps/shared.js';
+import { defaultSpellFilter } from '../list-tools.js';
 import { SPELLS } from '../data/spells.js';
 import { componentsText } from '../custom-spells.js';
 
@@ -270,18 +271,13 @@ function spellManager(ctx) {
 function addSpellDialog(ctx) {
   const taken = () => new Set([...spellEntries(ctx.c, ctx.d).map((e) => e.spell.id), ...added]);
   const added = new Set();
-  const q = h('input', { type: 'search', id: 'add-spell-q', placeholder: 'Search by name…', oninput: () => draw() });
-  const lvl = h('select', { id: 'add-spell-level', onchange: () => draw() },
-    h('option', { value: '' }, 'All levels'), h('option', { value: '0' }, 'Cantrips'),
-    Array.from({ length: 9 }, (_, i) => h('option', { value: String(i + 1) }, `Level ${i + 1}`)));
-  const only = h('input', { type: 'checkbox', id: 'add-spell-custom', onchange: () => draw() });
+  const bar = spellFilterBar({ spells: SPELLS, state: defaultSpellFilter(), idPrefix: 'add-spell', onChange: () => draw() });
   const list = h('ul', { class: 'add-spell-list' });
   const status = h('p', { class: 'hint', role: 'status', 'aria-live': 'polite' });
   function draw() {
-    const term = q.value.trim().toLowerCase();
     const have = taken();
-    const rows = SPELLS.filter((sp) => (!term || sp.name.toLowerCase().includes(term)) && (lvl.value === '' || sp.level === Number(lvl.value)) && (!only.checked || sp.custom))
-      .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
+    const rows = bar.apply(SPELLS).sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
+    bar.setCount(rows.length, SPELLS.length);
     list.replaceChildren(...rows.slice(0, 80).map((sp) => h('li', { class: 'add-spell-row' },
       h('div', {}, h('strong', {}, sp.name), sp.custom ? h('span', { class: 'tag custom-tag' }, 'Custom') : null,
         h('span', { class: 'check-detail' }, `${spellDetail(sp)} · ${sp.classes.map((x) => x[0].toUpperCase() + x.slice(1)).join(', ') || 'No class'}`)),
@@ -292,19 +288,16 @@ function addSpellDialog(ctx) {
           onclick: () => { added.add(sp.id); ctx.update((x) => { x.sheet.extraSpells = [...x.sheet.extraSpells, sp.id]; }); status.textContent = `${sp.name} added to Extra spells.`; draw(); },
         }, 'Add'))));
     if (!rows.length) list.append(h('li', { class: 'hint' }, 'No spells match.'));
-    else if (rows.length > 80) list.append(h('li', { class: 'hint' }, `Showing 80 of ${rows.length}. Narrow the search.`));
+    else if (rows.length > 80) list.append(h('li', { class: 'hint' }, `Showing the first 80 of ${rows.length}. Narrow the search.`));
   }
   const body = h('div', {},
     h('p', { class: 'hint' }, 'Take any spell onto your list, even if your class cannot normally learn it. It is marked "Outside class list" and does not count against your prepared spells.'),
-    h('div', { class: 'row gap' },
-      h('div', { class: 'field' }, h('label', { for: 'add-spell-q' }, 'Search'), q),
-      h('div', { class: 'field' }, h('label', { for: 'add-spell-level' }, 'Level'), lvl),
-      h('div', { class: 'field inline' }, only, h('label', { for: 'add-spell-custom' }, 'Custom only'))),
+    bar.el,
     status, list,
     h('p', { class: 'hint' }, h('a', { href: '#/homebrew' }, 'Create your own spell on the Homebrew page.')));
   openModal('Add a spell', body, { wide: true });
   draw();
-  q.focus();
+  document.getElementById('add-spell-q')?.focus();
 }
 
 const addSpellPanel = (ctx) => panel('Extra spells',
@@ -342,16 +335,46 @@ export function spellsTab(ctx) {
 
   const groups = new Map();
   entries.forEach((e) => { const k = e.spell.level; groups.set(k, [...(groups.get(k) || []), e]); });
+  // Search / filter the spell cards in place (no re-render, so typing keeps focus).
+  const filter = (ctx.view.spellFilter ||= defaultSpellFilter());
+  const bar = entries.length > 4 ? spellFilterBar({ spells: entries.map((e) => e.spell), state: filter, idPrefix: 'sheet-spell', onChange: () => applyFilter() }) : null;
+  const cardRefs = [];
+  const applyFilter = () => {
+    if (!bar) return;
+    let shown = 0;
+    for (const r of cardRefs) {
+      const ok = bar.apply([r.spell]).length === 1;
+      r.li.hidden = !ok;
+      if (ok) shown += 1;
+    }
+    for (const g of groupPanels) g.panel.hidden = !cardRefs.some((r) => r.level === g.level && !r.li.hidden);
+    bar.setCount(shown, cardRefs.length);
+    noMatch.hidden = shown > 0;
+  };
+  const noMatch = h('p', { class: 'empty', hidden: true }, 'No spells match your filters.');
+  const groupPanels = [];
   const levels = [...groups.keys()].sort((a, b) => a - b);
 
   const spellbookOnly = c.spellbook.filter((id) => !c.spells.includes(id)).map((id) => SPELL_BY_ID[id]).filter(Boolean);
 
-  return h('div', { class: 'tab-body' },
+  const out = h('div', { class: 'tab-body' },
     header,
     slotsPanel(ctx, table),
-    ...levels.map((lvl) => panel(lvl === 0 ? 'Cantrips' : `Level ${lvl} spells`,
-      h('ul', { class: 'spell-list' }, groups.get(lvl).map((e) => spellCard(ctx, e, table))))),
+    bar ? panel('Find a spell', bar.el) : null,
+    ...levels.map((lvl) => {
+      const p = panel(lvl === 0 ? 'Cantrips' : `Level ${lvl} spells`,
+        h('ul', { class: 'spell-list' }, groups.get(lvl).map((e) => {
+          const li = spellCard(ctx, e, table);
+          cardRefs.push({ li, spell: e.spell, level: lvl });
+          return li;
+        })));
+      groupPanels.push({ panel: p, level: lvl });
+      return p;
+    }),
+    noMatch,
     addSpellPanel(ctx),
     spellbookOnly.length ? panel('Spellbook (not prepared)', h('p', { class: 'hint' }, 'You can swap prepared spells after a Long Rest.'), h('p', {}, spellbookOnly.map((sp) => sp.name).join(', '))) : null,
     h('p', { class: 'hint' }, 'Cast spends a slot at the chosen level. Damage and healing dice grow when you cast at a higher level. Cantrip dice grow at character levels 5, 11 and 17.'));
+  applyFilter();
+  return out;
 }

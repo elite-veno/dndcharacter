@@ -52,6 +52,7 @@ export function createDiceTray({ rng = () => Math.random() } = {}) {
   const toggle = h('button', {
     type: 'button', class: 'tray-toggle', 'aria-expanded': 'false', 'aria-controls': 'tray-panel',
     onclick: () => setOpen(!open),
+    title: 'Dice tray. Press D to open or close it, Esc to close.', 'aria-keyshortcuts': 'D',
   }, h('span', { 'aria-hidden': 'true', class: 'tray-icon' }, '⚄'), h('span', {}, 'Dice'), lastChip);
   const panel = h('div', { class: 'tray-panel', id: 'tray-panel', hidden: true, role: 'region', 'aria-label': 'Dice tray' });
   const el = h('aside', { class: 'dice-tray' }, panel, toggle);
@@ -153,6 +154,34 @@ export function createDiceTray({ rng = () => Math.random() } = {}) {
     el.classList.toggle('open', open);
   }
 
+  /** Keyboard helper: open the tray and focus the expression field, or close it when already open. */
+  function toggleWithFocus() {
+    if (open) {
+      const hadFocus = panel.contains(document.activeElement);
+      setOpen(false);
+      if (hadFocus) toggle.focus();
+    } else {
+      setOpen(true);
+      exprInput.focus();
+    }
+  }
+
+  /** Close the tray (Esc). Returns true when it was open. Focus goes back to the Dice button if it was inside. */
+  function closeTray() {
+    if (!open) return false;
+    const hadFocus = panel.contains(document.activeElement);
+    setOpen(false);
+    if (hadFocus) toggle.focus();
+    return true;
+  }
+
+  function clearLog() {
+    log = [];
+    saveLog(log);
+    renderLog();
+    lastChip.textContent = '';
+  }
+
   // ---------------------------------------------------------------- rolling
 
   function rollD20({ label, bonus = 0, mode: extraMode = 'normal', penalty = 0, attack = false, targetAC = null } = {}) {
@@ -250,17 +279,19 @@ export function createDiceTray({ rng = () => Math.random() } = {}) {
         h('label', { for: 'tray-expr' }, 'Expression'),
         h('div', { class: 'row' }, exprInput, h('button', { type: 'submit', class: 'btn primary' }, 'Roll')),
         exprError,
-        h('p', { class: 'hint' }, 'Try 2d6+3, d20-1, 1d8+1d6+2 or 4d6kh3 (keep highest 3).')),
+        h('p', { class: 'hint' }, 'Try 2d6+3, d20-1, 1d8+1d6+2 or 4d6kh3 (keep highest 3).'),
+        h('p', { class: 'hint' }, 'Keyboard: D opens or closes this tray, Esc closes it.')),
       h('div', { class: 'log-head' },
         h('h3', {}, 'Roll log'),
-        h('button', { type: 'button', class: 'btn small', onclick: () => { log = []; saveLog(log); renderLog(); lastChip.textContent = ''; } }, 'Clear')),
+        h('button', { type: 'button', class: 'btn small', onclick: clearLog }, 'Clear roll log')),
       logList));
 
   renderLog();
   if (log[0]) lastChip.textContent = log[0].total !== null ? `${log[0].label}: ${log[0].total}` : log[0].label;
 
   return {
-    el, modeControl, modeFromEvent, rollD20, rollDamage, rollExpr, rollFlat, note, setMode, open: () => setOpen(true),
+    el, modeControl, modeFromEvent, rollD20, rollDamage, rollExpr, rollFlat, note, setMode, open: () => setOpen(true), toggleWithFocus, closeTray, clearLog,
+    get isOpen() { return open; },
     get mode() { return mode; },
   };
 }

@@ -2,9 +2,12 @@
 // character, autosaves to localStorage and re-renders. The dice tray lives outside the re-rendered area so rolls,
 // the result animation and the log survive every update. Panels live in js/sheet/*.js.
 
-import { h, mount, toast, openModal, confirmDialog } from './ui.js';
+import { h, mount, toast, openModal, confirmDialog, uid } from './ui.js';
 import { deriveCharacter } from './character.js';
 import { saveCharacter, setLastSheet } from './store.js';
+import { createHistory, snapshotOf, restoreInto, isTypingTarget } from './history.js';
+import { duplicateCharacter } from './custom-sheet.js';
+import { trackersPanel } from './sheet/custom.js';
 import { exportCharacter } from './transfer.js';
 import * as R from './rules.js';
 import { ABILITIES, CONDITIONS, ARMOR_BY_ID } from './data/index.js';
@@ -43,7 +46,20 @@ export function renderSheet(root, character) {
   // ---------------------------------------------------------------- persistence
 
   let warned = false;
-  function persist() {
+  const history = createHistory();
+  let baseline = snapshotOf(c);
+
+  /**
+   * Save, and record the change in the undo history by comparing the character with the last saved snapshot. Every
+   * mutation path (update, save, the appearance panel) goes through here. `key` merges rapid edits (typing) into one step.
+   */
+  function persist(key = null) {
+    const now = snapshotOf(c);
+    if (now !== baseline) {
+      history.commit(baseline, now, { key });
+      baseline = now;
+      syncHistoryButtons();
+    }
     if (!saveCharacter(c) && !warned) { warned = true; toast('Could not save: browser storage is full or unavailable. Changes are kept until you leave this page.'); }
   }
 
@@ -57,7 +73,70 @@ export function renderSheet(root, character) {
   /** Mutate and save without redrawing (text fields). */
   function save(fn) {
     fn(c);
-    persist();
+    persist('text');
+  }
+
+  function syncHistoryButtons() {
+    host.querySelectorAll('[data-history]').forEach((b) => { b.disabled = b.dataset.history === 'undo' ? !history.canUndo : !history.canRedo; });
+  }
+
+  /** Undo or redo one change: restore the snapshot into the character, save it, redraw. */
+  function stepHistory(direction) {
+    if (!root.isConnected) return;
+    const snap = direction === 'undo' ? history.undo(baseline) : history.redo(baseline);
+    if (snap === null) { toast(direction === 'undo' ? 'Nothing to undo.' : 'Nothing to redo.'); return; }
+    restoreInto(c, snap);
+    c.sheet = normalizeSheet(c.sheet, { gold: 0 });
+    baseline = snapshotOf(c);
+    view.concDC = null;
+    if (!saveCharacter(c)) toast('Could not save: browser storage is full or unavailable. Changes are kept until you leave this page.');
+    render();
+    toast(direction === 'undo' ? `Undone. ${history.undoCount} more step${history.undoCount === 1 ? '' : 's'} to undo.` : 'Redone.');
+  }
+
+  // ---------------------------------------------------------------- keyboard shortcuts
+
+  function onKey(e) {
+    if (!host.isConnected) return;
+    const mod = e.ctrlKey || e.metaKey;
+    const dialogOpen = !!document.querySelector('dialog[open]');
+    if (mod && !e.altKey && e.key.toLowerCase() === 'z') {
+      if (isTypingTarget(e.target) || dialogOpen) return; // native undo inside text fields
+      e.preventDefault();
+      stepHistory(e.shiftKey ? 'redo' : 'undo');
+      return;
+    }
+    if (mod && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'y') {
+      if (isTypingTarget(e.target) || dialogOpen) return;
+      e.preventDefault();
+      stepHistory('redo');
+      return;
+    }
+    if (e.key === 'Escape' && !dialogOpen) {
+      if (tray.closeTray()) e.preventDefault();
+      return;
+    }
+    if (!mod && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'd' && !isTypingTarget(e.target) && !dialogOpen) {
+      const tag = e.target?.tagName;
+      if (tag === 'SUMMARY') return;
+      e.preventDefault();
+      tray.toggleWithFocus();
+    }
+  }
+  document.addEventListener('keydown', onKey);
+  const onDocClick = (e) => {
+    if (!host.isConnected) return;
+    const menu = host.querySelector('.head-menu');
+    if (menu?.open && !menu.contains(e.target)) menu.open = false;
+  };
+  document.addEventListener('click', onDocClick);
+
+  function duplicate() {
+    const copy = duplicateCharacter(c, uid);
+    const saved = saveCharacter(copy);
+    if (!saved) { toast('Could not save the copy: browser storage is full or unavailable.'); return; }
+    toast(`Created ${saved.name}.`);
+    location.hash = `#/sheet/${saved.id}`;
   }
 
   // ---------------------------------------------------------------- shared roll helpers
@@ -205,11 +284,11 @@ export function renderSheet(root, character) {
       bannerView(ctx),
       h('div', { class: 'sheet-grid' },
         h('div', { class: 'sheet-col left' }, abilitiesPanel(ctx), savesPanel(ctx), skillsPanel(ctx)),
-        h('div', { class: 'sheet-col main' }, vitalsPanel(ctx), conditionsPanel(ctx), tabsView(ctx))));
+        h('div', { class: 'sheet-col main' }, vitalsPanel(ctx), conditionsPanel(ctx), trackersPanel(ctx), tabsView(ctx))));
   }
 
   render();
-  return () => { /* nothing global to tear down: the tray and sheet live inside the route root */ };
+  return () => { document.removeEventListener('keydown', onKey); document.removeEventListener('click', onDocClick); };
 
   // ================================================================ views (closures over ctx)
 
@@ -217,7 +296,7 @@ export function renderSheet(root, character) {
     const { s } = ctx;
     const src = portraitSrc(c);
     const subtitle = [d.species?.name, d.cls?.name].filter(Boolean).join(' ');
-    const open = (section) => openAppearancePanel({ c, persist, refresh: render }, section);
+    const open = (section) => openAppearancePanel({ c, persist: () => persist('appearance'), refresh: render }, section);
     return h('header', { class: 'sheet-head', dataset: { backdrop: s.appearance.backdrop } },
       h('button', { type: 'button', class: 'portrait-wrap', dataset: { frame: s.appearance.frame }, 'aria-label': 'Change portrait', onclick: () => open('portrait') },
         src ? h('img', { src, alt: `Portrait of ${c.name || 'your character'}` }) : h('span', { class: 'portrait-empty', 'aria-hidden': 'true' }, '⚔')),
@@ -234,13 +313,34 @@ export function renderSheet(root, character) {
             onclick: () => update((x) => { x.sheet.inspiration = !x.sheet.inspiration; }),
           }, s.inspiration ? 'Inspired' : 'Heroic Inspiration'),
           h('button', { type: 'button', class: 'btn small', onclick: () => open('portrait') }, 'Change Sheet Appearance'),
-          h('button', { type: 'button', class: 'btn small', onclick: () => exportCharacter(c), title: 'Download this character as a JSON file' }, 'Export'),
-          h('button', { type: 'button', class: 'btn small', onclick: () => window.print(), title: 'Print this sheet (or save as PDF)' }, 'Print'),
+          h('span', { class: 'btn-pair', role: 'group', 'aria-label': 'Undo and redo' },
+            h('button', {
+              type: 'button', class: 'btn small', dataset: { history: 'undo' }, disabled: !history.canUndo, 'aria-keyshortcuts': 'Control+Z',
+              title: 'Undo the last change (Ctrl+Z). Remembers your last 30 changes.', onclick: () => stepHistory('undo'),
+            }, 'Undo'),
+            h('button', {
+              type: 'button', class: 'btn small', dataset: { history: 'redo' }, disabled: !history.canRedo, 'aria-keyshortcuts': 'Control+Shift+Z',
+              title: 'Redo (Ctrl+Shift+Z)', onclick: () => stepHistory('redo'),
+            }, 'Redo')),
+          headMenu(),
           h('a', { class: 'btn small', href: '#/' }, 'All characters'))),
       h('div', { class: 'head-stats' },
         h('div', { class: 'stat' }, h('span', { class: 'stat-label' }, 'Proficiency'), h('span', { class: 'stat-value' }, fmt(d.pb))),
         nextUnlockStat(),
         h('div', { class: 'stat' }, h('span', { class: 'stat-label' }, 'Roll next d20'), tray.modeControl())));
+  }
+
+  /** "More" menu in the header: copy, export and print. */
+  function headMenu() {
+    const menu = h('details', { class: 'head-menu' });
+    const item = (label, title, fn) => h('button', { type: 'button', class: 'menu-item', title, onclick: () => { menu.open = false; fn(); } }, label);
+    menu.append(h('summary', { class: 'btn small', 'aria-label': 'More actions' }, 'More'),
+      h('div', { class: 'menu-list' },
+        item('Duplicate character', 'Make a copy of this character with " (copy)" added to the name', duplicate),
+        item('Export', 'Download this character as a JSON file', () => exportCharacter(c)),
+        item('Print', 'Print this sheet (or save as PDF)', () => window.print())));
+    menu.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.open) { e.stopPropagation(); menu.open = false; menu.querySelector('summary').focus(); } });
+    return menu;
   }
 
   /** Compact "Next unlock" stat in the header; opens the Progression tab. */

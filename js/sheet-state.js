@@ -3,6 +3,7 @@
 // easy to test. The sheet keeps this state in `character.sheet`.
 
 import * as R from './rules.js';
+import { normalizeCounters, normalizeFeatures, normalizeAttacks, restCounters } from './custom-sheet.js';
 
 export const COIN_TYPES = ['pp', 'gp', 'ep', 'sp', 'cp'];
 
@@ -25,6 +26,9 @@ export function defaultSheet({ gold = 0 } = {}) {
     appearance: { frame: 'gold', backdrop: 'dusk', theme: 'gold', presetPortrait: null },
     notes: '',
     extraSpells: [],
+    counters: [],
+    customFeatures: [],
+    customAttacks: [],
   };
 }
 
@@ -39,6 +43,9 @@ export function normalizeSheet(raw, opts = {}) {
   s.weaponOpts = { ...(raw?.weaponOpts || {}) };
   s.slotsUsed = base.slotsUsed.map((_, i) => Math.max(0, Number(raw?.slotsUsed?.[i]) || 0));
   s.extraSpells = [...new Set((Array.isArray(raw?.extraSpells) ? raw.extraSpells : []).filter((id) => typeof id === 'string' && id))];
+  s.counters = normalizeCounters(raw?.counters);
+  s.customFeatures = normalizeFeatures(raw?.customFeatures);
+  s.customAttacks = normalizeAttacks(raw?.customAttacks);
   s.conditions = Array.isArray(raw?.conditions) ? raw.conditions.slice() : [];
   s.exhaustion = clamp(Number(raw?.exhaustion) || 0, 0, 6);
   return s;
@@ -218,7 +225,7 @@ export function shortRest(sheet, defs) {
     const used = resUsed[def.key] || 0;
     resUsed[def.key] = def.short === 'all' ? 0 : Math.max(0, used - def.short);
   }
-  return { ...sheet, resUsed, pactUsed: 0, raging: false };
+  return { ...sheet, resUsed, pactUsed: 0, raging: false, counters: restCounters(sheet.counters, 'short') };
 }
 
 /**
@@ -233,6 +240,7 @@ export function longRest(sheet, { level, maxHp }) {
     slotsUsed: new Array(9).fill(0),
     pactUsed: 0,
     resUsed: {},
+    counters: restCounters(sheet.counters, 'long'),
     exhaustion: Math.max(0, sheet.exhaustion - 1),
     raging: false,
     concentration: null,
