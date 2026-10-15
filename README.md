@@ -5,7 +5,7 @@ A static website that recreates the idea of a step-by-step character builder for
 ## Features
 
 - **Builder**: Preferences, Class, Background, Species, Ability Scores (Standard Array, Manual/Rolled, Point Buy), Equipment, Details. Backgrounds grant +2/+1 or +1/+1/+1 and an Origin feat; species give no ability bonuses.
-- **Sheet**: ability checks, saves, skills, attacks and damage with Weapon Mastery, spells and slots, hit points, death saves, rests, conditions, inventory and coins, level up with Ability Score Improvements, and sheet appearance (portrait, frame, backdrop, theme). A dice tray rolls d20s (Shift: Advantage, Ctrl/Alt: Disadvantage) and any dice expression.
+- **Sheet**: ability checks, saves, skills, attacks and damage with Weapon Mastery, spells and slots, hit points, death saves, rests, conditions, inventory and coins, level up with Ability Score Improvements, and sheet appearance (portrait, frame, backdrop, theme). Sheet extras: custom Trackers (uses with Short/Long Rest recharge), your own features, quick attacks and custom items, Undo/Redo (Ctrl+Z / Ctrl+Shift+Z, last 30 changes), Duplicate character, and dice tray shortcuts (D opens/closes, Esc closes). A dice tray rolls d20s (Shift: Advantage, Ctrl/Alt: Disadvantage) and any dice expression.
 - **Info**: how to play, from movement to armor class, attacks, saves, resting and spellcasting, with small calculators.
 - **My Characters**: several characters, import/export as JSON, print-friendly sheet (Print button, or save as PDF).
 
@@ -45,6 +45,8 @@ js/builder.js, js/steps/   the builder wizard and its seven steps
 js/sheet.js, js/sheet/     the interactive sheet and its panels
 js/sheet-state.js     pure play-state logic (HP, rests, slots)
 js/dicetray.js        dice tray UI
+js/custom-sheet.js    pure logic: trackers, custom features/attacks/items, duplicate
+js/history.js         pure undo/redo history
 js/info*.js           the Info page
 js/data/              classes, species, backgrounds, feats, spells, equipment (SRD 5.2)
 data-src/             source data used to author the subclass data

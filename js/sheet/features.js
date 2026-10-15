@@ -6,6 +6,7 @@ import { subclassChoices } from '../rules.js';
 import { subclassOtherProficiencies } from '../choices.js';
 import { select, field } from '../steps/shared.js';
 import { panel, disclosure, titleCase } from './widgets.js';
+import { customFeaturesPanel } from './custom.js';
 
 const featureItem = (f) => disclosure(`${f.name} (level ${f.level}${f.source ? `, ${f.source}` : ''})`, h('p', {}, f.desc || 'See the SRD 5.2 for the full text.'));
 
@@ -37,6 +38,7 @@ export function featuresTab(ctx) {
       const feat = FEAT_BY_ID[f.id];
       return disclosure(`${feat.name} (${f.source})`, h('p', {}, feat.desc), feat.benefits.length ? h('ul', { class: 'bullets' }, feat.benefits.map((b) => h('li', {}, b))) : null);
     }))) : null,
+    customFeaturesPanel(ctx),
     c.invocations.length ? panel('Eldritch Invocations', h('p', {}, c.invocations.join(', ').replace(/-/g, ' '))) : null);
 }
 

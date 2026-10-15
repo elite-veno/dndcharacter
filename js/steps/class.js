@@ -14,8 +14,9 @@ import {
 import { skillGrants } from '../character.js';
 import { resetEquipment } from '../inventory.js';
 import {
-  field, select, sectionTitle, notice, tag, cardGrid, checkList, counter, featCard, spellOptions, skillLabel,
+  field, select, sectionTitle, notice, tag, cardGrid, checkList, counter, featCard, spellOptions, skillLabel, spellFilterBar,
 } from './shared.js';
+import { defaultSpellFilter } from '../list-tools.js';
 
 let tab = 'class';
 const spellFilters = {};
@@ -278,23 +279,16 @@ function skillGrantsAfter(c) {
 // ---------------------------------------------------------------- spells tab
 
 function spellPicker(ctx, { key, title, spells, selected, max, onChange, hint }) {
-  const f = (spellFilters[key] ||= { q: '', level: 'all' });
-  const levels = [...new Set(spells.map((s) => s.level))].sort((a, b) => a - b);
+  const f = (spellFilters[key] ||= defaultSpellFilter());
   const listBox = h('div', { class: 'picker-list' });
-  const draw = () => {
-    const q = f.q.trim().toLowerCase();
-    const visible = spells.filter((s) => (f.level === 'all' || s.level === Number(f.level)) && (!q || s.name.toLowerCase().includes(q)));
+  const bar = spellFilterBar({ spells, state: f, idPrefix: `filter-${key}`, onChange: () => draw() });
+  function draw() {
+    const visible = bar.apply(spells);
+    bar.setCount(visible.length, spells.length);
     listBox.replaceChildren(visible.length ? checkList({
       idPrefix: `sp-${key}`, selected, max, options: spellOptions(visible), onChange,
-    }) : h('p', { class: 'hint' }, 'No spells match.'));
-  };
-  const searchId = `search-${key}`;
-  const search = h('input', { id: searchId, type: 'search', value: f.q, placeholder: 'Search spells', oninput: (e) => { f.q = e.target.value; draw(); } });
-  const levelSel = select({
-    id: `level-${key}`, value: f.level,
-    options: [{ value: 'all', label: 'All levels' }, ...levels.map((l) => ({ value: String(l), label: l === 0 ? 'Cantrips' : `Level ${l}` }))],
-    onChange: (v) => { f.level = v || 'all'; draw(); },
-  });
+    }) : h('p', { class: 'hint' }, 'No spells match. Try clearing a filter.'));
+  }
   draw();
   const chosen = selected.map((id) => SPELL_BY_ID[id]?.name).filter(Boolean);
   return h('div', { class: 'sub-panel' },
@@ -302,7 +296,7 @@ function spellPicker(ctx, { key, title, spells, selected, max, onChange, hint })
     hint ? h('p', { class: 'hint' }, hint) : null,
     counter(selected.length, max),
     chosen.length ? h('p', { class: 'chosen-line' }, h('strong', {}, 'Chosen: '), chosen.join(', ')) : null,
-    h('div', { class: 'filters' }, field('Search', search, null, searchId), spells.some((s) => s.level > 0) && levels.length > 1 ? field('Spell level', levelSel, null, levelSel.id) : null),
+    bar.el,
     listBox);
 }
 

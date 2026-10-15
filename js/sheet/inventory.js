@@ -4,8 +4,10 @@ import { h, openModal } from '../ui.js';
 import * as R from '../rules.js';
 import { resolveItem, WEAPONS, ARMOR, SHIELD, GEAR, PACKS, TOOLS, AMMUNITION } from '../data/index.js';
 import { itemName, toggleEquipped, totalWeight, formatCost } from '../inventory.js';
+import { customItemWeight } from '../custom-sheet.js';
 import { spendCoins, coinsToGold, COIN_TYPES } from '../sheet-state.js';
 import { panel, titleCase } from './widgets.js';
+import { openItemForm } from './custom.js';
 
 const CATALOG = [
   { id: 'weapons', label: 'Weapons', items: WEAPONS },
@@ -89,14 +91,19 @@ function itemRow(ctx, it, index) {
     tags.push(h('span', { class: 'tag' }, 'Shield · +2 AC'));
     if (!d.armorTraining.includes('shield')) tags.push(h('span', { class: 'tag bad' }, 'Not trained'));
   }
-  const weight = (found?.item.weight || 0) * it.qty;
+  const weight = it.custom ? customItemWeight(it) : (found?.item.weight || 0) * it.qty;
+  const label = found?.item.name || it.name;
   return h('li', { class: `inv-row${it.equipped ? ' equipped' : ''}` },
-    h('span', { class: 'inv-name' }, entryName(it), h('span', { class: 'tag-row' }, tags)),
+    h('span', { class: 'inv-name' }, entryName(it), h('span', { class: 'tag-row' }, tags), it.custom && it.note ? h('small', { class: 'inv-note' }, it.note) : null),
     h('span', { class: 'inv-weight' }, weight ? `${Math.round(weight * 100) / 100} lb` : '—'),
     wearable ? h('label', { class: 'inline-check' },
       h('input', { type: 'checkbox', checked: !!it.equipped, onchange: () => ctx.update((x) => toggleEquipped(x, index)) }),
       it.equipped ? 'Equipped' : 'Equip') : null,
+    it.custom ? h('label', { class: 'inline-check', title: 'A reminder only: custom items never change your Armor Class.' },
+      h('input', { type: 'checkbox', checked: !!it.equipped, onchange: () => ctx.update((x) => { x.equipment.items[index].equipped = !x.equipment.items[index].equipped; }) }),
+      it.equipped ? 'Equipped' : 'Equip') : null,
     h('span', { class: 'btn-pair' },
+      it.custom ? h('button', { type: 'button', class: 'btn small', 'aria-label': `Edit ${label}`, onclick: () => openItemForm(ctx, index) }, 'Edit') : null,
       h('button', { type: 'button', class: 'btn small', 'aria-label': `One fewer ${found?.item.name || it.name}`, onclick: () => ctx.update((x) => { const e = x.equipment.items[index]; if (e.qty > 1) e.qty -= 1; else x.equipment.items.splice(index, 1); }) }, '−'),
       h('button', { type: 'button', class: 'btn small', 'aria-label': `One more ${found?.item.name || it.name}`, onclick: () => ctx.update((x) => { x.equipment.items[index].qty += 1; }) }, '+'),
       h('button', { type: 'button', class: 'btn small danger', 'aria-label': `Remove ${found?.item.name || it.name}`, onclick: () => ctx.update((x) => { x.equipment.items.splice(index, 1); }) }, 'Remove')));
@@ -123,6 +130,7 @@ export function inventoryTab(ctx) {
     panel('Equipment',
       h('div', { class: 'row gap' },
         h('button', { type: 'button', class: 'btn primary small', onclick: () => catalogModal(ctx) }, 'Add or buy items'),
+        h('button', { type: 'button', class: 'btn small', onclick: () => openItemForm(ctx) }, 'Add custom item'),
         h('span', { class: 'hint' }, `Carrying ${weight} lb of ${cap.capacity} lb (push, drag or lift ${cap.pushDragLift} lb). Armor class: ${d.ac.ac} (${d.ac.formula}).`)),
       items.length ? h('ul', { class: 'inv-list' }, items.map((it, i) => itemRow(ctx, it, i))) : h('p', { class: 'empty' }, 'Your pack is empty.'),
       h('p', { class: 'hint' }, 'Only one suit of armor and one shield can be equipped at a time. Equipping changes your Armor Class immediately.')));

@@ -6,6 +6,7 @@ import {
   CLASS_BY_ID, BACKGROUND_BY_ID, resolveItem, EQUIPMENT_CHOICES, MUSICAL_INSTRUMENTS, ARTISANS_TOOLS, ARMOR_BY_ID,
 } from './data/index.js';
 import { armorTrainingOf } from './choices.js';
+import { customItemWeight } from './custom-sheet.js';
 
 const slotOptions = {
   'musical-instrument': MUSICAL_INSTRUMENTS,
@@ -88,7 +89,7 @@ const round2 = (n) => Math.round(n * 100) / 100;
 
 /** Total weight in pounds of all items. */
 export function totalWeight(items) {
-  return items.reduce((sum, it) => sum + (resolveItem(it.id)?.item.weight || 0) * it.qty, 0);
+  return items.reduce((sum, it) => sum + (it.custom ? customItemWeight(it) : (resolveItem(it.id)?.item.weight || 0) * it.qty), 0);
 }
 
 /** Equip the best armor (highest base AC the character is trained in) and a shield, clearing other flags. */
@@ -96,6 +97,7 @@ export function autoEquip(c, items) {
   const trained = armorTrainingOf(c);
   let best = null;
   for (const it of items) {
+    if (it.custom) continue; // custom items never affect AC: leave their own equipped flag alone
     it.equipped = false;
     const found = resolveItem(it.id);
     if (found?.kind === 'armor' && trained.includes(found.item.category)) {
@@ -167,7 +169,7 @@ export function resetEquipment(c) {
 /** Starting-equipment options changed: drop granted items (keep shop purchases) and require re-adding. */
 export function invalidateStarting(c) {
   c.equipment.added = false;
-  c.equipment.items = c.equipment.items.filter((it) => it.paid > 0);
+  c.equipment.items = c.equipment.items.filter((it) => it.paid > 0 || it.custom);
 }
 
 /** Format a gold amount for display ("12 gp", "5 sp", "1 cp"). */

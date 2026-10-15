@@ -9,6 +9,8 @@ import { resourceDefs, usesLeft } from '../sheet-state.js';
 import { itemName } from '../inventory.js';
 import { rollButton, panel, pips, disclosure, titleCase } from './widgets.js';
 import { checkList, counter } from '../steps/shared.js';
+import { customAttackToAttack } from '../custom-sheet.js';
+import { openAttackForm, customAttackControls } from './custom.js';
 
 const fmt = R.formatMod;
 
@@ -58,11 +60,12 @@ export function buildAttacks(c, d) {
     damageDice: unarmed.damageDice, damageBonus: unarmed.damageBonus, damageType: unarmed.damageType,
     flat: !/d/.test(unarmed.damageDice), autoMode: 'normal',
   });
+  for (const custom of s.customAttacks || []) attacks.push(customAttackToAttack(custom));
   return attacks;
 }
 
 /** Damage text for display: '1d8+3 slashing'. */
-export const damageText = (a) => (a.flat ? `${Math.max(0, Number(a.damageDice) + a.damageBonus)} ${a.damageType}` : `${withModifier(a.damageDice, a.damageBonus)} ${a.damageType}`);
+export const damageText = (a) => (a.flat ? `${Math.max(0, Number(a.damageDice) + a.damageBonus)} ${a.damageType}` : `${withModifier(a.damageDice, a.damageBonus)} ${a.damageType}`).trim();
 
 // ---------------------------------------------------------------- attacks panel
 
@@ -79,7 +82,7 @@ function attackCard(ctx, a) {
       ctx.tray.rollFlat(`${a.name} damage`, total, `${a.damageDice}${a.damageBonus ? ` ${fmt(a.damageBonus)}` : ''} = ${total} ${a.damageType}`);
     } else {
       ctx.tray.rollDamage({
-        label: `${a.name} damage (${a.damageType})`, expr: withModifier(a.damageDice, a.damageBonus), crit: asCrit, minDie: a.greatWeapon ? 3 : 0,
+        label: `${a.name} damage${a.damageType ? ` (${a.damageType})` : ''}`, expr: withModifier(a.damageDice, a.damageBonus), crit: asCrit, minDie: a.greatWeapon ? 3 : 0,
       });
     }
     view.lastCrit[a.key] = false;
@@ -110,6 +113,10 @@ function attackCard(ctx, a) {
   }
 
   const controls = [];
+  if (a.custom) {
+    tags.push(h('span', { class: 'tag custom-tag' }, 'Quick attack'));
+    controls.push(customAttackControls(ctx, a));
+  }
   if (a.weapon?.versatile) {
     controls.push(h('label', { class: 'inline-check' },
       h('input', { type: 'checkbox', checked: a.twoHanded, onchange: (e) => ctx.update(() => { ctx.weaponOpts(a.key).twoHanded = e.target.checked; }) }),
@@ -285,7 +292,10 @@ export function actionsTab(ctx) {
         h('button', { type: 'button', class: 'btn small', onclick: () => masteryPicker(ctx, masteryNeed) }, 'Choose')) : null,
       masteryNeed > 0 ? h('p', { class: 'hint' }, `Weapon Mastery: ${c.masteries.length ? c.masteries.map((id) => resolveItem(id)?.item.name || id).join(', ') : 'none chosen'} `,
         h('button', { type: 'button', class: 'link-btn', onclick: () => masteryPicker(ctx, masteryNeed) }, 'Change')) : null,
-      h('ul', { class: 'attack-list' }, attacks.map((a) => attackCard(ctx, a)))),
+      h('ul', { class: 'attack-list' }, attacks.map((a) => attackCard(ctx, a))),
+      h('div', { class: 'row gap' },
+        h('button', { type: 'button', class: 'btn small', onclick: () => openAttackForm(ctx) }, 'Add quick attack'),
+        h('span', { class: 'hint' }, 'For magic weapons, spell attacks or anything the sheet does not list. Uses the same Advantage, Disadvantage and critical-hit rules.'))),
     acts.length ? panel('Class actions', h('ul', { class: 'action-list' }, acts.map((a) => actionCard(ctx, a, defs)))) : null,
     defs.length ? panel('Limited-use features',
       h('ul', { class: 'resource-list' }, defs.map((def) => resourceRow(ctx, def))),

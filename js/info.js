@@ -1,13 +1,37 @@
 // Info tab: searchable, collapsible how-to-play reference with a sticky table of contents.
 
-import { h, mount } from './ui.js';
+import { h, mount, toast } from './ui.js';
+import { parseInfoState, serializeInfoState, infoSectionLink } from './list-tools.js';
 import { SECTIONS } from './info-content.js';
 
-/** Render the Info page into `root`. */
-export function renderInfo(root) {
+const INFO_KEY = 'characterforge.info.v1';
+const readState = () => { try { return parseInfoState(sessionStorage.getItem(INFO_KEY)); } catch { return parseInfoState(null); } };
+
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch { /* fall back below */ }
+  const ta = h('textarea', { 'aria-hidden': 'true', style: 'position:fixed;opacity:0' }, text);
+  document.body.append(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch { /* ignore */ }
+  ta.remove();
+  return ok;
+}
+
+/** Render the Info page into `root`. `focusId` (from #/info/<id>) opens and scrolls to one section. */
+export function renderInfo(root, focusId = null) {
+  const saved = readState();
   const sections = SECTIONS.map((s) => {
     const details = h('details', { class: 'info-section', id: `info-${s.id}`, open: true },
-      h('summary', {}, h('h2', {}, s.title)),
+      h('summary', {}, h('h2', {}, s.title),
+        h('button', {
+          type: 'button', class: 'link-btn copy-link', 'aria-label': `Copy link to section ${s.title}`, title: 'Copy a link to this section',
+          onclick: async (e) => {
+            e.preventDefault(); e.stopPropagation();
+            toast(await copyText(infoSectionLink(location.href, s.id)) ? 'Link copied.' : 'Could not copy the link.');
+          },
+          onkeydown: (e) => e.stopPropagation(),
+        }, 'Copy link')),
       h('div', { class: 'info-body' }, s.build()));
     return { ...s, el: details, items: filterUnits(details.querySelector('.info-body')) };
   });
@@ -63,9 +87,18 @@ export function renderInfo(root) {
     empty.hidden = visibleSections > 0;
     status.textContent = terms.length ? `${visibleSections} matching section${visibleSections === 1 ? '' : 's'}.` : '';
   }
-  search.addEventListener('input', applyFilter);
+  const save = () => {
+    try { sessionStorage.setItem(INFO_KEY, serializeInfoState(search.value, sections.filter((s) => !s.el.open).map((s) => s.id))); } catch { /* ignore */ }
+  };
+  search.addEventListener('input', () => { applyFilter(); save(); });
+  // Restore this session's state before listening for changes.
+  sections.forEach((s) => { if (saved.closed.includes(s.id)) s.el.open = false; });
+  if (saved.q) { search.value = saved.q; applyFilter(); }
+  const target = focusId && sections.find((s) => s.id === focusId);
+  if (target) { if (target.el.hidden) { search.value = ''; applyFilter(); } target.el.open = true; }
+  sections.forEach((s) => s.el.addEventListener('toggle', save));
 
-  const setAll = (open) => sections.forEach((s) => { if (!s.el.hidden) s.el.open = open; });
+  const setAll = (open) => { sections.forEach((s) => { if (!s.el.hidden) s.el.open = open; }); save(); };
 
   // Highlight the section being read in the table of contents.
   if ('IntersectionObserver' in window) {
@@ -92,6 +125,13 @@ export function renderInfo(root) {
     h('div', { class: 'info-layout' },
       toc,
       h('div', { class: 'info-content' }, sections.map((s) => s.el), empty))));
+
+  if (target) {
+    requestAnimationFrame(() => {
+      target.el.scrollIntoView({ block: 'start' });
+      target.el.querySelector('summary').focus({ preventScroll: true });
+    });
+  }
 }
 
 function p(text) { return h('p', { class: 'lead' }, text); }

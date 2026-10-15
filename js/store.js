@@ -45,6 +45,15 @@ export function saveCharacter(character) {
   return write(CHARACTERS_KEY, list) ? saved : null;
 }
 
+/** Change fields of a saved character without touching `updatedAt` (rename and similar housekeeping). */
+export function patchCharacter(id, patch) {
+  const list = read(CHARACTERS_KEY, []);
+  const idx = list.findIndex((c) => c.id === id);
+  if (idx < 0) return false;
+  list[idx] = { ...list[idx], ...patch };
+  return write(CHARACTERS_KEY, list);
+}
+
 export function deleteCharacter(id) {
   return write(CHARACTERS_KEY, read(CHARACTERS_KEY, []).filter((c) => c.id !== id));
 }
@@ -68,6 +77,19 @@ const LAST_SHEET_KEY = 'characterforge.lastSheet.v1';
 /** Remember which sheet was opened last (used by the "Sheet" nav link). */
 export function setLastSheet(id) {
   try { localStorage.setItem(LAST_SHEET_KEY, id); } catch { /* ignore */ }
+  try {
+    const played = read(PLAYED_KEY, {});
+    played[id] = Date.now();
+    write(PLAYED_KEY, played);
+  } catch { /* ignore */ }
+}
+
+const PLAYED_KEY = 'characterforge.lastPlayed.v1';
+
+/** { characterId: timestamp } of when each sheet was last opened (kept apart from the characters themselves). */
+export function lastPlayedMap() {
+  const m = read(PLAYED_KEY, {});
+  return m && typeof m === 'object' && !Array.isArray(m) ? m : {};
 }
 
 /** The last opened character, else the most recently edited one, else null. */

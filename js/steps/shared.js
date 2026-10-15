@@ -6,6 +6,7 @@ import { h } from '../ui.js';
 import { FEAT_BY_ID, SPELL_BY_ID, SKILL_BY_ID } from '../data/index.js';
 import { featChoiceSpec, magicInitiateOptions, skilledOptions } from '../choices.js';
 import { formatMod } from '../rules.js';
+import { defaultSpellFilter, filterSpells, countText, spellFilterActive } from '../list-tools.js';
 
 let idCounter = 0;
 /** Unique DOM id for label/control association. */
@@ -93,7 +94,7 @@ export function featCard(featId) {
 }
 
 /** Compact spell label with school/level. */
-export const spellLabel = (s) => `${s.name}`;
+export const spellLabel = (s) => (s.custom ? `${s.name} (Custom)` : `${s.name}`);
 export const spellDetail = (s) => `${s.level === 0 ? 'Cantrip' : `Level ${s.level}`} ${s.school}${s.concentration ? ', Concentration' : ''}${s.ritual ? ', Ritual' : ''} · ${s.castingTime} · ${s.range}`;
 
 /** Spell card used in pickers: checkbox options with a detail line. */
@@ -147,3 +148,50 @@ export const skillLabel = (id) => {
 };
 
 export { formatMod };
+
+
+/**
+ * Search + filter controls for a spell list (level, school, concentration/ritual, custom only) with a live result count.
+ * `state` is a mutable filter object (see defaultSpellFilter) so callers can keep it for the session.
+ * Returns { el, apply(spells) -> matching spells, setCount(shown, total) } and calls onChange() after every edit.
+ */
+export function spellFilterBar({ spells, state, idPrefix, onChange }) {
+  const levels = [...new Set(spells.map((s) => s.level))].sort((a, b) => a - b);
+  const schools = [...new Set(spells.map((s) => s.school).filter(Boolean))].sort();
+  const hasCustom = spells.some((s) => s.custom);
+  const change = (key) => (e) => { state[key] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; onChange(); };
+  const controls = {};
+  const sel = (key, label, options) => {
+    const el = h('select', { id: `${idPrefix}-${key}`, onchange: change(key) }, options.map(([v, l]) => h('option', { value: v }, l)));
+    el.value = state[key];
+    controls[key] = el;
+    return field(label, el);
+  };
+  const q = h('input', { id: `${idPrefix}-q`, type: 'search', value: state.q, placeholder: 'Search spells by name', autocomplete: 'off', oninput: change('q') });
+  const status = h('p', { class: 'hint filter-count', role: 'status', 'aria-live': 'polite' });
+  const custom = hasCustom ? h('input', { type: 'checkbox', id: `${idPrefix}-custom`, checked: state.customOnly, onchange: change('customOnly') }) : null;
+  const clear = h('button', {
+    type: 'button', class: 'link-btn',
+    onclick: () => {
+      Object.assign(state, defaultSpellFilter());
+      q.value = '';
+      Object.entries(controls).forEach(([k, c]) => { c.value = state[k]; });
+      if (custom) custom.checked = false;
+      onChange();
+      q.focus();
+    },
+  }, 'Clear filters');
+  const el = h('div', { class: 'spell-filter' },
+    h('div', { class: 'filters' },
+      field('Search', q),
+      levels.length > 1 ? sel('level', 'Level', [['all', 'All levels'], ...levels.map((l) => [String(l), l === 0 ? 'Cantrips' : `Level ${l}`])]) : null,
+      schools.length > 1 ? sel('school', 'School', [['all', 'All schools'], ...schools.map((x) => [x, x])]) : null,
+      sel('flag', 'Type', [['all', 'Any'], ['concentration', 'Concentration'], ['ritual', 'Ritual']]),
+      custom ? h('div', { class: 'field inline' }, custom, h('label', { for: `${idPrefix}-custom` }, 'Custom only')) : null),
+    h('div', { class: 'row' }, status, clear));
+  return {
+    el,
+    apply: (list) => filterSpells(list, state),
+    setCount: (shown, total) => { status.textContent = countText(shown, total); clear.hidden = !spellFilterActive(state); },
+  };
+}
