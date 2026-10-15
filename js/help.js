@@ -30,6 +30,7 @@ export function openHelp() {
       h('li', {}, 'On the sheet, click any check, save, attack or spell to roll it. The dice tray keeps a log of your rolls.'),
       h('li', {}, 'Spell lists can be searched and filtered by level, school, concentration, ritual and custom spells.'),
       h('li', {}, 'Make your own spells, subclasses and more on the Homebrew page; add any spell to a sheet with "Add a spell".'),
+      h('li', {}, 'Battle map (Map in the menu): upload a .png or .jpg, place your character and enemies, drag tokens, track HP, conditions and initiative. On the map: arrow keys move the selected token, N = next turn, + and - zoom.'),
       h('li', {}, 'On My Characters you can search, sort, rename and duplicate heroes. The Info page remembers what you opened.')),
     h('h3', {}, 'Saving and back-ups'),
     h('ul', { class: 'bullets' },

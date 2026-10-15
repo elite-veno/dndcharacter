@@ -8,6 +8,7 @@ import { renderInfo } from './info.js';
 import { renderBuilder } from './builder.js';
 import { renderImport } from './import-view.js';
 import { renderHomebrew } from './homebrew-view.js';
+import { renderMap } from './map-view.js';
 import { deriveCharacter } from './character.js';
 import { duplicateCharacter } from './custom-sheet.js';
 import { matchesQuery, characterSearchText, sortCharacters, SORT_MODES, relativeTime, cleanName } from './list-tools.js';
@@ -26,6 +27,7 @@ const routes = [
   { name: 'info', match: /^\/info(?:\/([\w-]+))?$/, render: renderInfo, title: 'How to Play' },
   { name: 'import', match: /^\/import$/, render: renderImport, title: 'Import' },
   { name: 'homebrew', match: /^\/homebrew(?:\/([\w-]+))?$/, render: renderHomebrew, title: 'Homebrew' },
+  { name: 'map', match: /^\/map(?:\/([\w-]+))?$/, render: renderMap, title: 'Battle map' },
 ];
 
 /** Navigate to a hash route. */
