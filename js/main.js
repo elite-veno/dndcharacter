@@ -25,7 +25,7 @@ const routes = [
   { name: 'sheet', match: /^\/sheet(?:\/([\w-]+))?$/, render: renderSheetRoute, title: 'Character Sheet' },
   { name: 'info', match: /^\/info(?:\/([\w-]+))?$/, render: renderInfo, title: 'How to Play' },
   { name: 'import', match: /^\/import$/, render: renderImport, title: 'Import' },
-  { name: 'homebrew', match: /^\/homebrew$/, render: renderHomebrew, title: 'Homebrew' },
+  { name: 'homebrew', match: /^\/homebrew(?:\/([\w-]+))?$/, render: renderHomebrew, title: 'Homebrew' },
 ];
 
 /** Navigate to a hash route. */

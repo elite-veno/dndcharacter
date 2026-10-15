@@ -5,7 +5,7 @@
 //  Roll:    A:<dice> <type> = spell attack, S:<abil>:<dice> <type> = saving throw (half on save unless noted),
 //           H:<dice> = healing. Cantrip damage scales at character levels 5, 11 and 17.
 
-import { loadCustomSpells, mergeIntoSpellData } from '../custom-spells.js';
+import { loadCustomSpells, mergeIntoSpellData, loadSpellOverrides, applySpellOverrides } from '../custom-spells.js';
 
 export const SPELL_CLASS_CODES = { B: 'bard', C: 'cleric', D: 'druid', P: 'paladin', R: 'ranger', S: 'sorcerer', L: 'warlock', W: 'wizard' };
 
@@ -334,6 +334,15 @@ const builtInIds = new Set(SPELLS.map((s) => s.id));
 export const BUILT_IN_SPELL_COUNT = SPELLS.length;
 mergeIntoSpellData(SPELLS, SPELL_BY_ID, loadCustomSpells(builtInIds));
 export const BUILT_IN_SPELL_IDS = builtInIds;
+
+// Pristine copies of the built-in spells, so edits made on the Homebrew page can be reset.
+export const ORIGINAL_SPELLS = new Map(SPELLS.filter((sp) => builtInIds.has(sp.id)).map((sp) => [sp.id, JSON.parse(JSON.stringify(sp))]));
+applySpellOverrides(SPELL_BY_ID, ORIGINAL_SPELLS, loadSpellOverrides(builtInIds));
+
+/** Re-apply the user's edits to built-in spells in place (used by the Homebrew page so changes apply without a reload). */
+export function syncSpellOverrides(overrides) {
+  applySpellOverrides(SPELL_BY_ID, ORIGINAL_SPELLS, overrides);
+}
 
 /** All SRD spells of a given class, optionally filtered by spell level. */
 export function spellsForClass(classId, level = null) {

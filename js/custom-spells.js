@@ -175,3 +175,71 @@ export function saveCustomSpells(list) {
   if (!ls) return false;
   try { ls.setItem(CUSTOM_SPELLS_KEY, JSON.stringify(list)); return true; } catch { return false; }
 }
+
+// ---------------------------------------------------------------- edits to built-in spells ("overrides")
+
+export const SPELL_OVERRIDES_KEY = 'characterforge.spell.overrides.v1';
+
+/** Validate one edited version of a built-in spell. The id never changes. Returns { ok, entry } or { ok: false, errors }. */
+export function normalizeOverride(raw, id) {
+  const r = normalizeSpell({ ...(raw || {}), id }, new Set());
+  if (!r.ok) return r;
+  const entry = { ...r.entry, id, modified: true };
+  delete entry.custom;
+  return { ok: true, entry };
+}
+
+/** Load stored edits: { [builtInId]: entry }. Entries for unknown ids or that no longer validate are dropped. */
+export function loadSpellOverrides(builtInIds = new Set()) {
+  const ls = storage();
+  if (!ls) return {};
+  try {
+    const raw = JSON.parse(ls.getItem(SPELL_OVERRIDES_KEY) || '{}');
+    const out = {};
+    for (const [id, value] of Object.entries(raw && typeof raw === 'object' ? raw : {})) {
+      if (!builtInIds.has(id)) continue;
+      const r = normalizeOverride(value, id);
+      if (r.ok) out[id] = r.entry;
+    }
+    return out;
+  } catch { return {}; }
+}
+
+export function saveSpellOverrides(map) {
+  const ls = storage();
+  if (!ls) return false;
+  try { ls.setItem(SPELL_OVERRIDES_KEY, JSON.stringify(map)); return true; } catch { return false; }
+}
+
+/**
+ * Apply edits in place (keeps object identity so everything already holding a spell sees the change):
+ * every touched spell is first restored from `originals` (id -> pristine copy), then its override is applied.
+ */
+export function applySpellOverrides(byId, originals, overrides) {
+  for (const [id, original] of originals) {
+    const target = byId[id];
+    if (!target) continue;
+    const edit = overrides[id];
+    if (!edit && !target.modified) continue;
+    for (const key of Object.keys(target)) delete target[key];
+    Object.assign(target, JSON.parse(JSON.stringify(edit ? { ...original, ...edit } : original)));
+  }
+}
+
+export const exportOverridesJson = (map) => JSON.stringify({ app: 'characterforge', kind: 'spell-overrides', version: 1, spells: Object.values(map) }, null, 2);
+
+/** Parse an overrides export (or a plain spell array) into { [builtInId]: entry } for ids that exist. */
+export function parseOverridesJson(text, builtInIds) {
+  let data;
+  try { data = JSON.parse(text); } catch (e) { return { map: {}, errors: [`Invalid JSON: ${e.message}`] }; }
+  const list = Array.isArray(data) ? data : Array.isArray(data && data.spells) ? data.spells : [];
+  const map = {};
+  const errors = [];
+  list.forEach((raw, i) => {
+    const id = slugify(raw && raw.id);
+    if (!builtInIds.has(id)) { errors.push(`Item ${i + 1}: "${raw && raw.id}" is not a built-in spell id.`); return; }
+    const r = normalizeOverride(raw, id);
+    if (r.ok) map[id] = r.entry; else errors.push(`Item ${i + 1} (${raw.name || id}): ${r.errors.join(' ')}`);
+  });
+  return { map, errors };
+}

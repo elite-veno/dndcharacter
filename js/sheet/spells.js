@@ -208,6 +208,7 @@ function spellCard(ctx, entry, table) {
     spell.ritual ? h('span', { class: 'tag sub' }, 'Ritual') : null,
     h('span', { class: 'tag' }, source),
     spell.custom ? h('span', { class: 'tag custom-tag', title: 'Homebrew spell' }, 'Custom') : null,
+    spell.modified ? h('span', { class: 'tag custom-tag', title: 'You edited this spell on the Homebrew page' }, 'Modified') : null,
     entry.extra ? h('span', { class: 'tag warn-tag', title: 'Added by hand; not on your class spell list' }, 'Outside class list') : null,
     kind === 'feat-free' ? h('span', { class: freeUsed ? 'tag bad' : 'tag good' }, freeUsed ? 'Free cast used' : 'Free cast ready') : null,
   ];
@@ -219,6 +220,7 @@ function spellCard(ctx, entry, table) {
       h('div', { class: 'tag-row' }, tags)),
     h('div', { class: 'spell-actions' }, rollControls, h('span', { class: 'btn-pair' }, castControls)),
     multiNote ? h('p', { class: 'hint' }, multiNote) : null,
+    h('div', { class: 'row end' }, h('a', { class: 'btn small', href: `#/homebrew/${spell.id}`, 'aria-label': `Edit ${spell.name}` }, 'Edit spell')),
     entry.extra ? h('div', { class: 'row end' }, h('button', {
       type: 'button', class: 'btn small danger', 'aria-label': `Remove extra spell ${spell.name}`,
       onclick: () => ctx.update((x) => { x.sheet.extraSpells = x.sheet.extraSpells.filter((id) => id !== spell.id); }),

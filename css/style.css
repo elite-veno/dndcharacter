@@ -346,3 +346,7 @@ kbd { font: 0.82rem/1 var(--sans); background: #fff8ec; border: 1px solid var(--
 .copy-link { flex: none; }
 @media (max-width: 480px) { .home-tools { grid-template-columns: 1fr; } .help-keys { grid-template-columns: 1fr; } }
 .spell-filter .filters { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+
+.hb-builtins { list-style: none; padding: 0; margin: 0.5rem 0; display: grid; gap: 0.35rem; }
+.hb-builtins li { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.4rem 0.75rem; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; flex-wrap: wrap; }
+.hb-filters { align-items: end; flex-wrap: wrap; }
