@@ -9,6 +9,8 @@ import { renderBuilder } from './builder.js';
 import { renderImport } from './import-view.js';
 import { renderHomebrew } from './homebrew-view.js';
 import { renderMap } from './map-view.js';
+import { renderParty, renderJoin } from './party-view.js';
+import { resumeLive } from './live-host.js';
 import { deriveCharacter } from './character.js';
 import { duplicateCharacter } from './custom-sheet.js';
 import { matchesQuery, characterSearchText, sortCharacters, SORT_MODES, relativeTime, cleanName } from './list-tools.js';
@@ -28,6 +30,8 @@ const routes = [
   { name: 'import', match: /^\/import$/, render: renderImport, title: 'Import' },
   { name: 'homebrew', match: /^\/homebrew(?:\/([\w-]+))?$/, render: renderHomebrew, title: 'Homebrew' },
   { name: 'map', match: /^\/map(?:\/([\w-]+))?$/, render: renderMap, title: 'Battle map' },
+  { name: 'party', match: /^\/party$/, render: renderParty, title: 'Party' },
+  { name: 'party', match: /^\/join\/([A-Za-z0-9-]+)$/, render: renderJoin, title: 'Live party map' },
 ];
 
 /** Navigate to a hash route. */
@@ -58,6 +62,7 @@ else {
 
 window.addEventListener('hashchange', route);
 route();
+resumeLive();
 initHelp(isTypingTarget);
 
 // ---------------------------------------------------------------- home: characters list

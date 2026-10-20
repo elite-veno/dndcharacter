@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   normalizeToken, normalizeEncounter, newEncounter, damageToken, healToken, hpState, snapToGrid, distanceFeet,
   initiativeOrder, stepTurn, duplicateToken, initials, normalizeLink, rectFromPoints, viewForRect,
+  publicState, memberMayMove, partyCode, normalizeCode,
 } from './map-logic.js';
 
 let groups = 0;
@@ -76,6 +77,37 @@ group('links between maps: rectangles, clamping and zoom target', () => {
   const e = normalizeEncounter({ width: 500, height: 500, links: [{ x: 10, y: 10, w: 50, h: 50, targetId: 'a' }], parentId: 'p', isMain: true });
   assert.equal(e.links.length, 1); assert.equal(e.parentId, 'p'); assert.equal(e.isMain, true);
   assert.deepEqual(normalizeEncounter({}).links, []);
+});
+
+group('live sessions: players see a filtered map', () => {
+  const enc = normalizeEncounter({ ...newEncounter(), tokens: [
+    { id: 'p', name: 'Ann', kind: 'player', memberId: 'mem1', hp: { max: 20, current: 12 }, ac: 15, note: 'secret' },
+    { id: 'g', name: 'Goblin', kind: 'enemy', hp: { max: 10, current: 4 }, ac: 13, note: 'has the key' },
+    { id: 'h', name: 'Hidden trap', kind: 'marker', hidden: true }], turn: { activeId: 'h', round: 2 } });
+  const pub = publicState(enc);
+  assert.equal(pub.tokens.length, 2);
+  assert.deepEqual(pub.tokens.find((t) => t.id === 'g').hp, { state: 'bloodied' });
+  assert.equal(pub.tokens.find((t) => t.id === 'g').ac, null);
+  assert.equal(pub.tokens.find((t) => t.id === 'p').hp.current, 12);
+  assert.ok(pub.tokens.every((t) => t.note === ''));
+  assert.equal(pub.turn.activeId, null); assert.equal(pub.turn.round, 2);
+  assert.equal(publicState(enc, { showEnemyHp: true }).tokens.find((t) => t.id === 'g').hp.current, 4);
+  assert.equal(normalizeToken({ memberId: 'mem1' }).memberId, 'mem1');
+});
+
+group('only the owner may move their token, when allowed', () => {
+  const t = normalizeToken({ kind: 'player', memberId: 'mem1' });
+  assert.equal(memberMayMove(t, 'mem1', {}), true);
+  assert.equal(memberMayMove(t, 'mem2', {}), false);
+  assert.equal(memberMayMove(t, 'mem1', { playersMove: false }), false);
+  assert.equal(memberMayMove(null, 'mem1', {}), false);
+});
+
+group('party codes are 6 easy characters', () => {
+  const c = partyCode(() => 0.5);
+  assert.match(c, /^[A-Z2-9]{6}$/);
+  assert.ok(!/[01OIL]/.test(partyCode()));
+  assert.equal(normalizeCode(' ab-c 12x9 '), 'ABC12X');
 });
 
 console.log(`${groups} test groups passed`);
