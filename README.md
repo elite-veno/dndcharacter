@@ -70,3 +70,9 @@ This work includes material from the System Reference Document 5.2 ("SRD 5.2") b
 ## Import (PDF to JSON)
 
 The **Import** page reads a PDF in your browser (bundled pdf.js in `vendor/pdfjs`, Apache-2.0, nothing is uploaded), shows/downloads the extracted text as JSON, can draft a custom subclass from it, and installs subclass JSON into this browser (localStorage). Custom subclasses appear in the class step like built-in ones. Scanned PDFs (images only) have no text to extract.
+
+## Party play (live maps)
+
+Menu **Party**: the DM creates a party (it gets a fixed 6-character code) and goes live with a battle map. Players open the invite link or type the code on their own phone or laptop, pick their character, and see the DM's map live: they can drag their own figure (if the DM allows it) and track their HP, which stays in sync with their character sheet. Enemy HP and AC are hidden from players unless the DM turns that on. When the DM opens another map (for example by clicking an island on the main map), every player follows.
+
+Connections are browser to browser (WebRTC) using the bundled PeerJS library (`vendor/peerjs`, MIT). PeerJS's free public broker only introduces the browsers; no account or own server is needed. The DM's page must stay open while playing. Some strict networks (school or company Wi-Fi) block WebRTC; a phone hotspot usually works. For testing, a self-hosted PeerJS server can be used with `?peer=host:port` in the URL.

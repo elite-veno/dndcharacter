@@ -17,6 +17,9 @@ import {
   listEncounters, getEncounter, saveEncounter, deleteEncounter, putImage, getImageBlob, prepareImage,
   exportEncounterJson, importEncounterJson, loadPresets, savePresets,
 } from './map-store.js';
+import { memberMayMove } from './map-logic.js';
+import { listParties, createParty } from './party.js';
+import { liveSession, subscribe, startLive, stopLive, setLiveSettings, attachEditor, detachEditor, pushState, pushMoving, joinLink } from './live-host.js';
 
 const go = (path) => { location.hash = `#${path}`; };
 const ZOOM_KEY = 'characterforge.map.zoomIn';
@@ -159,7 +162,7 @@ function renderEditor(root, id) {
     saveTimer = setTimeout(() => { saveEncounter(enc).catch((err) => toast(`Could not save the map: ${err.message}`)); }, 250);
   };
   const flush = () => { if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; saveEncounter(enc).catch(() => {}); } };
-  const commit = (fn, { panel = true } = {}) => { fn(); scheduleSave(); drawTokens(); if (panel) drawSide(); drawToolbarTurn(); };
+  const commit = (fn, { panel = true } = {}) => { fn(); scheduleSave(); drawTokens(); if (panel) drawSide(); drawToolbarTurn(); pushState(); };
   const tokenById = (tid) => enc.tokens.find((t) => t.id === tid) || null;
   const replaceToken = (next) => { enc.tokens = enc.tokens.map((t) => (t.id === next.id ? next : t)); };
 
@@ -334,6 +337,8 @@ function renderEditor(root, id) {
           h('button', { type: 'button', class: 'btn small', 'aria-label': 'Zoom in', onclick: () => zoomCenter(1.25) }, '+'),
           h('button', { type: 'button', class: 'btn small', onclick: fit }, 'Fit')),
         h('button', { type: 'button', class: 'btn primary small', onclick: () => openAddDialog(viewCenterImage()) }, '+ Add token'),
+        liveSession() ? h('button', { type: 'button', class: 'btn small live-on', onclick: () => side.querySelector('.map-live')?.scrollIntoView({ behavior: 'smooth' }), title: 'Your party sees this map live' }, `● Live · ${liveSession().online.size}`)
+          : h('button', { type: 'button', class: 'btn small', onclick: openLiveDialog, title: 'Let your party see this map live on their own devices' }, '📡 Go live'),
         h('button', { type: 'button', class: `btn small${mode === 'link' ? ' cta' : ''}`, 'aria-pressed': String(mode === 'link'), onclick: () => setMode(mode === 'link' ? 'normal' : 'link'), title: 'Drag a rectangle over an area (an island, a town…) and link it to another map' }, mode === 'link' ? 'Cancel link area' : '⌖ Link area'),
         h('span', { class: 'btn-pair' },
           h('button', { type: 'button', class: 'btn small', 'aria-label': 'Previous turn', onclick: () => commit(() => { enc = stepTurn(enc, -1); }) }, '◀'),
@@ -451,6 +456,7 @@ function renderEditor(root, id) {
       });
     });
     side.replaceChildren(
+      livePanel(),
       sel ? tokenEditor(sel) : h('p', { class: 'hint map-help' }, 'Select a token to edit it. Double-click the map (or use "+ Add token") to place your character, enemies or custom markers. Arrow keys move the selected token one square; N = next turn.'),
       h('section', { class: 'panel' },
         h('div', { class: 'row gap map-side-head' },
@@ -476,6 +482,102 @@ function renderEditor(root, id) {
             } }, 'Delete'));
         })) : h('p', { class: 'hint' }, 'None. Use "⌖ Link area" and drag over part of the map (an island, a town) to link it to its own map. Clicking the area then zooms in.')));
   }
+
+  // ---------------------------------------------------------------- live party session (DM side)
+  function livePanel() {
+    const s = liveSession();
+    if (!s) return null;
+    const chk = (key, label) => {
+      const fid = nextId('live');
+      return h('div', { class: 'field inline' }, h('input', { id: fid, type: 'checkbox', checked: !!s.settings[key], onchange: (e) => setLiveSettings({ [key]: e.target.checked }) }), h('label', { for: fid }, label));
+    };
+    const link = joinLink(s.party.code);
+    return h('section', { class: `panel map-live state-${s.state}` },
+      h('div', { class: 'row gap map-side-head' },
+        h('h2', {}, `● Live: ${s.party.name}`),
+        h('button', { type: 'button', class: 'btn small danger', onclick: async () => { if (await confirmDialog('Stop live session', 'Players will no longer see the map.', 'Stop')) stopLive(); } }, 'Stop')),
+      h('p', { class: 'hint', role: 'status' }, s.status),
+      h('p', {}, 'Party code ', h('strong', { class: 'party-code' }, s.party.code)),
+      h('div', { class: 'row gap' },
+        h('input', { type: 'text', readOnly: true, value: link, 'aria-label': 'Invite link', class: 'invite-link', onfocus: (e) => e.target.select() }),
+        h('button', { type: 'button', class: 'btn small', onclick: async () => { try { await navigator.clipboard.writeText(link); toast('Invite link copied.'); } catch { toast('Select the link and copy it.'); } } }, 'Copy link')),
+      h('h3', {}, `Players (${s.online.size} online)`),
+      s.party.members.length ? h('ul', { class: 'map-rows' }, s.party.members.map((m) => {
+        const on = s.online.has(m.memberId);
+        const tok = enc.tokens.find((t) => t.memberId === m.memberId);
+        return h('li', { class: 'map-link-row' },
+          h('span', { class: `online-dot${on ? ' on' : ''}`, 'aria-label': on ? 'online' : 'offline' }),
+          h('span', { class: 'map-row-name' }, m.name, m.character ? h('small', { class: 'hint' }, ` · ${m.character.name}${m.character.classLine ? `, ${m.character.classLine}` : ''}`) : null),
+          tok ? h('button', { type: 'button', class: 'btn small', onclick: () => { selectedId = tok.id; centerOn(tok); drawTokens(); drawSide(); } }, 'Show')
+            : h('button', { type: 'button', class: 'btn small', onclick: () => placeMember(m, viewCenterImage()) }, 'Place'));
+      })) : h('p', { class: 'hint' }, 'Nobody has joined yet. Share the code or the link.'),
+      chk('autoPlace', 'Put players on the map when they join'),
+      chk('playersMove', 'Players may move their own token'),
+      chk('showEnemyHp', 'Show enemy HP and AC to players'));
+  }
+
+  function openLiveDialog() {
+    let modal;
+    const parties = listParties();
+    const sel = h('select', { id: 'live-party' }, parties.map((p) => h('option', { value: p.id }, `${p.name} (${p.code})`)));
+    const nameIn = h('input', { id: 'live-new', type: 'text', maxlength: 60, placeholder: 'e.g. The Lantern Bearers' });
+    const status = h('p', { class: 'hint', role: 'status' });
+    const go = async (partyId) => {
+      status.textContent = 'Starting…';
+      try { await startLive(partyId); await attachEditor(editorApi); modal.close(); drawToolbar(); drawSide(); }
+      catch (err) { status.textContent = err.message || String(err); }
+    };
+    modal = openModal('Go live with your party', h('div', { class: 'map-add' },
+      h('p', {}, 'Players open the invite link (or Party → Join and type the code) on their own phone or laptop and see this map live. You keep full control; they can move their own token if you allow it.'),
+      parties.length ? h('section', {}, h('h3', {}, 'Use a party'), h('div', { class: 'row gap' }, field('Party', sel), h('button', { type: 'button', class: 'btn cta', onclick: () => go(sel.value) }, 'Go live'))) : null,
+      h('section', {}, h('h3', {}, 'New party'), h('div', { class: 'row gap' }, field('Party name', nameIn), h('button', { type: 'button', class: parties.length ? 'btn' : 'btn cta', onclick: () => go(createParty(nameIn.value).id) }, 'Create and go live'))),
+      status), { wide: true });
+  }
+
+  /** Put a party member's token on this map (or refresh it). */
+  function placeMember(member, at) {
+    const ch = member.character || {};
+    const existing = enc.tokens.find((t) => t.memberId === member.memberId);
+    const base = {
+      name: ch.name || member.name, kind: 'player', memberId: member.memberId, color: ch.color || TOKEN_KINDS.player.color,
+      hp: ch.hp ? { max: ch.hp.max, current: ch.hp.current, temp: ch.hp.temp || 0 } : (existing ? existing.hp : null),
+      ac: ch.ac ?? (existing ? existing.ac : null), initBonus: ch.initBonus ?? 0,
+    };
+    if (existing) { commit(() => replaceToken(normalizeToken({ ...existing, ...base, x: existing.x, y: existing.y }))); return; }
+    const offset = enc.tokens.filter((t) => t.memberId).length;
+    place([base], { x: at.x + offset * enc.grid.size, y: at.y });
+  }
+
+  const editorApi = {
+    getEnc: () => enc,
+    getImageBlob: () => getImageBlob(enc.imageId),
+    onMemberHello: (member) => {
+      const s = liveSession();
+      const existing = enc.tokens.find((t) => t.memberId === member.memberId);
+      if (existing || (s && s.settings.autoPlace)) placeMember(member, viewCenterImage());
+    },
+    onMemberMove: (memberId, msg) => {
+      const t = tokenById(msg.tokenId);
+      const s = liveSession();
+      if (!memberMayMove(t, memberId, s && s.settings)) { pushState(); return; }
+      const x = Number(msg.x);
+      const y = Number(msg.y);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+      const pos = enc.grid.snap ? snapToGrid(x, y, enc.grid, t.size) : { x, y };
+      commit(() => replaceToken({ ...t, x: Math.min(enc.width, Math.max(0, pos.x)), y: Math.min(enc.height, Math.max(0, pos.y)) }), { panel: false });
+    },
+    onMemberHp: (memberId, msg) => {
+      const t = enc.tokens.find((x) => x.memberId === memberId);
+      if (!t) return;
+      commit(() => replaceToken(normalizeToken({ ...t, hp: { max: msg.max ?? (t.hp && t.hp.max) ?? 0, current: msg.current, temp: msg.temp } })));
+    },
+  };
+  const unsubscribe = subscribe((sess) => {
+    if (!enc) return;
+    if (sess && !sess.editor) attachEditor(editorApi); // e.g. the session resumed after a page refresh
+    drawToolbar();
+    drawSide();
+  });
 
   function setMode(next) {
     mode = next;
@@ -584,7 +686,7 @@ function renderEditor(root, id) {
     // Custom token(s)
     const f = {};
     const inp = (key, label, attrs) => { const i = nextId('add'); f[key] = h('input', { id: i, ...attrs }); return field(label, f[key]); };
-    const kindSel = h('select', { id: 'add-kind' }, Object.entries(TOKEN_KINDS).filter(([k]) => k !== 'player').map(([k, v]) => h('option', { value: k }, v.label)));
+    const kindSel = h('select', { id: 'add-kind' }, Object.entries(TOKEN_KINDS).filter(([k]) => k !== 'player').map(([k, v]) => h('option', { value: k, selected: k === 'enemy' }, v.label)));
     const sizeSel = h('select', { id: 'add-size' }, TOKEN_SIZES.map((o) => h('option', { value: o.value, selected: o.value === 1 }, o.label)));
     const addCustom = () => {
       const name = f.name.value.trim();
@@ -707,6 +809,7 @@ function renderEditor(root, id) {
       gesture.node.style.left = `${pos.x - px / 2}px`;
       gesture.node.style.top = `${pos.y - px / 2}px`;
       gesture.pos = pos;
+      pushMoving(t.id, pos.x, pos.y);
       measure.hidden = false;
       measure.textContent = `${distanceFeet(gesture.orig, pos, enc.grid)} ft`;
       measure.style.left = `${pos.x}px`;
@@ -795,6 +898,7 @@ function renderEditor(root, id) {
       drawLinks();
       drawTokens();
       drawSide();
+      if (liveSession()) attachEditor(editorApi);
       let zoomed = false;
       try { zoomed = sessionStorage.getItem(ZOOM_KEY) === enc.id; sessionStorage.removeItem(ZOOM_KEY); } catch { /* ignore */ }
       requestAnimationFrame(() => {
@@ -808,6 +912,8 @@ function renderEditor(root, id) {
 
   return () => {
     if (enc) flush();
+    unsubscribe();
+    detachEditor(editorApi);
     document.removeEventListener('keydown', onKey);
     window.removeEventListener('resize', onResize);
     if (imgUrl) URL.revokeObjectURL(imgUrl);

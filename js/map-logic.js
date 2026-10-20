@@ -58,6 +58,7 @@ export function normalizeToken(raw = {}) {
     conditions: Array.isArray(raw.conditions) ? [...new Set(raw.conditions.map((c) => text(c, 30)).filter(Boolean))] : [],
     note: String(raw.note ?? '').slice(0, 2000),
     characterId: text(raw.characterId, 60) || null,
+    memberId: text(raw.memberId, 60) || null, // a party member who joined a live session
     hidden: raw.hidden === true,
   };
 }
@@ -188,3 +189,38 @@ export function duplicateToken(token, tokens, grid) {
 
 /** Initials for a token without a custom label ("Goblin Boss" -> "GB"). */
 export const initials = (name) => text(name, 60).split(' ').filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('') || '?';
+
+// ---------------------------------------------------------------- live sessions (party play)
+
+export const LIVE_DEFAULTS = { playersMove: true, showEnemyHp: false, autoPlace: true };
+
+/**
+ * What players see of an encounter: hidden tokens and DM notes are removed, and unless the DM allows it enemy and
+ * neutral hit points are reduced to a state ("bloodied", "down") without numbers. Party members always see their own HP.
+ */
+export function publicState(enc, settings = LIVE_DEFAULTS) {
+  const s = { ...LIVE_DEFAULTS, ...(settings || {}) };
+  const tokens = enc.tokens.filter((t) => !t.hidden).map((t) => {
+    const out = { ...t, note: '' };
+    const secret = (t.kind === 'enemy' || t.kind === 'neutral') && !s.showEnemyHp;
+    if (secret) { out.hp = t.hp ? { state: hpState(t.hp) } : null; out.ac = null; }
+    return out;
+  });
+  const activeVisible = tokens.some((t) => t.id === enc.turn.activeId);
+  return {
+    id: enc.id, name: enc.name, imageId: enc.imageId, width: enc.width, height: enc.height, grid: enc.grid, tokens,
+    turn: { activeId: activeVisible ? enc.turn.activeId : null, round: enc.turn.round }, settings: s,
+  };
+}
+
+/** Can this party member move this token? Only their own token, and only when the DM allows it. */
+export const memberMayMove = (token, memberId, settings) => !!token && !!memberId && token.memberId === memberId && ({ ...LIVE_DEFAULTS, ...(settings || {}) }).playersMove;
+
+const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+/** Short, easy-to-type party code (no 0/O, 1/I/L). */
+export function partyCode(rand = Math.random) {
+  let out = '';
+  for (let i = 0; i < 6; i++) out += CODE_ALPHABET[Math.floor(rand() * CODE_ALPHABET.length)];
+  return out;
+}
+export const normalizeCode = (v) => String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
