@@ -19,8 +19,8 @@
 
 .map-body { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: 0.75rem; align-items: start; }
 .map-viewport {
-  position: relative; overflow: hidden; height: calc(100vh - 13rem); min-height: 22rem; border: 1px solid var(--line); border-radius: var(--radius);
-  background: #e9dcc4 repeating-conic-gradient(#e3d4b8 0 25%, #eee3cf 0 50%) 0 0 / 24px 24px; touch-action: none; cursor: grab; user-select: none;
+  position: relative; overflow: hidden; height: calc(100vh - 13rem); height: calc(100dvh - 13rem); min-height: 22rem; border: 1px solid var(--line); border-radius: var(--radius);
+  background: #e9dcc4 repeating-conic-gradient(#e3d4b8 0 25%, #eee3cf 0 50%) 0 0 / 24px 24px; touch-action: none; cursor: grab; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
 }
 .map-viewport:active { cursor: grabbing; }
 .map-viewport:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
@@ -35,7 +35,9 @@
 
 .map-token {
   position: absolute; display: grid; place-items: center; padding: 0; border-radius: 50%; cursor: grab; touch-action: none;
+  background: radial-gradient(circle at 35% 30%, #fffaf1, #efe2c8); /* fallback for older Safari without color-mix() */
   background: radial-gradient(circle at 35% 30%, #fffaf1, color-mix(in srgb, var(--token-color) 35%, #fffaf1));
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
   border: max(2px, 0.08em) solid var(--token-color); color: #2a1d10; font-weight: 800; font-family: var(--sans);
   box-shadow: 0 0.08em 0.25em rgba(40, 26, 14, 0.55); line-height: 1;
 }
@@ -53,7 +55,7 @@
 .map-token-cond { position: absolute; top: -0.25em; right: -0.25em; min-width: 1.1em; height: 1.1em; border-radius: 99px; background: #8a2233; color: #fff; font-size: 0.45em; display: grid; place-items: center; pointer-events: none; }
 .map-measure { position: absolute; transform: translate(-50%, -130%); padding: 0.1em 0.45em; border-radius: 6px; background: rgba(40, 26, 14, 0.85); color: #fffaf1; font-weight: 700; pointer-events: none; white-space: nowrap; }
 
-.map-side { display: grid; gap: 0.75rem; max-height: calc(100vh - 13rem); overflow: auto; }
+.map-side { display: grid; gap: 0.75rem; max-height: calc(100vh - 13rem); max-height: calc(100dvh - 13rem); overflow: auto; -webkit-overflow-scrolling: touch; }
 .map-side .panel { padding: 0.75rem; }
 .map-side h2 { font-size: 1.15rem; margin: 0; }
 .map-side h3 { font-size: 0.95rem; margin: 0.75rem 0 0.25rem; }
@@ -84,9 +86,35 @@
 
 @media (max-width: 900px) {
   .map-body { grid-template-columns: 1fr; }
-  .map-viewport { height: 60vh; }
+  .map-viewport { height: 70vh; height: 70dvh; }
   .map-side { max-height: none; }
 }
+
+/* Full-screen map (phones, or the "Full screen" button). Works without the Fullscreen API, which iPhone Safari lacks. */
+.focus-only { display: none; }
+body.map-focus { overflow: hidden; }
+body.map-focus .site-header, body.map-focus .site-footer { display: none; }
+.map-editor.is-focus {
+  position: fixed; inset: 0; z-index: 40; margin: 0; max-width: none; display: flex; flex-direction: column; gap: 0.35rem; background: var(--bg);
+  padding: max(0.35rem, env(safe-area-inset-top)) max(0.35rem, env(safe-area-inset-right)) max(0.35rem, env(safe-area-inset-bottom)) max(0.35rem, env(safe-area-inset-left));
+}
+.map-editor.is-focus .focus-only { display: inline-flex; }
+.map-editor.is-focus .map-toolbar { margin: 0; }
+.map-editor.is-focus .map-toolbar-row { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
+.map-editor.is-focus .map-toolbar-row::-webkit-scrollbar { display: none; }
+.map-editor.is-focus .map-toolbar-row > * { flex: none; }
+.map-editor.is-focus .map-title { width: 9rem; }
+.map-editor.is-focus .live-title { font-size: 1.05rem; white-space: nowrap; }
+.map-editor.is-focus .live-status { white-space: nowrap; font-size: 0.85rem; }
+.map-editor.is-focus .map-grid-settings { display: none; }
+.map-editor.is-focus .map-body { flex: 1; min-height: 0; display: block; position: relative; }
+.map-editor.is-focus .map-viewport { height: 100%; min-height: 0; border-radius: 10px; }
+.map-editor.is-focus .map-side {
+  display: none; position: absolute; left: 0; right: 0; bottom: 0; max-height: 58%; overflow: auto; z-index: 5; padding: 0.5rem;
+  background: var(--bg); border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: 14px 14px 0 0; box-shadow: 0 -8px 24px rgba(40, 26, 14, 0.3);
+}
+.map-editor.is-focus.side-open .map-side { display: grid; }
+.hp-chip { font-weight: 700; white-space: nowrap; }
 
 /* Linked areas (click to zoom into another map) */
 .map-links { position: absolute; inset: 0; }

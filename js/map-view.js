@@ -18,6 +18,7 @@ import {
   exportEncounterJson, importEncounterJson, loadPresets, savePresets,
 } from './map-store.js';
 import { memberMayMove } from './map-logic.js';
+import { focusController } from './map-focus.js';
 import { listParties, createParty } from './party.js';
 import { liveSession, subscribe, startLive, stopLive, setLiveSettings, attachEditor, detachEditor, pushState, pushMoving, joinLink } from './live-host.js';
 
@@ -155,6 +156,7 @@ function renderEditor(root, id) {
   const toolbar = h('div', { class: 'map-toolbar' });
   const page = h('div', { class: 'page map-editor' }, toolbar, h('div', { class: 'map-body' }, viewport, side));
   root.append(page);
+  const focus = focusController(page, { onChange: () => { if (enc) { drawToolbar(); requestAnimationFrame(fit); } } });
 
   // ---------------------------------------------------------------- persistence
   const scheduleSave = () => {
@@ -327,6 +329,8 @@ function renderEditor(root, id) {
     };
     toolbar.replaceChildren(
       h('div', { class: 'row gap map-toolbar-row' },
+        h('button', { type: 'button', class: 'btn small', onclick: focus.toggle, 'aria-pressed': String(focus.isOn()), title: 'Use the whole screen for the map' }, focus.isOn() ? '✕ Exit full screen' : '⤢ Full screen'),
+        focus.isOn() ? h('button', { type: 'button', class: 'btn small', onclick: focus.toggleSide, title: 'Show or hide the token and combat panel' }, '☰ Panel') : null,
         h('a', { class: 'btn small', href: '#/map' }, '← Maps'),
         mapsById[enc.parentId] ? h('button', { type: 'button', class: 'btn small', onclick: goParent, title: 'Zoom out to the map this one is part of' }, `↑ ${mapsById[enc.parentId].name}`) : null,
         (() => { const main = Object.values(mapsById).find((m) => m.isMain); return main && !enc.isMain && main.id !== enc.parentId ? h('a', { class: 'btn small', href: `#/map/${main.id}` }, `★ ${main.name}`) : null; })(),
@@ -457,7 +461,7 @@ function renderEditor(root, id) {
     });
     side.replaceChildren(
       livePanel(),
-      sel ? tokenEditor(sel) : h('p', { class: 'hint map-help' }, 'Select a token to edit it. Double-click the map (or use "+ Add token") to place your character, enemies or custom markers. Arrow keys move the selected token one square; N = next turn.'),
+      sel ? tokenEditor(sel) : h('p', { class: 'hint map-help' }, 'Select a token to edit it. Double-click (on a phone: press and hold) the map, or use "+ Add token", to place your character, enemies or custom markers. Arrow keys move the selected token one square; N = next turn.'),
       h('section', { class: 'panel' },
         h('div', { class: 'row gap map-side-head' },
           h('h2', {}, 'Combat'),
@@ -745,6 +749,7 @@ function renderEditor(root, id) {
     viewport.setPointerCapture(e.pointerId);
     if (pointers.size === 2) {
       const [a, b] = [...pointers.values()];
+      if (gesture) clearTimeout(gesture.longPress);
       gesture = { type: 'pinch', dist: Math.hypot(a.x - b.x, a.y - b.y), scale: view.scale };
       return;
     }
@@ -769,6 +774,11 @@ function renderEditor(root, id) {
       if (selectedId !== t.id) { selectedId = t.id; tokenLayer.querySelectorAll('.map-token.selected').forEach((n) => n.classList.remove('selected')); tokenNode.classList.add('selected'); drawSide(); }
     } else {
       gesture = { type: 'pan', sx: e.clientX, sy: e.clientY, x0: view.x, y0: view.y, moved: false };
+      if (e.pointerType === 'touch' && mode === 'normal') {
+        const at = toImage(e.clientX, e.clientY);
+        const g = gesture;
+        g.longPress = setTimeout(() => { if (gesture === g && !g.moved && pointers.size === 1) { gesture = null; pointers.clear(); openAddDialog(at); } }, 600);
+      }
     }
   }
 
@@ -792,7 +802,7 @@ function renderEditor(root, id) {
     if (gesture.type === 'pan') {
       const dx = e.clientX - gesture.sx;
       const dy = e.clientY - gesture.sy;
-      if (Math.abs(dx) + Math.abs(dy) > 3) gesture.moved = true;
+      if (Math.abs(dx) + Math.abs(dy) > 6) { gesture.moved = true; clearTimeout(gesture.longPress); }
       view.x = gesture.x0 + dx;
       view.y = gesture.y0 + dy;
       applyTransform();
@@ -823,6 +833,7 @@ function renderEditor(root, id) {
     if (!gesture) return;
     const g = gesture;
     if (g.type === 'pinch') { if (pointers.size < 2) gesture = null; return; }
+    clearTimeout(g.longPress);
     gesture = null;
     measure.hidden = true;
     if (g.type === 'rect') {
@@ -913,6 +924,7 @@ function renderEditor(root, id) {
   return () => {
     if (enc) flush();
     unsubscribe();
+    focus.destroy();
     detachEditor(editorApi);
     document.removeEventListener('keydown', onKey);
     window.removeEventListener('resize', onResize);

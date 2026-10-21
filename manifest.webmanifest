@@ -1,0 +1,14 @@
+{
+  "name": "Character Forge",
+  "short_name": "Forge",
+  "description": "D&D 2024 character builder, sheet, battle maps and live party play.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6efe4",
+  "theme_color": "#f6efe4",
+  "icons": [
+    { "src": "icons/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
