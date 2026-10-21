@@ -12,6 +12,7 @@ import { joinParty } from './net.js';
 import { listParties, createParty, deleteParty, myMemberId, loadJoin, saveJoin } from './party.js';
 import { liveSession, startLive, stopLive, joinLink } from './live-host.js';
 import { listEncounters } from './map-store.js';
+import { focusController, isSmallScreen } from './map-focus.js';
 import {
   normalizeCode, snapToGrid, distanceFeet, initiativeOrder, initials, hpState, damageToken, healToken, memberMayMove,
 } from './map-logic.js';
@@ -150,8 +151,12 @@ export function renderJoin(root, rawCode) {
   viewport.append(stage, waiting);
   const side = h('aside', { class: 'map-side' });
   const title = h('h1', { class: 'live-title' }, `Party ${code}`);
-  root.append(h('div', { class: 'page map-editor live-player' },
+  const hpChip = h('span', { class: 'tag hp-chip', hidden: true, 'aria-live': 'polite' });
+  const focusBtn = h('button', { type: 'button', class: 'btn small' });
+  const panelBtn = h('button', { type: 'button', class: 'btn small focus-only', title: 'Show or hide your HP, party and turn order' }, '☰ Panel');
+  const page = h('div', { class: 'page map-editor live-player' },
     h('div', { class: 'map-toolbar' }, h('div', { class: 'row gap map-toolbar-row' },
+      focusBtn, panelBtn, hpChip,
       h('a', { class: 'btn small', href: '#/party' }, '← Party'),
       title, statusEl,
       h('span', { class: 'btn-pair' },
@@ -159,7 +164,12 @@ export function renderJoin(root, rawCode) {
         h('button', { type: 'button', class: 'btn small', 'aria-label': 'Zoom in', onclick: () => zoomCenter(1.25) }, '+'),
         h('button', { type: 'button', class: 'btn small', onclick: fit }, 'Fit')),
       h('button', { type: 'button', class: 'btn small', onclick: () => { const t = myToken(); if (t) centerOn(t); else toast('You are not on the map yet.'); } }, 'Find me'))),
-    h('div', { class: 'map-body' }, viewport, side)));
+    h('div', { class: 'map-body' }, viewport, side));
+  root.append(page);
+  const focus = focusController(page, { onChange: (on) => { focusBtn.textContent = on ? '✕ Exit full screen' : '⤢ Full screen'; requestAnimationFrame(fit); } });
+  focusBtn.addEventListener('click', focus.toggle);
+  panelBtn.addEventListener('click', focus.toggleSide);
+  focus.set(isSmallScreen()); // phones start in full screen
 
   // ---------------------------------------------------------------- view transform
   const applyTransform = () => { stage.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.scale})`; };
@@ -178,6 +188,14 @@ export function renderJoin(root, rawCode) {
     view.y = cy - (cy - view.y) * k;
     view.scale = next;
     applyTransform();
+  }
+  /** First look at a map: the whole map, unless squares would be tiny (phones): then zoom in on your own token. */
+  function firstView() {
+    fit();
+    const me = myToken();
+    if (!map || !me || map.grid.size * view.scale >= 26) return;
+    view.scale = Math.min(8, 34 / map.grid.size);
+    centerOn(me);
   }
   const zoomCenter = (f) => { const r = viewport.getBoundingClientRect(); zoomAt(f, r.width / 2, r.height / 2); };
   const toImage = (cx, cy) => { const r = viewport.getBoundingClientRect(); return { x: (cx - r.left - view.x) / view.scale, y: (cy - r.top - view.y) / view.scale }; };
@@ -200,7 +218,7 @@ export function renderJoin(root, rawCode) {
     gridEl.style.setProperty('--grid-line', `${Math.max(1, g.size / 50)}px`);
     const ordered = [...map.tokens].sort((a, b) => (a.kind === 'marker' ? 0 : 1) - (b.kind === 'marker' ? 0 : 1));
     tokenLayer.replaceChildren(...ordered.map(tokenEl));
-    if (!view.fitted) { view.fitted = true; requestAnimationFrame(fit); }
+    if (!view.fitted) { view.fitted = true; requestAnimationFrame(firstView); }
   }
 
   function hpInfo(t) {
@@ -227,6 +245,9 @@ export function renderJoin(root, rawCode) {
 
   function drawSide() {
     const me = myToken();
+    const hasHp = me && me.hp && me.hp.current !== undefined;
+    hpChip.hidden = !hasHp;
+    if (hasHp) { hpChip.textContent = `HP ${me.hp.current}/${me.hp.max}${me.hp.temp ? ` +${me.hp.temp}` : ''}`; hpChip.className = `tag hp-chip${hpState(me.hp) === 'down' ? ' bad' : hpState(me.hp) === 'bloodied' ? ' warn-tag' : ''}`; }
     const order = map ? initiativeOrder(map.tokens) : [];
     const canMove = map && me && memberMayMove(me, memberId, map.settings);
     const amount = h('input', { type: 'number', min: 0, max: 999, class: 'map-amount', placeholder: 'Amount', 'aria-label': 'Amount' });
@@ -397,6 +418,7 @@ export function renderJoin(root, rawCode) {
   }).then((c) => { conn = c; conn.send({ type: 'hello', memberId, name: playerName, character: snapshot() }); }).catch((err) => setStatus(err.message || String(err), 'error'));
 
   return () => {
+    focus.destroy();
     if (conn) conn.close();
     window.removeEventListener('resize', onResize);
     if (imgUrl) URL.revokeObjectURL(imgUrl);

@@ -266,7 +266,12 @@ input[type='checkbox'] { width: 1.15rem; height: 1.15rem; accent-color: var(--go
   .summary { position: static; max-height: none; }
 }
 @media (max-width: 720px) {
-  .site-header { flex-direction: column; align-items: flex-start; gap: 0.35rem; position: static; }
+  .site-header { flex-direction: column; align-items: flex-start; gap: 0.35rem; position: static; padding-top: max(0.6rem, env(safe-area-inset-top)); }
+  .main-nav { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .main-nav::-webkit-scrollbar { display: none; }
+  .main-nav a { white-space: nowrap; flex: none; }
+  /* iPhone Safari zooms into any field with text smaller than 16px */
+  input, select, textarea { font-size: 16px; }
   .score-row { grid-template-columns: 1fr 1fr 1fr; }
   .score-row.head { display: none; }
   .score-name { grid-column: 1 / -1; }
