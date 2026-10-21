@@ -8,7 +8,14 @@
 //                                           cforge/v2/<code>/to/<id>   DM -> one player
 // To survive one broker being down or blocked, both sides connect to every broker in the list and drop duplicates.
 
-const DEFAULT_BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt'];
+// Public brokers. Two on the normal HTTPS port 443 (reachable on networks that block unusual ports) and two others.
+export const DEFAULT_BROKERS = [
+  { url: 'wss://public.cloud.shiftr.io', username: 'public', password: 'public', label: 'shiftr.io (port 443)' },
+  { url: 'wss://mqtt.eclipseprojects.io:443/mqtt', label: 'Eclipse (port 443)' },
+  { url: 'wss://broker.emqx.io:8084/mqtt', label: 'EMQX (port 8084)' },
+  { url: 'wss://broker.hivemq.com:8884/mqtt', label: 'HiveMQ (port 8884)' },
+];
+export const NET_VERSION = '2026-10-21b';
 const BROKER_KEY = 'characterforge.mqtt.brokers'; // optional override, comma separated (tests use ?mqtt=ws://127.0.0.1:8888)
 const CHUNK = 48 * 1024; // public brokers cap message size; bigger payloads (map images) are split
 const PING_MS = 6000;
@@ -31,7 +38,44 @@ function loadLib() {
 function brokers() {
   let custom = null;
   try { custom = new URLSearchParams(location.search).get('mqtt') || localStorage.getItem(BROKER_KEY); } catch { /* ignore */ }
-  return custom ? custom.split(',').map((s) => s.trim()).filter(Boolean) : DEFAULT_BROKERS;
+  return custom ? custom.split(',').map((s) => s.trim()).filter(Boolean).map((url) => ({ url, label: url })) : DEFAULT_BROKERS;
+}
+
+const clientOptions = (b) => {
+  const opts = { clientId: `cf_${rid()}`, clean: true, reconnectPeriod: 3000, connectTimeout: 8000, keepalive: 30, protocolVersion: 4 };
+  if (b.username) { opts.username = b.username; opts.password = b.password || ''; }
+  return opts;
+};
+
+/**
+ * Connection check for the Party page: for every relay, connect, send a message to ourselves and time the round trip.
+ * Resolves to [{ label, url, ok, ms, error }].
+ */
+export async function testRelays(timeoutMs = 9000) {
+  const mqtt = await loadLib();
+  return Promise.all(brokers().map((b) => new Promise((resolve) => {
+    const started = performance.now();
+    const topic = `cforge/v2/diag/${rid()}`;
+    let done = false;
+    let lastError = '';
+    const c = mqtt.connect(b.url, { ...clientOptions(b), reconnectPeriod: 0 });
+    const finish = (ok, error = '') => {
+      if (done) return;
+      done = true;
+      try { c.end(true); } catch { /* ignore */ }
+      resolve({ label: b.label || b.url, url: b.url, ok, ms: Math.round(performance.now() - started), error });
+    };
+    const timer = setTimeout(() => finish(false, lastError || 'No answer (blocked or offline)'), timeoutMs);
+    c.on('connect', () => {
+      c.subscribe(topic, { qos: 0 }, (err) => {
+        if (err) { clearTimeout(timer); finish(false, `Subscribe failed: ${err.message || err}`); return; }
+        c.publish(topic, 'ping', { qos: 0 });
+      });
+    });
+    c.on('message', () => { clearTimeout(timer); finish(true); });
+    c.on('error', (err) => { lastError = (err && err.message) || String(err); });
+    c.on('close', () => { if (!done && lastError) { clearTimeout(timer); finish(false, lastError); } });
+  })));
 }
 
 const rid = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
@@ -79,10 +123,10 @@ async function relay({ subscribe = [], will = null, onMessage, onStatus }) {
   const mqtt = await loadLib();
   const decode = createDecoder();
   const urls = brokers();
-  const clients = urls.map((url) => {
-    const opts = { clientId: `cf_${rid()}`, clean: true, reconnectPeriod: 3000, connectTimeout: 8000, keepalive: 30, protocolVersion: 4 };
+  const clients = urls.map((b) => {
+    const opts = clientOptions(b);
     if (will) opts.will = { topic: will.topic, payload: JSON.stringify({ ...will.message, mid: rid() }), qos: 0, retain: false };
-    const c = mqtt.connect(url, opts);
+    const c = mqtt.connect(b.url, opts);
     c.on('connect', () => { c.subscribe(subscribe, { qos: 0 }); report(); });
     c.on('close', report);
     c.on('offline', report);

@@ -8,13 +8,13 @@ import { listCharacters, getCharacter, saveCharacter } from './store.js';
 import { deriveCharacter } from './character.js';
 import { normalizeSheet, currentHp } from './sheet-state.js';
 import { CONDITIONS } from './data/index.js';
-import { joinParty } from './net.js';
+import { joinParty, testRelays, NET_VERSION } from './net.js';
 import { listParties, createParty, deleteParty, myMemberId, loadJoin, saveJoin } from './party.js';
 import { liveSession, startLive, stopLive, joinLink } from './live-host.js';
 import { listEncounters } from './map-store.js';
 import { focusController, isSmallScreen } from './map-focus.js';
 import {
-  normalizeCode, snapToGrid, distanceFeet, initiativeOrder, initials, hpState, damageToken, healToken, memberMayMove,
+  normalizeCode, snapToGrid, distanceFeet, initiativeOrder, initials, hpState, damageToken, healToken, memberMayMove, memberMayEditHp,
 } from './map-logic.js';
 
 const go = (path) => { location.hash = `#${path}`; };
@@ -65,6 +65,28 @@ export function renderParty(root) {
   }
   const newName = h('input', { id: 'party-name', type: 'text', maxlength: 60, placeholder: 'e.g. The Lantern Bearers' });
 
+  // Connection check: shows which public relays this device can reach (DM and players should both run it).
+  const diagOut = h('div', { class: 'diag-out', 'aria-live': 'polite' });
+  const diagBtn = h('button', { type: 'button', class: 'btn', onclick: async () => {
+    diagBtn.disabled = true;
+    diagOut.replaceChildren(h('p', { class: 'hint' }, 'Testing the live relays (up to 10 seconds)…'));
+    try {
+      const res = await testRelays();
+      const ok = res.filter((r) => r.ok).length;
+      diagOut.replaceChildren(
+        h('p', { class: ok ? 'notice' : 'notice warn' }, ok
+          ? `${ok} of ${res.length} relays work on this device: live play should work. Everyone at the table needs at least one working relay in common.`
+          : 'No relay can be reached from this device, so live play cannot work here. Try another network (for example a phone hotspot) or another browser, and switch off VPN / ad-blocking extensions for this site.'),
+        h('table', { class: 'info-table diag-table' },
+          h('thead', {}, h('tr', {}, h('th', {}, 'Relay'), h('th', {}, 'Result'))),
+          h('tbody', {}, res.map((r) => h('tr', {}, h('td', {}, r.label), h('td', { class: r.ok ? 'diag-ok' : 'diag-bad' }, r.ok ? `OK (${r.ms} ms)` : `Failed: ${r.error}`))))),
+        h('p', { class: 'hint' }, `Version ${NET_VERSION} · ${navigator.userAgent.match(/(Chrome|Firefox|Safari|Edg)\/[\d.]+/g)?.join(' ') || 'browser'}`));
+    } catch (err) {
+      diagOut.replaceChildren(h('p', { class: 'notice warn' }, `The test could not run: ${err.message || err}`));
+    }
+    diagBtn.disabled = false;
+  } }, 'Test connection');
+
   root.append(h('div', { class: 'page party-page' },
     h('h1', {}, 'Party'),
     h('p', { class: 'lead' }, 'Play together: the DM shows a map, every player sees it live on their own phone or laptop and moves their own figure. No accounts needed.'),
@@ -78,7 +100,11 @@ export function renderParty(root) {
       h('section', { class: 'panel' },
         h('h2', {}, 'Run a party (DM)'),
         h('div', { class: 'row gap' }, field('New party', newName), h('button', { type: 'button', class: 'btn primary', onclick: () => { const p = createParty(newName.value); newName.value = ''; toast(`Party created. Code: ${p.code}`); drawParties(); } }, 'Create party')),
-        partyBox))));
+        partyBox),
+      h('section', { class: 'panel' },
+        h('h2', {}, 'Connection check'),
+        h('p', { class: 'hint' }, `Live play sends messages through free public relays. If players cannot join, run this test on every device. Version ${NET_VERSION}.`),
+        diagBtn, diagOut))));
   drawParties();
 }
 
@@ -152,11 +178,12 @@ export function renderJoin(root, rawCode) {
   const side = h('aside', { class: 'map-side' });
   const title = h('h1', { class: 'live-title' }, `Party ${code}`);
   const hpChip = h('span', { class: 'tag hp-chip', hidden: true, 'aria-live': 'polite' });
+  const lockChip = h('span', { class: 'tag warn-tag lock-chip', hidden: true, 'aria-live': 'polite' });
   const focusBtn = h('button', { type: 'button', class: 'btn small' });
   const panelBtn = h('button', { type: 'button', class: 'btn small focus-only', title: 'Show or hide your HP, party and turn order' }, '☰ Panel');
   const page = h('div', { class: 'page map-editor live-player' },
     h('div', { class: 'map-toolbar' }, h('div', { class: 'row gap map-toolbar-row' },
-      focusBtn, panelBtn, hpChip,
+      focusBtn, panelBtn, hpChip, lockChip,
       h('a', { class: 'btn small', href: '#/party' }, '← Party'),
       title, statusEl,
       h('span', { class: 'btn-pair' },
@@ -233,7 +260,7 @@ export function renderJoin(root, rawCode) {
     const mine = t.memberId === memberId;
     const active = map.turn.activeId === t.id;
     return h('button', {
-      type: 'button', class: `map-token kind-${t.kind}${mine ? ' mine selected' : ''}${active ? ' active' : ''}${info && info.state ? ` ${info.state}` : ''}`,
+      type: 'button', class: `map-token kind-${t.kind}${mine ? ` mine selected${memberMayMove(t, memberId, map.settings) ? '' : ' locked'}` : ''}${active ? ' active' : ''}${info && info.state ? ` ${info.state}` : ''}`,
       dataset: { id: t.id }, 'aria-label': `${t.name}${info ? `, ${info.text}` : ''}${mine ? ' (you)' : ''}${active ? ', current turn' : ''}`,
       title: `${t.name}${mine ? ' (you)' : ''}${info ? ` · ${info.text}` : ''}${t.ac !== null && t.ac !== undefined ? ` · AC ${t.ac}` : ''}${t.conditions.length ? ` · ${t.conditions.map((c) => CONDITION_NAME[c] || c).join(', ')}` : ''}`,
       style: `left:${t.x - px / 2}px;top:${t.y - px / 2}px;width:${px}px;height:${px}px;--token-color:${t.color};font-size:${Math.max(8, px * 0.36)}px`,
@@ -250,9 +277,13 @@ export function renderJoin(root, rawCode) {
     if (hasHp) { hpChip.textContent = `HP ${me.hp.current}/${me.hp.max}${me.hp.temp ? ` +${me.hp.temp}` : ''}`; hpChip.className = `tag hp-chip${hpState(me.hp) === 'down' ? ' bad' : hpState(me.hp) === 'bloodied' ? ' warn-tag' : ''}`; }
     const order = map ? initiativeOrder(map.tokens) : [];
     const canMove = map && me && memberMayMove(me, memberId, map.settings);
+    const canHp = map && me && memberMayEditHp(me, memberId, map.settings);
+    lockChip.hidden = !(map && me && !canMove);
+    lockChip.textContent = map && map.settings && map.settings.movementLocked ? '🔒 Movement locked' : '🔒 DM moves you';
     const amount = h('input', { type: 'number', min: 0, max: 999, class: 'map-amount', placeholder: 'Amount', 'aria-label': 'Amount' });
     const act = (mode) => {
       const v = Math.floor(Number(amount.value) || 0);
+      if (!canHp) return;
       if (!v || !me || !me.hp || me.hp.state !== undefined) { amount.focus(); return; }
       let next = me;
       if (mode === 'damage') next = damageToken(me, v);
@@ -269,13 +300,14 @@ export function renderJoin(root, rawCode) {
         me && me.hp && me.hp.current !== undefined ? h('div', { class: 'map-hp' },
           h('div', { class: 'map-hp-line' }, h('strong', {}, `HP ${me.hp.current} / ${me.hp.max}`), me.hp.temp ? h('span', { class: 'tag good' }, `+${me.hp.temp} temp`) : null),
           h('div', { class: 'hp-bar' }, h('span', { class: `hp-fill${hpState(me.hp) !== 'healthy' ? ' low' : ''}`, style: `width:${me.hp.max ? Math.round((me.hp.current / me.hp.max) * 100) : 0}%` })),
-          h('div', { class: 'row gap map-hp-actions' }, amount,
+          canHp ? h('div', { class: 'row gap map-hp-actions' }, amount,
             h('button', { type: 'button', class: 'btn small danger', onclick: () => act('damage') }, 'Damage'),
             h('button', { type: 'button', class: 'btn small', onclick: () => act('heal') }, 'Heal'),
-            h('button', { type: 'button', class: 'btn small', onclick: () => act('temp') }, 'Temp')),
+            h('button', { type: 'button', class: 'btn small', onclick: () => act('temp') }, 'Temp'))
+            : h('p', { class: 'hint' }, '🔒 The DM manages your hit points in this session.'),
           characterId ? h('p', { class: 'hint' }, 'Synced with your character sheet.') : null) : null,
         me && me.conditions.length ? h('p', {}, h('strong', {}, 'Conditions: '), me.conditions.map((c) => CONDITION_NAME[c] || c).join(', ')) : null,
-        h('p', { class: 'hint' }, !map ? 'Waiting for the DM to show a map.' : !me ? 'The DM has not put you on this map yet.' : canMove ? 'Drag your token (blue outline) to move. The DM sees it right away.' : 'The DM moves the tokens on this map.'),
+        h('p', { class: 'hint' }, !map ? ['Waiting for the DM to show a map. Not connecting? Run ', h('a', { href: '#/party' }, 'Party → Test connection'), ' on this device and on the DM\'s device.'] : !me ? 'The DM has not put you on this map yet.' : canMove ? 'Drag your token (blue outline) to move. The DM sees it right away.' : map.settings && map.settings.movementLocked ? '🔒 The DM has locked movement for now.' : '🔒 The DM moves your token in this session.'),
         characterId ? h('a', { class: 'btn small', href: `#/sheet/${characterId}` }, 'Open my sheet') : null),
       h('section', { class: 'panel' },
         h('h2', {}, `Party (${roster.filter((m) => m.online).length} online)`),

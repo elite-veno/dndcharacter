@@ -192,7 +192,19 @@ export const initials = (name) => text(name, 60).split(' ').filter(Boolean).slic
 
 // ---------------------------------------------------------------- live sessions (party play)
 
-export const LIVE_DEFAULTS = { playersMove: true, showEnemyHp: false, autoPlace: true };
+// playersMove / playersHp are the defaults for everyone; perMember[memberId] = { move, hp } overrides them per player
+// (true = allowed, false = locked, missing = follow the default).
+export const LIVE_DEFAULTS = { playersMove: true, playersHp: true, movementLocked: false, showEnemyHp: false, autoPlace: true, perMember: {} };
+
+/** Effective permissions of one party member: { move, hp }. */
+export function memberPermissions(memberId, settings) {
+  const s = { ...LIVE_DEFAULTS, ...(settings || {}) };
+  const own = (s.perMember && memberId && s.perMember[memberId]) || {};
+  return {
+    move: !s.movementLocked && (typeof own.move === 'boolean' ? own.move : !!s.playersMove),
+    hp: typeof own.hp === 'boolean' ? own.hp : !!s.playersHp,
+  };
+}
 
 /**
  * What players see of an encounter: hidden tokens and DM notes are removed, and unless the DM allows it enemy and
@@ -214,7 +226,9 @@ export function publicState(enc, settings = LIVE_DEFAULTS) {
 }
 
 /** Can this party member move this token? Only their own token, and only when the DM allows it. */
-export const memberMayMove = (token, memberId, settings) => !!token && !!memberId && token.memberId === memberId && ({ ...LIVE_DEFAULTS, ...(settings || {}) }).playersMove;
+export const memberMayMove = (token, memberId, settings) => !!token && !!memberId && token.memberId === memberId && memberPermissions(memberId, settings).move;
+/** Can this party member change the hit points of this token? Only their own, and only when allowed. */
+export const memberMayEditHp = (token, memberId, settings) => !!token && !!memberId && token.memberId === memberId && memberPermissions(memberId, settings).hp;
 
 const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 /** Short, easy-to-type party code (no 0/O, 1/I/L). */
