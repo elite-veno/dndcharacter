@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   normalizeToken, normalizeEncounter, newEncounter, damageToken, healToken, hpState, snapToGrid, distanceFeet,
   initiativeOrder, stepTurn, duplicateToken, initials, normalizeLink, rectFromPoints, viewForRect,
-  publicState, memberMayMove, partyCode, normalizeCode,
+  publicState, memberMayMove, memberMayEditHp, memberPermissions, partyCode, normalizeCode,
 } from './map-logic.js';
 
 let groups = 0;
@@ -108,6 +108,21 @@ group('party codes are 6 easy characters', () => {
   assert.match(c, /^[A-Z2-9]{6}$/);
   assert.ok(!/[01OIL]/.test(partyCode()));
   assert.equal(normalizeCode(' ab-c 12x9 '), 'ABC12X');
+});
+
+group('DM permissions: defaults for everyone, overrides per player', () => {
+  const t = normalizeToken({ kind: 'player', memberId: 'a' });
+  const u = normalizeToken({ kind: 'player', memberId: 'b' });
+  const s = { playersMove: false, playersHp: true, perMember: { b: { move: true, hp: false } } };
+  assert.deepEqual(memberPermissions('a', s), { move: false, hp: true });
+  assert.deepEqual(memberPermissions('b', s), { move: true, hp: false });
+  assert.equal(memberMayMove(t, 'a', s), false);
+  assert.equal(memberMayMove(u, 'b', s), true);
+  assert.equal(memberMayEditHp(u, 'b', s), false);
+  assert.equal(memberMayEditHp(t, 'a', s), true);
+  assert.equal(memberMayEditHp(u, 'a', s), false);          // never someone else's token
+  assert.deepEqual(memberPermissions('x', {}), { move: true, hp: true });
+  assert.equal(memberMayMove(u, 'b', { ...s, movementLocked: true }), false); // the lock beats every override
 });
 
 console.log(`${groups} test groups passed`);

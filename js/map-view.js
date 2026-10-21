@@ -17,7 +17,7 @@ import {
   listEncounters, getEncounter, saveEncounter, deleteEncounter, putImage, getImageBlob, prepareImage,
   exportEncounterJson, importEncounterJson, loadPresets, savePresets,
 } from './map-store.js';
-import { memberMayMove } from './map-logic.js';
+import { memberMayMove, memberMayEditHp, memberPermissions } from './map-logic.js';
 import { focusController } from './map-focus.js';
 import { listParties, createParty } from './party.js';
 import { liveSession, subscribe, startLive, stopLive, setLiveSettings, attachEditor, detachEditor, pushState, pushMoving, joinLink } from './live-host.js';
@@ -341,6 +341,7 @@ function renderEditor(root, id) {
           h('button', { type: 'button', class: 'btn small', 'aria-label': 'Zoom in', onclick: () => zoomCenter(1.25) }, '+'),
           h('button', { type: 'button', class: 'btn small', onclick: fit }, 'Fit')),
         h('button', { type: 'button', class: 'btn primary small', onclick: () => openAddDialog(viewCenterImage()) }, '+ Add token'),
+        liveSession() ? h('button', { type: 'button', class: `btn small${liveSession().settings.movementLocked ? ' danger' : ''}`, onclick: () => setLiveSettings({ movementLocked: !liveSession().settings.movementLocked }), title: 'Stop or allow all player movement' }, liveSession().settings.movementLocked ? '🔓 Unlock' : '🔒 Lock') : null,
         liveSession() ? h('button', { type: 'button', class: 'btn small live-on', onclick: () => side.querySelector('.map-live')?.scrollIntoView({ behavior: 'smooth' }), title: 'Your party sees this map live' }, `● Live · ${liveSession().online.size}`)
           : h('button', { type: 'button', class: 'btn small', onclick: openLiveDialog, title: 'Let your party see this map live on their own devices' }, '📡 Go live'),
         h('button', { type: 'button', class: `btn small${mode === 'link' ? ' cta' : ''}`, 'aria-pressed': String(mode === 'link'), onclick: () => setMode(mode === 'link' ? 'normal' : 'link'), title: 'Drag a rectangle over an area (an island, a town…) and link it to another map' }, mode === 'link' ? 'Cancel link area' : '⌖ Link area'),
@@ -509,15 +510,39 @@ function renderEditor(root, id) {
       s.party.members.length ? h('ul', { class: 'map-rows' }, s.party.members.map((m) => {
         const on = s.online.has(m.memberId);
         const tok = enc.tokens.find((t) => t.memberId === m.memberId);
-        return h('li', { class: 'map-link-row' },
+        const perm = (key, label) => {
+          const own = (s.settings.perMember || {})[m.memberId] || {};
+          const cur = typeof own[key] === 'boolean' ? String(own[key]) : 'default';
+          const def = key === 'move' ? s.settings.playersMove : s.settings.playersHp;
+          const fid = nextId('perm');
+          return h('span', { class: 'perm-field' }, h('label', { for: fid }, label), h('select', {
+            id: fid, 'aria-label': `${label} permission for ${m.name}`,
+            onchange: (e) => {
+              const per = { ...(s.settings.perMember || {}) };
+              const next = { ...(per[m.memberId] || {}) };
+              if (e.target.value === 'default') delete next[key]; else next[key] = e.target.value === 'true';
+              per[m.memberId] = next;
+              setLiveSettings({ perMember: per });
+            },
+          }, [['default', `Default (${def ? 'yes' : 'no'})`], ['true', 'Allowed'], ['false', 'Not allowed']].map(([v, l]) => h('option', { value: v, selected: v === cur }, l))));
+        };
+        const eff = memberPermissions(m.memberId, s.settings);
+        return h('li', { class: 'map-link-row member-row' },
           h('span', { class: `online-dot${on ? ' on' : ''}`, 'aria-label': on ? 'online' : 'offline' }),
           h('span', { class: 'map-row-name' }, m.name, m.character ? h('small', { class: 'hint' }, ` · ${m.character.name}${m.character.classLine ? `, ${m.character.classLine}` : ''}`) : null),
           tok ? h('button', { type: 'button', class: 'btn small', onclick: () => { selectedId = tok.id; centerOn(tok); drawTokens(); drawSide(); } }, 'Show')
-            : h('button', { type: 'button', class: 'btn small', onclick: () => placeMember(m, viewCenterImage()) }, 'Place'));
+            : h('button', { type: 'button', class: 'btn small', onclick: () => placeMember(m, viewCenterImage()) }, 'Place'),
+          h('span', { class: 'perm-row' }, perm('move', 'Move'), perm('hp', 'HP'),
+            h('small', { class: 'hint' }, `${eff.move ? 'can move' : '🔒 cannot move'} · ${eff.hp ? 'can change HP' : 'HP locked'}`)));
       })) : h('p', { class: 'hint' }, 'Nobody has joined yet. Share the code or the link.'),
+      h('h3', {}, 'Permissions for everyone'),
+      h('button', { type: 'button', class: `btn small${s.settings.movementLocked ? ' danger' : ''}`, 'aria-pressed': String(!!s.settings.movementLocked), onclick: () => setLiveSettings({ movementLocked: !s.settings.movementLocked }) },
+        s.settings.movementLocked ? '🔓 Unlock movement' : '🔒 Lock movement for everyone'),
+      chk('playersMove', 'Players may move their own token (default)'),
+      chk('playersHp', 'Players may change their own HP (default)'),
       chk('autoPlace', 'Put players on the map when they join'),
-      chk('playersMove', 'Players may move their own token'),
-      chk('showEnemyHp', 'Show enemy HP and AC to players'));
+      chk('showEnemyHp', 'Show enemy HP and AC to players'),
+      h('p', { class: 'hint' }, 'Per player you can override the defaults above. "Lock movement" freezes everyone, whatever the other settings say. You (the DM) can always move and edit everything.'));
   }
 
   function openLiveDialog() {
@@ -573,6 +598,8 @@ function renderEditor(root, id) {
     onMemberHp: (memberId, msg) => {
       const t = enc.tokens.find((x) => x.memberId === memberId);
       if (!t) return;
+      const s = liveSession();
+      if (!memberMayEditHp(t, memberId, s && s.settings)) { pushState(); return; } // not allowed: send the real HP back
       commit(() => replaceToken(normalizeToken({ ...t, hp: { max: msg.max ?? (t.hp && t.hp.max) ?? 0, current: msg.current, temp: msg.temp } })));
     },
   };
