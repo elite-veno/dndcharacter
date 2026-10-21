@@ -91,6 +91,7 @@ export function renderJoin(root, rawCode) {
   let characterId = saved.code === code || !saved.code ? saved.characterId || null : saved.characterId || null;
   let playerName = saved.name || '';
   let map = null; // public map state from the DM
+  let roster = []; // party members as the DM sees them (with online status)
   let imageId = null;
   let imgUrl = null;
   let conn = null;
@@ -256,6 +257,12 @@ export function renderJoin(root, rawCode) {
         h('p', { class: 'hint' }, !map ? 'Waiting for the DM to show a map.' : !me ? 'The DM has not put you on this map yet.' : canMove ? 'Drag your token (blue outline) to move. The DM sees it right away.' : 'The DM moves the tokens on this map.'),
         characterId ? h('a', { class: 'btn small', href: `#/sheet/${characterId}` }, 'Open my sheet') : null),
       h('section', { class: 'panel' },
+        h('h2', {}, `Party (${roster.filter((m) => m.online).length} online)`),
+        roster.length ? h('ul', { class: 'map-rows' }, roster.map((m) => h('li', { class: 'map-link-row' },
+          h('span', { class: `online-dot${m.online ? ' on' : ''}`, 'aria-label': m.online ? 'online' : 'offline' }),
+          h('span', { class: 'map-row-name' }, m.name, m.memberId === memberId ? ' (you)' : '', m.character ? h('small', { class: 'hint' }, ` · ${m.character.name}${m.character.classLine ? `, ${m.character.classLine}` : ''}`) : null))))
+          : h('p', { class: 'hint' }, 'The party list appears when you are connected to the DM.')),
+      h('section', { class: 'panel' },
         h('h2', {}, `Turn order${map ? ` · round ${map.turn.round}` : ''}`),
         order.length ? h('ol', { class: 'map-rows' }, order.map((t) => {
           const info = hpInfo(t);
@@ -358,6 +365,7 @@ export function renderJoin(root, rawCode) {
       view.fitted = false;
       return;
     }
+    if (Array.isArray(msg.roster)) { roster = msg.roster; if (!(document.activeElement && side.contains(document.activeElement))) drawSide(); }
     if (msg.type === 'state' && msg.map) {
       const changedMap = !map || map.id !== msg.map.id;
       if (gesture && gesture.type === 'drag') {
@@ -386,7 +394,7 @@ export function renderJoin(root, rawCode) {
     onStatus: setStatus,
     onOpen: () => conn && conn.send({ type: 'hello', memberId, name: playerName, character: snapshot() }),
     onMessage,
-  }).then((c) => { conn = c; }).catch((err) => setStatus(err.message || String(err), 'error'));
+  }).then((c) => { conn = c; conn.send({ type: 'hello', memberId, name: playerName, character: snapshot() }); }).catch((err) => setStatus(err.message || String(err), 'error'));
 
   return () => {
     if (conn) conn.close();

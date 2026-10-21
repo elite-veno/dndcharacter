@@ -20,6 +20,20 @@ const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
   r.readAsDataURL(blob);
 });
 
+/** Map images go through a public relay in small parts, so send players a lighter copy (max 2048 px, JPEG). */
+async function lightImage(blob) {
+  try {
+    const bmp = await createImageBitmap(blob);
+    const scale = Math.min(1, 2048 / Math.max(bmp.width, bmp.height));
+    if (scale === 1 && blob.size < 900 * 1024) return blob;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    return await new Promise((resolve) => canvas.toBlob((b) => resolve(b || blob), 'image/jpeg', 0.82));
+  } catch { return blob; }
+}
+
 let imageCache = { id: null, dataUrl: null };
 async function imageMessage() {
   const ed = session && session.editor;
@@ -28,20 +42,24 @@ async function imageMessage() {
   if (!enc || !enc.imageId) return { type: 'image', imageId: null, dataUrl: null };
   if (imageCache.id !== enc.imageId) {
     const blob = await ed.getImageBlob();
-    imageCache = { id: enc.imageId, dataUrl: blob ? await blobToDataUrl(blob) : null };
+    imageCache = { id: enc.imageId, dataUrl: blob ? await blobToDataUrl(await lightImage(blob)) : null };
   }
   return { type: 'image', imageId: imageCache.id, dataUrl: imageCache.dataUrl };
 }
 
 const stateMessage = () => {
   const enc = session && session.editor && session.editor.getEnc();
-  return enc ? { type: 'state', map: publicState(enc, session.settings), party: session.party.name } : { type: 'idle', party: session.party.name };
+  const roster = session.party.members.map((m) => ({
+    memberId: m.memberId, name: m.name, online: session.online.has(m.memberId),
+    character: m.character ? { name: m.character.name, classLine: m.character.classLine } : null,
+  }));
+  return enc ? { type: 'state', map: publicState(enc, session.settings), party: session.party.name, roster } : { type: 'idle', party: session.party.name, roster };
 };
 
 async function sendFull(conn) {
   if (!session) return;
   const img = await imageMessage();
-  if (img) session.host.send(conn, img);
+  if (img && conn.imageSent !== img.imageId) { session.host.send(conn, img); conn.imageSent = img.imageId; }
   session.host.send(conn, stateMessage());
 }
 
@@ -55,11 +73,12 @@ export async function startLive(partyId) {
   const s = session;
   s.host = await hostParty(party.code, {
     onStatus: (text, state) => { if (session !== s) return; s.status = text; s.state = state; notify(); },
-    onJoin: () => notify(),
+    onJoin: () => { notify(); pushState(); },
     onLeave: (conn) => {
       if (session !== s) return;
       for (const [mid, c] of s.online) if (c === conn) s.online.delete(mid);
       notify();
+      pushState();
     },
     onMessage: (msg, conn) => {
       if (session !== s) return;
@@ -117,7 +136,7 @@ export async function attachEditor(editor) {
   }
   const img = await imageMessage();
   if (!session || session.editor !== editor) return;
-  if (img) session.host.broadcast(img);
+  if (img) { session.host.broadcast(img); session.online.forEach((c) => { c.imageSent = img.imageId; }); }
   session.host.broadcast(stateMessage());
   notify();
   return enc;
